@@ -1,0 +1,405 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
+#
+# Lese aktuelle kulingvarsler fra TED databasen og lage Produkt som kan vises i DIANA.
+#
+
+import sys
+import MySQLdb
+import time
+import os
+
+from fare_utilities import *
+from generatecap import *
+
+KML_HEADING = """<?xml version="1.0" encoding="iso-8859-1"?>
+
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <ExtendedData>
+      <Data name="met:layer:0:name">
+        <value>%s</value>
+      </Data>
+      <Data name="met:layer:0:visible">
+        <value>true</value>
+      </Data>
+    </ExtendedData>
+"""
+
+KML_END = """  </Document>
+</kml>
+"""
+
+KML_VALIDLABEL = """    <Placemark>
+      <name>Valid warnings at:</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>GYLDIGE ADVARSLER PR
+%s</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>-3.16288,75.7207,0
+15.9619,74.349,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+"""
+
+KML_VALIDLABEL_OL = """    <Placemark>
+      <name>Valid warnings at:</name>
+          <Point>
+            <coordinates>-3.16288,75.7207,0</coordinates>
+          </Point>
+          <description>GYLDIGE ADVARSLER PR
+%s</description>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>GYLDIGE ADVARSLER PR
+%s</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+"""
+
+KML_AREA = """    <Placemark>
+      <name>%s</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>%s</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>"""
+
+
+KML_AREA_END = """            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+"""
+
+KML_TEXT = """    <Placemark>
+      <name>%s</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>%s</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>%s</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>%f,%f,0
+%f,%f,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+"""
+KML_TEXT_OL = """    <Placemark>
+     <name>%s</name>
+     <Point>
+     	<coordinates>%f,%f,0</coordinates>
+     </Point>
+    </Placemark>
+"""
+
+def get_locations(db, select_string ):
+	"""Retrieve all currently valid GALE forecasts from the TED db"""
+
+	try:
+		cur = db.cursor()
+		cur.execute(select_string)
+		result = cur.fetchall()
+
+	except MySQLdb.Error, e:
+	    print "Error %d: %s" % (e.args[0], e.args[1])
+	
+	return result
+
+
+def generate_file( locations, db, filename, type, labelType ):
+	"""Writes the given locations to a file. First as AREAS then as LABELs"""
+
+	fil = open(filename,'w')
+
+	symbols = []
+
+	fil.write(KML_HEADING % type)
+
+	now = time.strftime("%Y-%m-%d %H:00")
+
+	fil.write(KML_VALIDLABEL % now )
+
+	for n in range(len(locations)):
+
+		varsel = locations[n]
+		dateto=varsel[2]
+		vname = varsel[0]
+		symbname = ""
+
+		locs = varsel[3]
+
+		for n in locs.split(":"):
+
+			latlon = get_latlon(n,db)
+			first = 0
+			lattop = 0
+			latbot = 90
+			lontop = 0
+			lonbot = 180
+			for name,lon,lat in latlon:
+	
+				if first == 0:
+					fil.write(KML_AREA % (name,type))
+		   
+					symbname = name
+
+				if lat > lattop: lattop = lat
+				if lat < latbot: latbot = lat
+				if lon > lontop: lontop = lon
+				if lon < lonbot: lonbot = lon
+
+				fil.write("%f,%f,0\n"%(lon,lat))
+				first= first + 1
+
+			slat = latbot + (lattop - latbot )/2.0
+			slon = lonbot + (lontop - lonbot )/2.0
+
+			# print lattop,latbot,lontop,lonbot,slat,slon
+
+			symbols.append((vname,symbname,dateto,slat,slon))
+
+			fil.write(KML_AREA_END)
+
+	for n in range(len(symbols)):
+
+		sentral,omrade,tidto,slat,slon = symbols[n]
+		
+		tekst = "%s %s" %( omrade, tidto.strftime("%Y-%m-%d %H:%M") )
+		
+		alon = float(slon) + 0.46 * len(tekst)
+		alat = float(slat) - 0.92
+		
+		fil.write(KML_TEXT % ( vname, labelType, tekst, float(slon), float(slat), alon, alat ) )
+
+	fil.write(KML_END)
+
+	fil.close()
+
+	return 0
+
+def generate_file_ol( locations, db, filename, type, labelType ):
+	"""Writes the given locations to a file. First as AREAS then as LABELs
+	   Version for OpenLayers use."""
+
+	fil = open(filename,'w')
+
+	symbols = []
+
+	now = time.strftime("%Y-%m-%d %H:00")
+
+	name = "%s warnings at %s" % ( type, now )
+
+	fil.write(KML_HEADING % type)
+
+	fil.write(KML_VALIDLABEL_OL % (now,now) )
+
+	for n in range(len(locations)):
+
+		varsel = locations[n]
+		dateto=varsel[2]
+		vname = varsel[0]
+		desc = varsel[4]
+		symbname = ""
+
+		locs = varsel[3]
+
+		for n in locs.split(":"):
+
+			latlon = get_latlon(n,db)
+			first = 0
+			lattop = 0
+			latbot = 90
+			lontop = 0
+			lonbot = 180
+			for name,lon,lat in latlon:
+	
+				if first == 0:
+					sname = type + " : " + name + " Valid to: " + dateto.strftime("%Y-%m-%d %H:%M") + " " + desc
+				    
+					fil.write(KML_AREA % (sname,type))
+		   
+					symbname = name
+
+				if lat > lattop: lattop = lat
+				if lat < latbot: latbot = lat
+				if lon > lontop: lontop = lon
+				if lon < lonbot: lonbot = lon
+
+				fil.write("%f,%f,0\n"%(lon,lat))
+				first= first + 1
+
+			slat = latbot + (lattop - latbot )/2.0
+			slon = lonbot + (lontop - lonbot )/2.0
+
+			# print lattop,latbot,lontop,lonbot,slat,slon
+
+			symbols.append((vname,symbname,dateto,slat,slon))
+
+			fil.write(KML_AREA_END)
+
+	for n in range(len(symbols)):
+
+		sentral,omrade,tidto,slat,slon = symbols[n]
+		
+		tekst = "%s %s" %( omrade, tidto.strftime("%Y-%m-%d %H:%M") )
+		
+		fil.write(KML_TEXT_OL % ( tekst, float(slon), float(slat) ) )
+
+	fil.write(KML_END)
+
+	fil.close()
+
+	return 0
+
+#
+# MAIN
+#
+if __name__ == "__main__":
+
+	if len(sys.argv) < 4:
+		print "Wrong number of arguments\nUsage faremeldinger.py <TED db username> <passwd> <directory for files>"
+		exit(1)
+
+	db = MySQLdb.connect(host="teddb",
+						user=sys.argv[1],
+						passwd=sys.argv[2],
+						db="ted",
+						port=19400)
+
+	dirname = sys.argv[3]
+
+	now = time.strftime("%Y-%m-%d %H:%M:00")
+
+### Gale Warnings
+
+	select_string="select name,vfrom,vto,location, value from forecast where lang=\"EN\" and vto > \"%s \" and name =\"MIkuling\" order by vto desc" % now
+
+	locations = get_locations(db, select_string)
+
+	filename = "%s/Current_gale.kml" %  dirname
+
+	generate_file( locations,db, filename, "Gale warning", "Label Gale" )
+
+	filename = "/var/www/html/data/Current_gale.kml"
+
+	generate_file_ol( locations,db, filename, "Gale warning", "Label Gale" )
+
+	filename = "/var/www/html/data/Current_gale.cap.txt"
+
+	generate_file_cap(locations,db, filename, "Gale warning", "Gale Warning")
+
+### OBS warnings
+
+	select_string="select name,vfrom,vto,location, value from forecast where vto > \"%s \" and name in (\"VA_Obsvarsel\",\"VV_Obsvarsel\",\"VN_Obsvarsel\") order by vto desc" % now
+
+	locations = get_locations(db, select_string)
+
+	filename = "%s/Current_obs.kml" % dirname
+
+	generate_file(locations,db, filename, "Obs warning", "Label Obs")
+
+	filename = "/var/www/html/data/Current_obs.kml"
+
+	generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
+
+	filename = "/var/www/html/data/Current_obs.cap.txt"
+
+	generate_file_cap(locations,db, filename, "Obs warning", "Severe weather")
+
+### Extreme forecasts
+
+	select_string="select name,vfrom,vto,location, value from forecast where vto > \"%s \" and name in (\"MIekstrem_FaseA\",\"MIekstrem\") order by vto desc" % now
+
+	locations = get_locations(db, select_string)
+
+	filename = "%s/Current_extreme.kml" % dirname
+
+	generate_file(locations,db, filename, "Extreme forecast", "Label Extreme")
+
+	filename = "/var/www/html/data/Current_extreme.kml"
+
+	generate_file_ol(locations,db, filename, "Extreme forecast", "Label Extreme")
+
+	filename = "/var/www/html/data/Current_extreme.cap.txt"
+
+	generate_file_cap(locations,db, filename, "Extreme forecast", "Extreme weather")
+
+
+## Close
+
+	if db:
+		db.close()

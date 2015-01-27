@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <ExtendedData>
+      <Data name="met:layer:0:name">
+        <value>WARNINGS</value>
+      </Data>
+      <Data name="met:layer:0:visible">
+        <value>true</value>
+      </Data>
+    </ExtendedData>
+    <Placemark>
+      <name>anonymous placemark 73</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>GYLDIGE ADVARSLER PR
+2014-12-16 13:00</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>-3.16288,75.7207,0
+15.9619,74.349,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Svenskegrensa - Stavern</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>10.605167,59.531167,0
+10.439167,59.523167,0
+10.355333,59.515833,0
+10.318000,59.477667,0
+10.380333,59.436000,0
+10.465833,59.412833,0
+10.447167,59.361167,0
+10.488333,59.319667,0
+10.482167,59.290500,0
+10.408667,59.219000,0
+10.010833,59.053333,0
+10.048167,58.956500,0
+10.224667,58.972667,0
+10.653167,59.043667,0
+10.904167,58.939167,0
+10.927667,58.944667,0
+10.984667,58.961167,0
+11.068167,58.979167,0
+11.094167,58.994667,0
+11.101167,59.001167,0
+11.118167,59.017667,0
+11.153167,59.078667,0
+11.177667,59.082500,0
+11.209667,59.085667,0
+11.226167,59.087667,0
+11.194833,59.125167,0
+11.131667,59.148167,0
+10.837667,59.194167,0
+10.743167,59.276667,0
+10.740667,59.315167,0
+10.701833,59.332833,0
+10.679333,59.423500,0
+10.711167,59.486667,0
+10.695167,59.493000,0
+10.675167,59.491667,0
+10.664167,59.508667,0
+10.645667,59.521833,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Stavern - Oksøy</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>9.435000,58.922667,0
+9.222667,58.797333,0
+9.026167,58.681000,0
+8.680000,58.470333,0
+8.146667,58.173167,0
+7.994833,58.154500,0
+8.052000,58.063500,0
+8.215333,58.089167,0
+8.525500,58.246167,0
+8.808833,58.396500,0
+9.153833,58.629000,0
+9.369333,58.759667,0
+9.595000,58.852167,0
+9.784667,58.930000,0
+10.048167,58.956500,0
+10.010833,59.053333,0
+9.840167,59.051667,0
+9.770167,59.064833,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Oksøy - Lindesnes</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>7.159167,58.067667,0
+7.040833,57.972167,0
+7.568500,57.957167,0
+8.052000,58.063500,0
+7.994833,58.154500,0
+7.565667,58.069167,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Lindesnes - Åna Sira</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>6.364167,58.266667,0
+6.377000,58.277667,0
+6.468667,58.303333,0
+6.533500,58.314500,0
+7.159167,58.067667,0
+7.040833,57.972167,0
+6.566833,58.022333,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Åna-Sira - Stad</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>4.760167,62.043000,0
+4.645000,61.833833,0
+4.556167,61.651000,0
+4.486000,61.454167,0
+4.451833,61.297000,0
+4.455833,61.146667,0
+4.451333,61.048500,0
+4.456667,60.976000,0
+4.484167,60.851000,0
+4.511500,60.760000,0
+4.637667,60.529000,0
+4.755333,60.309167,0
+4.795000,60.235500,0
+4.874000,60.009333,0
+4.893833,59.918833,0
+4.925000,59.738333,0
+4.939500,59.649500,0
+4.903500,59.564333,0
+4.867333,59.460167,0
+4.823333,59.372667,0
+4.824500,59.299500,0
+4.894333,59.209833,0
+4.987167,59.148833,0
+5.106000,59.089500,0
+5.199167,59.020167,0
+5.251167,58.973167,0
+5.324500,58.812667,0
+5.377000,58.714167,0
+5.434333,58.629000,0
+5.565000,58.509000,0
+5.806667,58.369500,0
+5.988500,58.313833,0
+6.188333,58.248667,0
+6.317667,58.216833,0
+6.364167,58.266667,0
+6.377000,58.277667,0
+6.392667,58.292167,0
+6.318500,58.330167,0
+6.213833,58.359167,0
+6.082833,58.399000,0
+5.970833,58.444333,0
+5.842167,58.498667,0
+5.692667,58.568667,0
+5.595500,58.658667,0
+5.558833,58.712000,0
+5.561000,58.821333,0
+5.579000,58.902833,0
+5.570500,58.996667,0
+5.509667,59.064667,0
+5.388167,59.119333,0
+5.272833,59.153333,0
+5.227000,59.192167,0
+5.205833,59.266167,0
+5.193667,59.346667,0
+5.198167,59.581000,0
+5.168500,59.684000,0
+5.129500,59.767333,0
+5.079000,59.924333,0
+5.067833,60.014333,0
+5.057333,60.123667,0
+5.023000,60.223167,0
+4.984500,60.347167,0
+4.960833,60.447500,0
+4.849500,60.570667,0
+4.795833,60.661333,0
+4.694500,60.786833,0
+4.702833,60.853333,0
+4.696667,60.949000,0
+4.674667,61.052167,0
+4.695167,61.156500,0
+4.691667,61.302667,0
+4.740333,61.403167,0
+4.776833,61.563167,0
+4.844833,61.702667,0
+5.019333,62.021667,0
+5.141000,62.183833,0
+4.932500,62.217167,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Stad - Frøya</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>6.453000,62.922000,0
+6.235000,62.847500,0
+6.029000,62.740500,0
+5.812167,62.631000,0
+5.637333,62.541500,0
+5.400500,62.433667,0
+5.222667,62.360333,0
+4.932500,62.217167,0
+5.141000,62.183833,0
+5.446000,62.265500,0
+5.573000,62.350500,0
+5.948667,62.480000,0
+6.069333,62.577333,0
+6.152333,62.638000,0
+6.253500,62.685333,0
+6.459333,62.776833,0
+6.607333,62.838167,0
+7.081833,62.952333,0
+7.471000,63.038000,0
+7.771333,63.143833,0
+7.876667,63.263667,0
+7.846333,63.389667,0
+7.998500,63.449000,0
+8.364667,63.505333,0
+8.563333,63.592167,0
+8.279000,63.746333,0
+7.949833,63.642833,0
+7.677667,63.553000,0
+7.436500,63.409833,0
+7.302500,63.304667,0
+7.051833,63.164000,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Frøya - Rørvik</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>9.197833,64.237000,0
+8.870167,64.096833,0
+8.622667,63.986500,0
+8.382167,63.859833,0
+8.279000,63.746333,0
+8.563333,63.592167,0
+9.065000,63.680000,0
+9.588167,63.773500,0
+9.877167,63.879000,0
+10.030167,63.994500,0
+10.225667,64.147000,0
+10.381500,64.273667,0
+10.593833,64.406833,0
+10.938167,64.607667,0
+11.238667,64.758167,0
+10.635500,65.005667,0
+10.314000,64.815167,0
+9.963333,64.617500,0
+9.542667,64.397833,0
+9.267667,64.272333,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Fladen og Viking</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>4.000000,58.500000,0
+3.995000,58.998833,0
+3.993833,61.007833,0
+3.489667,61.006000,0
+2.491667,61.000833,0
+1.006500,61.006833,0
+0.000833,60.999167,0
+0.000000,58.500000,0
+-1.000000,58.500000,0
+-1.000000,56.000000,0
+4.000000,56.000000,0
+4.000000,57.753667,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Utsira Sør</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>5.122000,59.004000,0
+3.994833,59.004167,0
+4.000000,58.500000,0
+4.000000,57.753667,0
+7.437000,57.754500,0
+5.549500,58.550667,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Utsira Nord</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>4.776000,61.000000,0
+4.000000,61.000000,0
+3.994333,58.999500,0
+5.131667,59.008333,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Området fra Storegga-Haltenbanken til 0-meridianen</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>8.280667,65.002167,0
+6.998000,65.000667,0
+5.502667,65.001500,0
+4.003667,65.000833,0
+2.494000,64.996167,0
+1.005000,64.997500,0
+0.000000,65.000833,0
+0.000000,63.004167,0
+0.994000,63.003333,0
+2.001500,63.000500,0
+3.759667,63.526500,0
+5.105833,63.900333,0
+5.992333,64.234667,0
+7.001000,64.599333,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Aust-Tampen</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>5.000000,62.250000,0
+2.000000,63.000000,0
+1.000000,63.000000,0
+1.000000,61.000000,0
+2.491667,61.000833,0
+3.489667,61.006000,0
+4.000000,61.000000,0
+4.776000,61.000000,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Storegga</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>7.299667,63.297000,0
+5.095500,63.907667,0
+1.992167,63.007333,0
+4.697833,62.302833,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Støtt - Bodø</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>13.760667,66.913333,0
+14.612833,67.250500,0
+13.916167,67.301500,0
+13.700000,67.200000,0
+13.353500,67.048500,0
+13.583167,66.949833,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Skomvær - Slettnes fyr</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>PolyLine</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Gale warning</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+           <coordinates>15.133167,68.366667,0
+15.266667,68.416667,0
+15.433167,68.466667,0
+15.433167,68.516667,0
+15.616667,68.533167,0
+15.733167,68.683167,0
+15.716667,68.766667,0
+15.766667,68.833167,0
+15.866667,68.949833,0
+16.049833,69.033167,0
+16.030167,69.064667,0
+16.655500,69.100833,0
+16.864500,69.316500,0
+18.099833,69.516667,0
+18.100000,69.516667,0
+19.179667,69.915667,0
+19.960167,70.039000,0
+21.600000,70.183167,0
+21.783167,70.099833,0
+22.083167,70.166667,0
+22.216667,70.066667,0
+22.516667,70.116667,0
+22.383167,70.250000,0
+22.616667,70.333167,0
+22.733167,70.400000,0
+23.033167,70.416667,0
+23.283167,70.433167,0
+23.583167,70.500000,0
+23.683167,70.583167,0
+23.916667,70.599833,0
+24.033167,70.650000,0
+24.166667,70.716667,0
+24.383167,70.716667,0
+24.950000,70.633167,0
+25.333167,70.733167,0
+25.600000,70.699833,0
+25.883167,70.716667,0
+26.033167,70.666667,0
+26.250000,70.666667,0
+26.750000,70.750000,0
+27.216667,70.750000,0
+27.621333,70.744167,0
+28.237667,71.105667,0
+27.643167,71.150167,0
+26.783167,71.116667,0
+25.814167,71.194167,0
+23.988500,71.104167,0
+21.941167,70.680833,0
+21.334667,70.462667,0
+20.807167,70.411167,0
+20.167667,70.342000,0
+19.215167,70.312667,0
+18.617000,70.206167,0
+18.405667,70.109167,0
+18.007667,69.905833,0
+17.759833,69.687167,0
+17.759667,69.687167,0
+16.062833,69.332000,0
+16.062667,69.332167,0
+15.163667,69.071667,0
+14.548667,68.839667,0
+13.911833,68.535000,0
+12.908167,68.029667,0
+12.507167,67.646167,0
+11.894833,67.494000,0
+11.923167,67.438000,0
+12.603667,67.557167,0
+13.253167,67.976667,0
+13.909167,68.113500,0
+14.623167,68.151167,0
+14.742167,68.098667,0
+15.216667,68.166667,0
+15.183167,68.266667,0
+15.116667,68.300000,0
+15.266667,68.349833,0
+            </coordinates>         
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Svenskegrensa - Stavern 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>10.605167,59.531167,0
+29.005167,58.611167,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Stavern - Oksøy 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>9.435000,58.922667,0
+24.155000,58.002667,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Oksøy - Lindesnes 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>7.159167,58.067667,0
+22.799167,57.147667,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Lindesnes - Åna Sira 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>6.364167,58.266667,0
+23.384167,57.346667,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Åna-Sira - Stad 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>4.760167,62.043000,0
+19.480167,61.123000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Stad - Frøya 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>6.453000,62.922000,0
+19.793000,62.002000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Frøya - Rørvik 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>9.197833,64.237000,0
+23.457833,63.317000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Fladen og Viking 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>4.000000,58.500000,0
+19.180000,57.580000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Utsira Sør 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>5.122000,59.004000,0
+17.542000,58.084000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Utsira Nord 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>4.776000,61.000000,0
+17.656000,60.080000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Området fra Storegga-Haltenbanken til 0-meridianen 2014-12-16 19:03</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>8.280667,65.002167,0
+39.100667,64.082167,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Aust-Tampen 2014-12-16 20:39</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>5.000000,62.250000,0
+17.880000,61.330000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Storegga 2014-12-16 20:39</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>7.299667,63.297000,0
+18.799667,62.377000,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Støtt - Bodø 2014-12-17 09:01</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>13.760667,66.913333,0
+27.100667,65.993333,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MIkuling</name>
+      <ExtendedData>
+        <Data name="met:objectType">
+          <value>Text</value>
+        </Data>
+        <Data name="met:style:type">
+          <value>Label Gale</value>
+        </Data>
+        <Data name="met:layerId">
+          <value>0</value>
+        </Data>
+        <Data name="met:text">
+          <value>Skomvær - Slettnes fyr 2014-12-17 09:01</value>
+        </Data>
+        <Data name="met:spacing">
+          <value>0.5</value>
+        </Data>
+        <Data name="met:margin">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>15.133167,68.366667,0
+33.073167,67.446667,0
+</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>
