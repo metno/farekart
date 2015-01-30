@@ -3,6 +3,8 @@
 #
 # Lese aktuelle kulingvarsler fra TED databasen og lage Produkt som kan vises i DIANA.
 #
+# Author:
+#  Bård Fjukstad.  Jan. 2015
 
 import sys
 import MySQLdb

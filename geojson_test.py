@@ -3,7 +3,10 @@
 #
 # test av kartverkets GEOJSON grenser
 #
-
+#
+# Author:
+#  Bård Fjukstad.  Jan. 2015
+#
 import json
 
 

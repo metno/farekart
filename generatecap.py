@@ -5,7 +5,10 @@
 #
 # Kilde til CAP : http://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.pdf
 #
-
+#
+# Author:
+#  Bård Fjukstad.  Jan. 2015
+#
 import sys
 import uuid
 import time
