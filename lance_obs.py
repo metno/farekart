@@ -45,6 +45,11 @@ def latest(req):
 <html>
 <head>
   <title>LANCE OBSERVATIONS</title>
+  <style>
+    th {
+        text-align: left;
+    }
+  </style>
 </head>
 
 <body>
@@ -67,7 +72,7 @@ def latest(req):
 #    lines = lines + "Number of items : %d " % num  
 #    lines = lines + str(js)
     
-    for n in range(num-1,1,-1):
+    for n in range(num-1,0,-1):
    
         tid = js['features'][n]['properties']['measured']
         ff  = js['features'][n]['properties']['wind_speed_mean']
