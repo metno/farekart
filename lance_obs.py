@@ -23,6 +23,8 @@ def index(req):
 			<h1>Observations from LANCE</h1>
 			<form action="lance_obs.py/latest" method="POST">
             <br>
+            Data siden (mm/dd/yyyy): <input name="date" type="date" value="2015-02-01" min="2015-01-25">
+            <br>
 			<input type="submit" value="Hent data">
 		    </form></body></html>
 		  """)
@@ -30,10 +32,10 @@ def index(req):
 		req.content_type = "text/plain"
 		req.write("NOT A GET METHOD CALL\n")
 
-def latest(req):
+def latest(req,date):
     req.content_type = "text/html"
     
-    response = urllib2.urlopen("https://api.npolar.no/expedition/track/?q=&filter-code=N-ICE2015&sort=measured&limit=all&filter-measured=2015-02-01T00:00:00..&format=geojson")
+    response = urllib2.urlopen("https://api.npolar.no/expedition/track/?q=&filter-code=N-ICE2015&sort=measured&limit=all&filter-measured=%sT00:00:00..&format=geojson" % date)
     
     data = response.read()
     
@@ -46,9 +48,8 @@ def latest(req):
 <head>
   <title>LANCE OBSERVATIONS</title>
   <style>
-    th {
-        text-align: left;
-    }
+    th { text-align: center; }
+    td { text-align: center; }
   </style>
 </head>
 
@@ -75,16 +76,16 @@ def latest(req):
     for n in range(num-1,0,-1):
    
         tid = js['features'][n]['properties']['measured']
-        ff  = js['features'][n]['properties']['wind_speed_mean']
-        dd  = js['features'][n]['properties']['wind_direction_mean']
-        tt  = js['features'][n]['properties']['air_temperature']
-        pp  = js['features'][n]['properties']['air_pressure']
-        hum = js['features'][n]['properties']['humidity']
-        dept= js['features'][n]['properties']['depth']
+        ff  = float( js['features'][n]['properties']['wind_speed_mean'] )
+        dd  = float( js['features'][n]['properties']['wind_direction_mean'] )
+        tt  = float( js['features'][n]['properties']['air_temperature'] )
+        pp  = float( js['features'][n]['properties']['air_pressure'] )
+        hum = float( js['features'][n]['properties']['humidity'] )
+        dept= float( js['features'][n]['properties']['depth'] )
         lat = js['features'][n]['properties']['latitude']
         lon = js['features'][n]['properties']['longitude']
         
-        lines = lines + "<tr><td> %s </td><td> %s </td><td> %s </td><td> %s </td><td> %s </td><td> %s </td><td> %s </td><td> %s </td><td> %s </td></tr>\n" %( tid,ff,dd,tt,pp,hum,dept,lat,lon)
+        lines = lines + "<tr><td> %s </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %s </td><td> %s </td></tr>\n" %( tid,ff,dd,tt,pp,hum,dept,lat,lon)
         
     lines = lines + """
 </table>
