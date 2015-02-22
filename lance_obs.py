@@ -59,7 +59,7 @@ def latest(req,date):
   <table style="width:100%">
   <tr>
     <th> Observing time </th>
-    <th> Wind Speed Mean (m/s) </th> 
+    <th> Wind Speed Mean (knop) </th> 
     <th> Direction </th>
     <th> Air Temperature </th>
     <th> Air Pressure </th>
@@ -74,19 +74,45 @@ def latest(req,date):
 #    lines = lines + str(js)
     
     for n in range(num-1,0,-1):
-   
+      try:   
         tid = js['features'][n]['properties']['measured']
+      except:
+        continue
+      try:
         ff  = float( js['features'][n]['properties']['wind_speed_mean'] )
+      except:
+        ff = -1.0
+      try:
         dd  = float( js['features'][n]['properties']['wind_direction_mean'] )
+      except:
+        dd = -1.0
+      try:
         tt  = float( js['features'][n]['properties']['air_temperature'] )
+      except:
+        tt = -1.0
+      try:
         pp  = float( js['features'][n]['properties']['air_pressure'] )
+      except:
+        pp = -1.0
+      try:
         hum = float( js['features'][n]['properties']['humidity'] )
+      except:
+        hum = -1.0
+      try:
         dept= float( js['features'][n]['properties']['depth'] )
+      except:
+        dept = -1.0
+      try:
         lat = js['features'][n]['properties']['latitude']
+      except:
+        lat = -1.0
+      try:
         lon = js['features'][n]['properties']['longitude']
+      except:
+        lon = -1.0
         
-        lines = lines + "<tr><td> %s </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %s </td><td> %s </td></tr>\n" %( tid,ff,dd,tt,pp,hum,dept,lat,lon)
-        
+      lines = lines + "<tr><td> %s </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %0.1f </td><td> %s </td><td> %s </td></tr>\n" %( tid,ff,dd,tt,pp,hum,dept,lat,lon)
+
     lines = lines + """
 </table>
 </body>
