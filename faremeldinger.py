@@ -101,16 +101,23 @@ KML_VALIDLABEL_OL = """    <Placemark>
 
 KML_AREA = """    <Placemark>
       <name>%s</name>
+      <description>
+      %s
+      </description>
+      <TimeSpan>
+    	<begin>%s</begin>
+    	<end>%s</end>
+      </TimeSpan>
       <ExtendedData>
         <Data name="met:objectType">
           <value>PolyLine</value>
         </Data>
         <Data name="met:style:type">
-          <value>%s</value>
+          <value>Gale warning</value>
         </Data>
-        <Data name="met:layerId">
-          <value>0</value>
-        </Data>
+        <Data name="met:severity">
+          <value>yellow</value>
+        </Data>	
       </ExtendedData>
       <Polygon>
         <tessellate>1</tessellate>
@@ -187,23 +194,28 @@ def generate_file( locations, db, filename, type, labelType ):
 
 	fil = open(filename,'w')
 
-	symbols = []
+	# symbols = []
 
 	fil.write(KML_HEADING % type)
 
-	now = time.strftime("%Y-%m-%d %H:00")
-
-	fil.write(KML_VALIDLABEL % now )
+#	now = time.strftime("%Y-%m-%d %H:00")
+#
+#	fil.write(KML_VALIDLABEL % now )
 
 	for n in range(len(locations)):
 
 		varsel = locations[n]
-		dateto=varsel[2]
 		vname = varsel[0]
-		symbname = ""
-
+		datefrom=varsel[1]
+		dateto=varsel[2]
 		locs = varsel[3]
-
+		value = varsel[4]
+		value = value.replace("<in>","")		# Strip som tags from TED
+		value = value.replace("</in>","")		# Strip som tags from TED
+		# symbname = ""
+		dt = dateto.strftime("%Y-%m-%dT%H:%M:00Z")
+		df = datefrom.strftime("%Y-%m-%dT%H:%M:00Z")
+    
 		for n in locs.split(":"):
 
 			latlon = get_latlon(n,db)
@@ -215,9 +227,8 @@ def generate_file( locations, db, filename, type, labelType ):
 			for name,lon,lat in latlon:
 	
 				if first == 0:
-					fil.write(KML_AREA % (name,type))
-		   
-					symbname = name
+					fil.write(KML_AREA % (name,value,df,dt)) #name, description, vfrom,vto 
+		   			# symbname = name
 
 				if lat > lattop: lattop = lat
 				if lat < latbot: latbot = lat
@@ -232,20 +243,20 @@ def generate_file( locations, db, filename, type, labelType ):
 
 			# print lattop,latbot,lontop,lonbot,slat,slon
 
-			symbols.append((vname,symbname,dateto,slat,slon))
+			# symbols.append((vname,symbname,dateto,slat,slon))
 
 			fil.write(KML_AREA_END)
 
-	for n in range(len(symbols)):
-
-		sentral,omrade,tidto,slat,slon = symbols[n]
-		
-		tekst = "%s %s" %( omrade, tidto.strftime("%Y-%m-%d %H:%M") )
-		
-		alon = float(slon) + 0.46 * len(tekst)
-		alat = float(slat) - 0.92
-		
-		fil.write(KML_TEXT % ( vname, labelType, tekst, float(slon), float(slat), alon, alat ) )
+# 	for n in range(len(symbols)):
+#
+# 		sentral,omrade,tidto,slat,slon = symbols[n]
+# 		
+# 		tekst = "%s %s" %( omrade, tidto.strftime("%Y-%m-%d %H:%M") )
+# 		
+# 		alon = float(slon) + 0.46 * len(tekst)
+# 		alat = float(slat) - 0.92
+# 		
+# 		fil.write(KML_TEXT % ( vname, labelType, tekst, float(slon), float(slat), alon, alat ) )
 
 	fil.write(KML_END)
 
@@ -254,8 +265,8 @@ def generate_file( locations, db, filename, type, labelType ):
 	return 0
 
 def generate_file_ol( locations, db, filename, type, labelType ):
-	"""Writes the given locations to a file. First as AREAS then as LABELs
-	   Version for OpenLayers use."""
+	"""Version for OpenLayers use.
+	   Writes the given locations to a file. First as AREAS then as LABELs"""
 
 	fil = open(filename,'w')
 
@@ -267,17 +278,19 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 
 	fil.write(KML_HEADING % type)
 
-	fil.write(KML_VALIDLABEL_OL % (now,now) )
+#	fil.write(KML_VALIDLABEL_OL % (now,now) )
 
 	for n in range(len(locations)):
 
 		varsel = locations[n]
-		dateto=varsel[2]
 		vname = varsel[0]
-		desc = varsel[4]
-		symbname = ""
-
+		datefrom=varsel[1]
+		dateto=varsel[2]
 		locs = varsel[3]
+		value = varsel[4]
+		value.replace("<in>","")		# Strip som tags from TED
+		value.replace("</in>","")		# Strip som tags from TED
+		# symbname = ""
 
 		for n in locs.split(":"):
 
@@ -290,11 +303,8 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 			for name,lon,lat in latlon:
 	
 				if first == 0:
-					sname = type + " : " + name + " Valid to: " + dateto.strftime("%Y-%m-%d %H:%M") + " " + desc
-				    
-					fil.write(KML_AREA % (sname,type))
-		   
-					symbname = name
+					fil.write(KML_AREA % (name,value +" Valid to: " + str(dateto),datefrom,dateto)) #name, description, vfrom,vto 
+					symbname = name + " " + value + " " + str(dateto)
 
 				if lat > lattop: lattop = lat
 				if lat < latbot: latbot = lat
@@ -352,11 +362,12 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "%s/Current_gale.kml" %  dirname
+	filename = "/var/www/html/data/Current_gale.kml"
+#	filename = "%s/Current_gale.kml" %  dirname
 
 	generate_file( locations,db, filename, "Gale warning", "Label Gale" )
 
-	filename = "/var/www/html/data/Current_gale.kml"
+	filename = "/var/www/html/data/Current_gale_ol.kml"
 
 	generate_file_ol( locations,db, filename, "Gale warning", "Label Gale" )
 
@@ -370,11 +381,12 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "%s/Current_obs.kml" % dirname
+	filename = "/var/www/html/data/Current_obs.kml"
+#	filename = "%S/Current_obs.kml" % dirname
 
 	generate_file(locations,db, filename, "Obs warning", "Label Obs")
 
-	filename = "/var/www/html/data/Current_obs.kml"
+	filename = "/var/www/html/data/Current_obs_ol.kml"
 
 	generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
 
@@ -388,11 +400,12 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "%s/Current_extreme.kml" % dirname
+	filename = "/var/www/html/data/Current_extreme.kml"
+#	filename = "%s/Current_extreme.kml" % dirname
 
 	generate_file(locations,db, filename, "Extreme forecast", "Label Extreme")
 
-	filename = "/var/www/html/data/Current_extreme.kml"
+	filename = "/var/www/html/data/Current_extreme_ol.kml"
 
 	generate_file_ol(locations,db, filename, "Extreme forecast", "Label Extreme")
 

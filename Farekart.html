@@ -89,7 +89,7 @@
 		   source: new ol.source.KML({
 		       extractStyles: false,
 			   projection: projection,
-			   url: 'data/Current_gale.kml'
+			   url: 'data/Current_gale_ol.kml'
 		   }),
 		   style: galeStyleFunction
    });
@@ -98,7 +98,7 @@
 		   source: new ol.source.KML({
 		       extractStyles: false,
 			   projection: projection,
-			   url: 'data/Current_obs.kml'
+			   url: 'data/Current_obs_ol.kml'
 		   }),
 		   style: obsStyleFunction
    });
@@ -107,7 +107,7 @@
 		   source: new ol.source.KML({
 		       extractStyles: false,
 			   projection: projection,
-			   url: 'data/Current_extreme.kml'
+			   url: 'data/Current_extreme_ol.kml'
 		   }),
 		   style: ekstremeStyleFunction
    });
@@ -136,7 +136,7 @@
 		var info = [];
 		var i, ii;
 		for (i = 0, ii = features.length; i < ii; ++i) {
-		  info.push(features[i].get('name'));
+		  info.push(features[i].get('name')+" "+features[i].get('description'));
 		}
 		document.getElementById('info').innerHTML = info.join('<p>   ') || '(unknown)';
 		map.getTarget().style.cursor = 'pointer';
