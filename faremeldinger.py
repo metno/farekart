@@ -342,17 +342,23 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 #
 if __name__ == "__main__":
 
-	if len(sys.argv) < 4:
-		print "Wrong number of arguments\nUsage faremeldinger.py <TED db username> <passwd> <directory for files>"
+	if len(sys.argv) < 6:
+		print "Wrong number of arguments\nUsage faremeldinger.py <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> <Optional: OpenLayerDir>"
 		exit(1)
 
-	db = MySQLdb.connect(host="teddb",
-						user=sys.argv[1],
+	db = MySQLdb.connect(user=sys.argv[1],
 						passwd=sys.argv[2],
+						host=sys.argv[3],
+						port=int(sys.argv[4]),
 						db="ted",
-						port=19400)
+						)
 
-	dirname = sys.argv[3]
+	dirname = sys.argv[5]
+	OpenLayer = False
+    
+	if len(sys.argv) >6:
+		ol_dirname = sys.argv[6]
+		OpenLayer = True
 
 	now = time.strftime("%Y-%m-%d %H:%M:00")
 
@@ -362,16 +368,15 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "/var/www/html/data/Current_gale.kml"
-#	filename = "%s/Current_gale.kml" %  dirname
+	filename = "%s/Current_gale.kml" %  dirname
 
 	generate_file( locations,db, filename, "Gale warning", "Label Gale" )
 
-	filename = "/var/www/html/data/Current_gale_ol.kml"
+	if OpenLayer:
+		filename = "%s/Current_gale_ol.kml" % dirname
+		generate_file_ol( locations,db, filename, "Gale warning", "Label Gale" )
 
-	generate_file_ol( locations,db, filename, "Gale warning", "Label Gale" )
-
-	filename = "/var/www/html/data/Current_gale.cap.txt"
+	filename = "%s/Current_gale.cap.txt" % dirname
 
 	generate_file_cap(locations,db, filename, "Gale warning", "Gale Warning")
 
@@ -381,16 +386,15 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "/var/www/html/data/Current_obs.kml"
-#	filename = "%S/Current_obs.kml" % dirname
+	filename = "%s/Current_obs.kml" % dirname
 
 	generate_file(locations,db, filename, "Obs warning", "Label Obs")
 
-	filename = "/var/www/html/data/Current_obs_ol.kml"
+	if OpenLayer:
+		filename = "%s/Current_obs_ol.kml" % dirname
+		generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
 
-	generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
-
-	filename = "/var/www/html/data/Current_obs.cap.txt"
+	filename = "%s/Current_obs.cap.txt" % dirname
 
 	generate_file_cap(locations,db, filename, "Obs warning", "Severe weather")
 
@@ -400,16 +404,15 @@ if __name__ == "__main__":
 
 	locations = get_locations(db, select_string)
 
-	filename = "/var/www/html/data/Current_extreme.kml"
-#	filename = "%s/Current_extreme.kml" % dirname
+	filename = "%s/Current_extreme.kml" % dirname
 
 	generate_file(locations,db, filename, "Extreme forecast", "Label Extreme")
 
-	filename = "/var/www/html/data/Current_extreme_ol.kml"
+	if OpenLayer:
+		filename = "%s/Current_extreme_ol.kml" % dirname
+		generate_file_ol(locations,db, filename, "Extreme forecast", "Label Extreme")
 
-	generate_file_ol(locations,db, filename, "Extreme forecast", "Label Extreme")
-
-	filename = "/var/www/html/data/Current_extreme.cap.txt"
+	filename = "%s/Current_extreme.cap.txt" % dirname
 
 	generate_file_cap(locations,db, filename, "Extreme forecast", "Extreme weather")
 
