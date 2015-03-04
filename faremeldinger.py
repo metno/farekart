@@ -194,13 +194,7 @@ def generate_file( locations, db, filename, type, labelType ):
 
 	fil = open(filename,'w')
 
-	# symbols = []
-
 	fil.write(KML_HEADING % type)
-
-#	now = time.strftime("%Y-%m-%d %H:00")
-#
-#	fil.write(KML_VALIDLABEL % now )
 
 	for n in range(len(locations)):
 
@@ -212,7 +206,7 @@ def generate_file( locations, db, filename, type, labelType ):
 		value = varsel[4]
 		value = value.replace("<in>","")		# Strip som tags from TED
 		value = value.replace("</in>","")		# Strip som tags from TED
-		# symbname = ""
+
 		dt = dateto.strftime("%Y-%m-%dT%H:%M:00Z")
 		df = datefrom.strftime("%Y-%m-%dT%H:%M:00Z")
     
@@ -220,43 +214,18 @@ def generate_file( locations, db, filename, type, labelType ):
 
 			latlon = get_latlon(n,db)
 			first = 0
-			lattop = 0
-			latbot = 90
-			lontop = 0
-			lonbot = 180
 			for name,lon,lat in latlon:
 	
 				if first == 0:
 					fil.write(KML_AREA % (name,value,df,dt)) #name, description, vfrom,vto 
-		   			# symbname = name
-
-				if lat > lattop: lattop = lat
-				if lat < latbot: latbot = lat
-				if lon > lontop: lontop = lon
-				if lon < lonbot: lonbot = lon
-
+					first_lat = lat
+					first_lon = lon
+					
 				fil.write("%f,%f,0\n"%(lon,lat))
 				first= first + 1
 
-			slat = latbot + (lattop - latbot )/2.0
-			slon = lonbot + (lontop - lonbot )/2.0
-
-			# print lattop,latbot,lontop,lonbot,slat,slon
-
-			# symbols.append((vname,symbname,dateto,slat,slon))
-
+			fil.write("%f,%f,0\n"%(first_lon,first_lat))
 			fil.write(KML_AREA_END)
-
-# 	for n in range(len(symbols)):
-#
-# 		sentral,omrade,tidto,slat,slon = symbols[n]
-# 		
-# 		tekst = "%s %s" %( omrade, tidto.strftime("%Y-%m-%d %H:%M") )
-# 		
-# 		alon = float(slon) + 0.46 * len(tekst)
-# 		alat = float(slat) - 0.92
-# 		
-# 		fil.write(KML_TEXT % ( vname, labelType, tekst, float(slon), float(slat), alon, alat ) )
 
 	fil.write(KML_END)
 
@@ -305,6 +274,8 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 				if first == 0:
 					fil.write(KML_AREA % (name,value +" Valid to: " + str(dateto),datefrom,dateto)) #name, description, vfrom,vto 
 					symbname = name + " " + value + " " + str(dateto)
+					first_lat = lat
+					first_lon = lon
 
 				if lat > lattop: lattop = lat
 				if lat < latbot: latbot = lat
@@ -317,10 +288,9 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 			slat = latbot + (lattop - latbot )/2.0
 			slon = lonbot + (lontop - lonbot )/2.0
 
-			# print lattop,latbot,lontop,lonbot,slat,slon
-
 			symbols.append((vname,symbname,dateto,slat,slon))
 
+			fil.write("%f,%f,0\n"%(first_lon,first_lat))
 			fil.write(KML_AREA_END)
 
 	for n in range(len(symbols)):
