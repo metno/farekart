@@ -1,0 +1,19 @@
+This package was debianized by Helen Korsmo <helen.korsmo@met.no> on
+ Thu, 05 Mar 2015 09:18:05 +0100.
+
+It was downloaded from https://gitlab.met.no/public/projects/bard.fjukstad/farekart_bardf
+
+Upstream Authors: 
+
+    Bård Fjukstad
+
+Copyright: 
+
+    Copyright (C) 2015 met.no
+
+
+License:
+
+
+The Debian packaging is (C) 2012 met.no and is licensed under the GPL;
+see `/usr/share/common-licenses/GPL'.

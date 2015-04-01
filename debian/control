@@ -1,0 +1,12 @@
+Source: python-farekart
+Section: python
+Priority: extra
+Maintainer: Helen Korsmo <helenk@met.no>
+Build-Depends: devscripts
+Standards-Version: 3.9.3
+
+Package: python-farekart
+Architecture: any
+Depends: python2.7, python-mysqldb
+Description: Farekart
+	     Farekart creates kml and cap files from text warnings stored in the Ted database 
