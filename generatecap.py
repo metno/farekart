@@ -9,6 +9,7 @@
 # Author:
 #  Bård Fjukstad.  Jan. 2015
 #
+import codecs
 import sys
 import uuid
 import time
@@ -186,8 +187,8 @@ def generate_file_cap( locations, db, filename, type, labelType ):
 
 	numAreas = 0
 
-	fil = open(filename,'w')
-	fil2 = open(filename + "clean.txt",'w')
+	fil = codecs.open(filename,'w','utf8')
+	fil2 = codecs.open(filename + "clean.txt",'w','utf8')
 
 	symbols = []
 
