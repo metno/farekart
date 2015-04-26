@@ -242,8 +242,8 @@ def generate_file_cap( locations, db, filename, type, labelType ):
 					firstlat = lat
 					firstlon = lon
 
-					fil.write(CAP_AREA % name)
-					fil2.write(CAP_AREA_CLEAN % name)
+					fil.write(CAP_AREA % unicode(name, errors='ignore'))
+					fil2.write(CAP_AREA_CLEAN % unicode(name, errors='ignore'))
 
 					numAreas = numAreas + 1
 
