@@ -187,8 +187,8 @@ def generate_file_cap( locations, db, filename, type, labelType ):
 
 	numAreas = 0
 
-	fil = codecs.open(filename,'w','utf8')
-	fil2 = codecs.open(filename + "clean.txt",'w','utf8')
+	fil = codecs.open(filename,'w','utf-8')
+	fil2 = codecs.open(filename + "clean.txt",'w','utf-8')
 
 	symbols = []
 
@@ -242,8 +242,8 @@ def generate_file_cap( locations, db, filename, type, labelType ):
 					firstlat = lat
 					firstlon = lon
 
-					fil.write(repr(CAP_AREA % name))
-					fil2.write(repr(CAP_AREA_CLEAN % name))
+					fil.write(unicode(CAP_AREA % name, "iso8859-1"))
+					fil2.write(unicode(CAP_AREA_CLEAN % name, "iso8859-1"))
 
 					numAreas = numAreas + 1
 

@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 from fare_utilities import *
 from generatecap import *
 
-KML_HEADING_FARE = """<?xml version="1.0" encoding="iso-8859-1"?>
+KML_HEADING_FARE = """<?xml version="1.0" encoding="UTF-8"?>
 
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
@@ -181,7 +181,7 @@ def generate_file_fare( db, filename, type, labelType, dateto ):
 	"""Writes the given locations to a file. First as AREAS then as LABELs"""
 		
 	# fil = open(filename,'w')
-	fil = codecs.open(filename,'w','utf8')
+	fil = codecs.open(filename,'w','utf-8')
 	
 	fil.write(KML_HEADING_FARE % type)
 	
@@ -230,7 +230,8 @@ def generate_file_fare( db, filename, type, labelType, dateto ):
 			for name,lon,lat in latlon:
 				
 				if first == 0:
-					fil.write(repr(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,comm))) #name, description, vfrom,vto
+					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,comm), "iso-8859-1")
+					fil.write(area) #name, description, vfrom,vto
 					first_lat = lat
 					first_lon = lon
 					
