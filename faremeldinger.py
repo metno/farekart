@@ -13,6 +13,7 @@ import os
 
 from fare_utilities import *
 from generatecap import *
+from faremeldinger_v2 import *
 
 KML_HEADING = """<?xml version="1.0" encoding="iso-8859-1"?>
 
@@ -385,6 +386,13 @@ if __name__ == "__main__":
 	filename = "%s/Current_extreme.cap.txt" % dirname
 
 	generate_file_cap(locations,db, filename, "Extreme forecast", "Extreme weather")
+
+### Farevarsler
+
+	filename = "%s/Current_fare.kml" %  dirname
+
+	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now )
+
 
 
 ## Close

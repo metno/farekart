@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 from fare_utilities import *
 from generatecap import *
 
-KML_HEADING = """<?xml version="1.0" encoding="iso-8859-1"?>
+KML_HEADING_FARE = """<?xml version="1.0" encoding="iso-8859-1"?>
 
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
@@ -29,54 +29,18 @@ KML_HEADING = """<?xml version="1.0" encoding="iso-8859-1"?>
 	</ExtendedData>
 """
 
-KML_END = """  </Document>
+KML_END_FARE = """  </Document>
 </kml>
 """
 
-KML_VALIDLABEL = """	<Placemark>
-	  <name>Valid warnings at:</name>
-	  <ExtendedData>
-		<Data name="met:objectType">
-		  <value>Text</value>
-		</Data>
-		<Data name="met:style:type">
-		  <value>Label</value>
-		</Data>
-		<Data name="met:layerId">
-		  <value>0</value>
-		</Data>
-		<Data name="met:text">
-		  <value>GYLDIGE ADVARSLER PR
-%s</value>
-		</Data>
-		<Data name="met:spacing">
-		  <value>0.5</value>
-		</Data>
-		<Data name="met:margin">
-		  <value>4</value>
-		</Data>
-	  </ExtendedData>
-	  <Polygon>
-		<tessellate>1</tessellate>
-		<outerBoundaryIs>
-		  <LinearRing>
-			<coordinates>-3.16288,75.7207,0
-15.9619,74.349,0
-</coordinates>
+KML_AREA_END_FARE = """			</coordinates>		 
 		  </LinearRing>
 		</outerBoundaryIs>
 	  </Polygon>
 	</Placemark>
 """
 
-KML_AREA_END = """			</coordinates>		 
-		  </LinearRing>
-		</outerBoundaryIs>
-	  </Polygon>
-	</Placemark>
-"""
-
-KML_AREA_NEW = """	<Placemark>
+KML_AREA_NEW_FARE = """	<Placemark>
 	  <name>%s</name>
 	  <description>
 	  %s
@@ -105,28 +69,6 @@ KML_AREA_NEW = """	<Placemark>
 		  <LinearRing>
 		   <coordinates>"""
 
-
-KML_TEXT_OL = """	<Placemark>
-	 <name>%s</name>
-	 <Point>
-	 	<coordinates>%f,%f,0</coordinates>
-	 </Point>
-	</Placemark>
-"""
-
-def get_locations(db, select_string ):
-	"""Retrieve all currently valid GALE forecasts from the TED db"""
-
-	try:
-		cur = db.cursor()
-		cur.execute(select_string)
-		result = cur.fetchall()
-
-	except MySQLdb.Error, e:
-		print "Error %d: %s" % (e.args[0], e.args[1])
-		return None
-	
-	return result
 
 def get_xml_doc( db, dateto):
 	"""Retrieve a full document from the data base."""
@@ -235,13 +177,13 @@ def retrieve_from_xml( value ):
 	
 	return results
 
-def generate_file( db, filename, type, labelType, dateto ):
+def generate_file_fare( db, filename, type, labelType, dateto ):
 	"""Writes the given locations to a file. First as AREAS then as LABELs"""
 		
 	# fil = open(filename,'w')
 	fil = codecs.open(filename,'w','utf8')
 	
-	fil.write(KML_HEADING % type)
+	fil.write(KML_HEADING_FARE % type)
 	
 	doc = get_xml_doc( db, dateto)
 	
@@ -288,7 +230,7 @@ def generate_file( db, filename, type, labelType, dateto ):
 			for name,lon,lat in latlon:
 				
 				if first == 0:
-					fil.write(repr(KML_AREA_NEW % (name,value,df,dt,ty,sev,comm))) #name, description, vfrom,vto
+					fil.write(repr(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,comm))) #name, description, vfrom,vto
 					first_lat = lat
 					first_lon = lon
 					
@@ -296,9 +238,9 @@ def generate_file( db, filename, type, labelType, dateto ):
 				first= first + 1
 		
 			fil.write("%f,%f,0\n"%(first_lon,first_lat))
-			fil.write(KML_AREA_END)
+			fil.write(KML_AREA_END_FARE)
 
-	fil.write(KML_END)
+	fil.write(KML_END_FARE)
 	
 	fil.close()
 	
@@ -334,7 +276,7 @@ if __name__ == "__main__":
 
 	filename = "%s/Current_fare.kml" %  dirname
 
-	generate_file( db, filename, "Dangerous weather warning", "Label Faremelding", now )
+	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now )
 
 
 ## Close
