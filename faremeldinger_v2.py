@@ -5,7 +5,7 @@
 #
 # Author:
 #  Bård Fjukstad.  Mar. 2015
-
+import codecs
 import sys
 import MySQLdb
 import time
@@ -175,7 +175,7 @@ def retrieve_from_xml( value ):
 			varsel = None
 			nam = None
 			severity = None
-			type = None
+			ty = None
 			kommentar = None
 			id = None
 			loc = {}
@@ -192,24 +192,23 @@ def retrieve_from_xml( value ):
 				if nam == "severity":
 					severity = keyword.find('in').text
 				elif nam =="type":
-					type = keyword.find('in').text
+					ty = keyword.find('in').text
 				elif nam =="kommentar":
 					kommentar = keyword.find('in').text
 
 			# print "---------------------"
-			# if id:		print id
-			if name:	  name = name.encode('Latin-1')
-			if varsel:	varsel = varsel.encode('Latin-1')
-			if severity:  severity = severity.encode('Latin-1')
-			if type:	  type = type.encode('Latin-1')
-			if kommentar: kommentar = kommentar.encode('Latin-1')
+			if name:	  name = name.encode('iso-8859-1')
+			if varsel:	varsel = varsel.encode('iso-8859-1')
+			if severity:  severity = severity.encode('iso-8859-1')
+			if ty:	  ty = ty.encode('iso-8859-1')
+			if kommentar: kommentar = kommentar.encode('iso-8859-1')
 			# print "---------------------"
 
 			loc['id'] = id
 			loc['name'] = name
 			loc['varsel'] = varsel
 			loc['severity'] = severity
-			loc['type'] = type
+			loc['type'] = ty
 			loc['kommentar'] = kommentar
 	
 			n = n + 1
@@ -239,7 +238,8 @@ def retrieve_from_xml( value ):
 def generate_file( db, filename, type, labelType, dateto ):
 	"""Writes the given locations to a file. First as AREAS then as LABELs"""
 		
-	fil = open(filename,'w')
+	# fil = open(filename,'w')
+	fil = codecs.open(filename,'w','utf8')
 	
 	fil.write(KML_HEADING % type)
 	
@@ -257,10 +257,10 @@ def generate_file( db, filename, type, labelType, dateto ):
 	
 		res = results[i]
 	
-		dt = time.strptime(res['vto'],"%Y-%m-%d %H:%M:00")
+		dt = time.strptime(res['vto'],"%Y-%m-%d %H:%M:%S")
 		dt = time.strftime("%Y-%m-%dT%H:%M:00Z",dt)
 		
-		df = time.strptime(res['vfrom'],"%Y-%m-%d %H:%M:00")
+		df = time.strptime(res['vfrom'],"%Y-%m-%d %H:%M:%S")
 		df = time.strftime("%Y-%m-%dT%H:%M:00Z",df)
 	
 		for p in res['locations']:
@@ -281,14 +281,14 @@ def generate_file( db, filename, type, labelType, dateto ):
 			comm =  locs['kommentar']
 			sev  =  locs['severity']
 	
-			type  =  locs['type']
+			ty  =  locs['type']
 			
 			# print latlon
 				
 			for name,lon,lat in latlon:
 				
 				if first == 0:
-					fil.write(KML_AREA_NEW % (name,value,df,dt,type,sev,comm)) #name, description, vfrom,vto
+					fil.write(repr(KML_AREA_NEW % (name,value,df,dt,ty,sev,comm))) #name, description, vfrom,vto
 					first_lat = lat
 					first_lon = lon
 					
