@@ -9,7 +9,7 @@ setup(
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.1.0",
-    py_modules=["generatecap","fare_utilities"],
+    version="0.1.1",
+    py_modules=["generatecap","fare_utilities","faremeldinger_v2"],
     scripts=["faremeldinger.py"]
     )
