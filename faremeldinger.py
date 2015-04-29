@@ -116,6 +116,9 @@ KML_AREA = """    <Placemark>
         <Data name="met:style:type">
           <value>Gale warning</value>
         </Data>
+        <Data name="met:style:fillcolour">
+          <value>yellow</value>
+        </Data>
         <Data name="met:severity">
           <value>yellow</value>
         </Data>	

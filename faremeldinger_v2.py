@@ -56,6 +56,9 @@ KML_AREA_NEW_FARE = """	<Placemark>
 		<Data name="met:info:type">
 		  <value>%s</value>
 		</Data>
+                <Data name="met:style:fillcolour">
+                   <value>%s</value>
+                </Data>
 		<Data name="met:info:severity">
 		  <value>%s</value>
 		</Data>	
@@ -230,7 +233,7 @@ def generate_file_fare( db, filename, type, labelType, dateto ):
 			for name,lon,lat in latlon:
 				
 				if first == 0:
-					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,comm), "iso-8859-1")
+					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,sev,comm), "iso-8859-1")
 					fil.write(area) #name, description, vfrom,vto
 					first_lat = lat
 					first_lon = lon
