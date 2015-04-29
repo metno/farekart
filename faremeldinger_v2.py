@@ -78,7 +78,7 @@ def get_xml_doc( db, dateto):
 	
 	# print db, dateto
 	
-	select_string="select value from document where name = \"X_test_Farevarsel_B\" and vto > \"%s \" " %	dateto
+	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
 
 	# print select_string
 	
