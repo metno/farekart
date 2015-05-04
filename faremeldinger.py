@@ -392,10 +392,19 @@ if __name__ == "__main__":
 
 ### Farevarsler
 
+ 	select_string="select value from document where name = \"MIfare\" and vto > \"%s \" " %	now
+
 	filename = "%s/Current_fare.kml" %  dirname
 
-	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now )
+	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
 
+### Farevarsler TEST
+
+ 	select_string="select value from document where name = \"X_test_Farevarsel_B\" and vto > \"%s \" " % now
+
+	filename = "%s/Current_fare_test.kml" %  dirname
+
+	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
 
 
 ## Close

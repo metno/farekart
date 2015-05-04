@@ -73,12 +73,12 @@ KML_AREA_NEW_FARE = """	<Placemark>
 		   <coordinates>"""
 
 
-def get_xml_doc( db, dateto):
+def get_xml_doc( db, dateto,select_string):
 	"""Retrieve a full document from the data base."""
 	
 	# print db, dateto
 	
-	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
+# 	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
 
 	# print select_string
 	
@@ -180,7 +180,7 @@ def retrieve_from_xml( value ):
 	
 	return results
 
-def generate_file_fare( db, filename, type, labelType, dateto ):
+def generate_file_fare( db, filename, type, labelType, dateto, selectString ):
 	"""Writes the given locations to a file. First as AREAS then as LABELs"""
 		
 	# fil = open(filename,'w')
@@ -188,7 +188,7 @@ def generate_file_fare( db, filename, type, labelType, dateto ):
 	
 	fil.write(KML_HEADING_FARE % type)
 	
-	doc = get_xml_doc( db, dateto)
+	doc = get_xml_doc( db, dateto, selectString)
 	
 	# print doc
 	
@@ -278,9 +278,11 @@ if __name__ == "__main__":
 
 ### Farevarsler
 
+ 	select_string="select value from document where name = \"MIfare\" and vto > \"%s \" " %	now
+
 	filename = "%s/Current_fare.kml" %  dirname
 
-	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now )
+	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
 
 
 ## Close
