@@ -53,12 +53,15 @@ KML_AREA_NEW_FARE = """	<Placemark>
 		<Data name="met:objectType">
 		  <value>PolyLine</value>
 		</Data>
+		<Data name="met:style:type">
+           <value>Dangerous weather warning</value>
+        </Data>
 		<Data name="met:info:type">
 		  <value>%s</value>
 		</Data>
-                <Data name="met:style:fillcolour">
-                   <value>%s</value>
-                </Data>
+        <Data name="met:style:fillcolour">
+           <value>%s</value>
+        </Data>
 		<Data name="met:info:severity">
 		  <value>%s</value>
 		</Data>	

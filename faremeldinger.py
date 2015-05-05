@@ -40,7 +40,7 @@ KML_VALIDLABEL = """    <Placemark>
           <value>Text</value>
         </Data>
         <Data name="met:style:type">
-          <value>Label</value>
+          <value>Dangerous weather warning</value>
         </Data>
         <Data name="met:layerId">
           <value>0</value>
@@ -81,7 +81,7 @@ KML_VALIDLABEL_OL = """    <Placemark>
           <value>Text</value>
         </Data>
         <Data name="met:style:type">
-          <value>Label</value>
+          <value>Dangerous weather warnig</value>
         </Data>
         <Data name="met:layerId">
           <value>0</value>
