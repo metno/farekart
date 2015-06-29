@@ -19,14 +19,6 @@ KML_HEADING = """<?xml version="1.0" encoding="iso-8859-1"?>
 
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <ExtendedData>
-      <Data name="met:layer:0:name">
-        <value>%s</value>
-      </Data>
-      <Data name="met:layer:0:visible">
-        <value>true</value>
-      </Data>
-    </ExtendedData>
 """
 
 KML_END = """  </Document>
@@ -41,9 +33,6 @@ KML_VALIDLABEL = """    <Placemark>
         </Data>
         <Data name="met:style:type">
           <value>Dangerous weather warning</value>
-        </Data>
-        <Data name="met:layerId">
-          <value>0</value>
         </Data>
         <Data name="met:text">
           <value>GYLDIGE ADVARSLER PR
@@ -83,9 +72,6 @@ KML_VALIDLABEL_OL = """    <Placemark>
         <Data name="met:style:type">
           <value>Dangerous weather warnig</value>
         </Data>
-        <Data name="met:layerId">
-          <value>0</value>
-        </Data>
         <Data name="met:text">
           <value>GYLDIGE ADVARSLER PR
 %s</value>
@@ -116,10 +102,13 @@ KML_AREA = """    <Placemark>
         <Data name="met:style:type">
           <value>Gale warning</value>
         </Data>
+        <Data name="met:info:type">
+          <value>Gale warning</value>
+        </Data>
         <Data name="met:style:fillcolour">
           <value>yellow</value>
         </Data>
-        <Data name="met:severity">
+        <Data name="met:info:severity">
           <value>yellow</value>
         </Data>	
       </ExtendedData>
@@ -145,9 +134,6 @@ KML_TEXT = """    <Placemark>
         </Data>
         <Data name="met:style:type">
           <value>%s</value>
-        </Data>
-        <Data name="met:layerId">
-          <value>0</value>
         </Data>
         <Data name="met:text">
           <value>%s</value>

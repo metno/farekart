@@ -19,14 +19,6 @@ KML_HEADING_FARE = """<?xml version="1.0" encoding="UTF-8"?>
 
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-	<ExtendedData>
-	  <Data name="met:layer:0:name">
-		<value>%s</value>
-	  </Data>
-	  <Data name="met:layer:0:visible">
-		<value>true</value>
-	  </Data>
-	</ExtendedData>
 """
 
 KML_END_FARE = """  </Document>
