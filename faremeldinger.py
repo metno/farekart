@@ -184,7 +184,7 @@ def generate_file( locations, db, filename, type, labelType ):
 
 	fil = open(filename,'w')
 
-	fil.write(KML_HEADING % type)
+	fil.write(KML_HEADING)
 
 	for n in range(len(locations)):
 
@@ -235,7 +235,7 @@ def generate_file_ol( locations, db, filename, type, labelType ):
 
 	name = "%s warnings at %s" % ( type, now )
 
-	fil.write(KML_HEADING % type)
+	fil.write(KML_HEADING)
 
 #	fil.write(KML_VALIDLABEL_OL % (now,now) )
 
@@ -386,7 +386,7 @@ if __name__ == "__main__":
 
 ### Farevarsler TEST
 
- 	select_string="select value from document where name = \"X_test_Farevarsel_B\" and vto > \"%s \" " % now
+ 	select_string="select value from document where name = \"x_test_MIfare\" and vto > \"%s \" " % now
 
 	filename = "%s/Current_fare_test.kml" %  dirname
 

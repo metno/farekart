@@ -60,6 +60,15 @@ KML_AREA_NEW_FARE = """	<Placemark>
 		<Data name="met:info:comment">
 		  <value>%s</value>
 		</Data>
+		<Data name="met:info:Certainty">
+ 		  <value>%s</value>
+ 		</Data>
+ 		<Data name="met:info:Triggerlevel">
+ 		  <value>%s</value>
+ 		</Data>
+ 		<Data name="met:info:English">
+ 		  <value>%s</value>
+ 		</Data>
 	  </ExtendedData>
 	  <Polygon>
 		<tessellate>1</tessellate>
@@ -109,13 +118,34 @@ def retrieve_from_xml( value ):
 	
 		root		 = ET.fromstring(xmldoc)
 	
+		vto = None
+		vfrom = None
+		ty = None
+ 
+		for t in root.iter('time'):
+			# print "Tag: ",t.tag, " Attrib: ", t.attrib
+	
+			vto = t.get('vto')
+			vfrom = t.get('vfrom')
+
+			for keyword in t.iter('keyword'):
+ 			
+				nam = keyword.get('name')
+ 				
+				if nam == "type":
+					ty = keyword.find('in').text
+
+
+ 		# Foreach time, Ony one in each time.	
 		for location in root.iter('location'):
 		
 			name = None
 			varsel = None
 			nam = None
 			severity = None
-			ty = None
+			certainty = None
+			triggLevel = None
+			english = None
 			kommentar = None
 			id = None
 			loc = {}
@@ -125,16 +155,26 @@ def retrieve_from_xml( value ):
 			name = location.find('header').text
 			varsel = location.find('in').text
 		
+			for param in location.findall('parameter'):
+			
+				nam =  param.get('name')
+ 
+				if nam == "severity":
+					severity = param.find('in').text					
+				elif nam =="certainty":
+					certainty = param.find('in').text
+				elif nam =="triggerlevel":
+					triggLevel = param.find('in').text
+				elif nam =="english":
+					english = param.find('in').text
+ 
 			for keyword in location.iter('keyword'):
 		
 				nam = keyword.get('name')
 		
-				if nam == "severity":
-					severity = keyword.find('in').text
-				elif nam =="type":
-					ty = keyword.find('in').text
-				elif nam =="kommentar":
+				if nam =="kommentar":
 					kommentar = keyword.find('in').text
+					
 
 			# print "---------------------"
 			if name:	  name = name.encode('iso-8859-1')
@@ -142,6 +182,9 @@ def retrieve_from_xml( value ):
 			if severity:  severity = severity.encode('iso-8859-1')
 			if ty:	  ty = ty.encode('iso-8859-1')
 			if kommentar: kommentar = kommentar.encode('iso-8859-1')
+			if certainty:  certainty = certainty.encode('iso-8859-1')
+			if triggLevel:  triggLevel = triggLevel.encode('iso-8859-1')
+			if english:  english = english.encode('iso-8859-1')
 			# print "---------------------"
 
 			loc['id'] = id
@@ -150,20 +193,13 @@ def retrieve_from_xml( value ):
 			loc['severity'] = severity
 			loc['type'] = ty
 			loc['kommentar'] = kommentar
+			loc['certainty'] = certainty
+			loc['triggerlevel'] = triggLevel
+			loc['english'] = english
 	
 			n = n + 1
 
 			locations[n] = loc
-
-		for t in root.iter('time'):
-			# print "Tag: ",t.tag, " Attrib: ", t.attrib
-	
-			vto = t.get('vto')
-			vfrom = t.get('vfrom')
-	
-			# print vfrom
-			# print vto
-
 
 		res['locations']= locations
 		res['vfrom']= vfrom
@@ -181,7 +217,7 @@ def generate_file_fare( db, filename, type, labelType, dateto, selectString ):
 	# fil = open(filename,'w')
 	fil = codecs.open(filename,'w','utf-8')
 	
-	fil.write(KML_HEADING_FARE % type)
+	fil.write(KML_HEADING_FARE)
 	
 	doc = get_xml_doc( db, dateto, selectString)
 	
@@ -222,13 +258,16 @@ def generate_file_fare( db, filename, type, labelType, dateto, selectString ):
 			sev  =  locs['severity']
 	
 			ty  =  locs['type']
-			
+			cer  =  locs['certainty']
+			tri  =  locs['triggerlevel']
+			eng  =  locs['english']
+		
 			# print latlon
 				
 			for name,lon,lat in latlon:
 				
 				if first == 0:
-					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,sev,comm), "iso-8859-1")
+					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,sev,comm,cer,tri,eng), "iso-8859-1")
 					fil.write(area) #name, description, vfrom,vto
 					first_lat = lat
 					first_lon = lon
