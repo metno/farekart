@@ -188,7 +188,7 @@ def generate_file_cap_fare( selectString, dateto, db, filename, type, labelType 
 			fil.write("%f,%f,0\n"%(first_lon,first_lat))
 			fil.write(CAP_AREA_END)
 	
-		fil.write(CAP_INFO_END)
+			fil.write(CAP_INFO_END)
 
 	fil.write(CAP_ALERT_END)
 
