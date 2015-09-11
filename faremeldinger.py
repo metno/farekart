@@ -337,10 +337,6 @@ if __name__ == "__main__":
 		filename = "%s/Current_gale_ol.kml" % dirname
 		generate_file_ol( locations,db, filename, "Gale warning", "Label Gale" )
 
-#	filename = "%s/Current_gale.cap.txt" % dirname
-#
-#	generate_file_cap(locations,db, filename, "Gale warning", "Gale Warning")
-
 ### OBS warnings
 
 	select_string="select name,vfrom,vto,location, value from forecast where vto > \"%s \" and name in (\"VA_Obsvarsel\",\"VV_Obsvarsel\",\"VN_Obsvarsel\") order by vto desc" % now
@@ -354,10 +350,6 @@ if __name__ == "__main__":
 	if OpenLayer:
 		filename = "%s/Current_obs_ol.kml" % dirname
 		generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
-
-#	filename = "%s/Current_obs.cap.txt" % dirname
-#
-#	generate_file_cap(locations,db, filename, "Obs warning", "Severe weather")
 
 ### Extreme forecasts
 
@@ -373,10 +365,6 @@ if __name__ == "__main__":
 		filename = "%s/Current_extreme_ol.kml" % dirname
 		generate_file_ol(locations,db, filename, "Extreme forecast", "Label Extreme")
 
-#	filename = "%s/Current_extreme.cap.txt" % dirname
-#
-#	generate_file_cap(locations,db, filename, "Extreme forecast", "Extreme weather")
-
 ### Farevarsler
 
  	select_string="select value from document where name = \"MIfare\" and vto > \"%s \" " %	now
@@ -385,9 +373,9 @@ if __name__ == "__main__":
 
 	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
 
-	filename = "%s/MIfare.cap" %  dirname
+	filebase = "%s/MIfare" %  dirname
 
-	generate_file_cap_fare(select_string, now,db, filename, "Dangerous weather warning", "Weather warnings")
+	generate_file_cap_fare(select_string,  now ,db, filebase, "Dangerous weather warning", "Weather warnings")
 
 ### Farevarsler TEST
 

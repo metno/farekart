@@ -121,6 +121,11 @@ def retrieve_from_xml( value ):
 		vto = None
 		vfrom = None
 		ty = None
+		sender = None
+		type = None
+		id = None
+		mnr = None
+		eventname=None
  
 		for t in root.iter('time'):
 			# print "Tag: ",t.tag, " Attrib: ", t.attrib
@@ -133,8 +138,19 @@ def retrieve_from_xml( value ):
 				nam = keyword.get('name')
  				
 				if nam == "type":
-					ty = keyword.find('in').text
+					type = keyword.find('in').text
+				elif nam == "ID":
+					id = keyword.find('in').text
+				elif nam == "mnr":
+					mnr = keyword.find('in').text
+				elif nam == "sender":
+					sender = keyword.find('in').text
+				elif nam == "navn":
+					eventname = keyword.find('in').text
 
+		for p in root.iter('productdescription'):
+	
+			termin = p.get('termin')
 
  		# Foreach time, Ony one in each time.	
 		for location in root.iter('location'):
@@ -144,57 +160,74 @@ def retrieve_from_xml( value ):
 			nam = None
 			severity = None
 			certainty = None
-			triggLevel = None
+			trigglevel = None
 			english = None
 			kommentar = None
-			id = None
+			pictlink = None
+			retperiode = None
+			consequence = None
+			infolink = None
+			
 			loc = {}
 		
 		
-			id = location.get('id')
-			name = location.find('header').text
-			varsel = location.find('in').text
+			l_id = location.get('id')
+			l_name = location.find('header').text
 		
 			for param in location.findall('parameter'):
 			
 				nam =  param.get('name')
  
-				if nam == "severity":
+				if nam =="varsel" :
+					varsel = param.find('in').text
+				elif nam == "severity":
 					severity = param.find('in').text					
 				elif nam =="certainty":
 					certainty = param.find('in').text
+				elif nam == "picturelink":
+					pictlink = param.find('in').text
+				elif nam == "returnperiod":
+					retperiode = param.find('in').text
+				elif nam == "consequence":
+					consequence = param.find('in').text
+				elif nam == "infolink":
+					infolink = param.find('in').text
 				elif nam =="triggerlevel":
-					triggLevel = param.find('in').text
-				elif nam =="english":
+					trigglevel = param.find('in').text
+				elif nam =="englishforecast":
 					english = param.find('in').text
+				elif nam =="coment":
+					kommentar = param.find('in').text
+				
  
-			for keyword in location.iter('keyword'):
-		
-				nam = keyword.get('name')
-		
-				if nam =="kommentar":
-					kommentar = keyword.find('in').text
-					
-
 			# print "---------------------"
 			if name:	  name = name.encode('iso-8859-1')
+			if ty:	  ty = ty.encode('iso-8859-1')
 			if varsel:	varsel = varsel.encode('iso-8859-1')
 			if severity:  severity = severity.encode('iso-8859-1')
-			if ty:	  ty = ty.encode('iso-8859-1')
-			if kommentar: kommentar = kommentar.encode('iso-8859-1')
 			if certainty:  certainty = certainty.encode('iso-8859-1')
-			if triggLevel:  triggLevel = triggLevel.encode('iso-8859-1')
+			if pictlink:  pictlink = pictlink.encode('iso-8859-1')
+			if infolink:  infolink = infolink.encode('iso-8859-1')
+			if retperiode:  retperiode = retperiode.encode('iso-8859-1')
+			if consequence:  consequence = consequence.encode('iso-8859-1')
+			if kommentar: kommentar = kommentar.encode('iso-8859-1')
+			if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
 			if english:  english = english.encode('iso-8859-1')
+			if l_name:  l_name = l_name.encode('iso-8859-1')
 			# print "---------------------"
 
-			loc['id'] = id
-			loc['name'] = name
+			loc['name'] = l_name
+			loc['id'] = l_id
+			loc['type'] = ty
 			loc['varsel'] = varsel
 			loc['severity'] = severity
-			loc['type'] = ty
-			loc['kommentar'] = kommentar
 			loc['certainty'] = certainty
-			loc['triggerlevel'] = triggLevel
+			loc['pictlink'] = pictlink
+			loc['infolink'] = infolink
+			loc['retperiode'] = retperiode
+			loc['consequence'] = consequence
+			loc['kommentar'] = kommentar
+			loc['triggerlevel'] = trigglevel
 			loc['english'] = english
 	
 			n = n + 1
@@ -204,6 +237,13 @@ def retrieve_from_xml( value ):
 		res['locations']= locations
 		res['vfrom']= vfrom
 		res['vto']=vto
+		res['termin']=termin
+		res['eventname']=eventname
+		res['sender']=sender
+		res['type']=type 
+		res['id']=id
+		res['mnr']=mnr
+		
 	
 		results[i] = res
 		i = i + 1

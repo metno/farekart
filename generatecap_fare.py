@@ -12,7 +12,7 @@
 import codecs
 import sys
 import uuid
-import time
+from datetime import datetime
 import os
 
 from fare_utilities import *
@@ -51,6 +51,12 @@ CAP_INFO = """
 <cap:effective>%s</cap:effective>
 <cap:expires>%s</cap:expires>
 
+<cap:description>%s</cap:description>
+<cap:instruction>%s</cap:instruction>
+<cap:web>%s</cap:web>
+<cap:sendername>%s</cap:sendername>
+
+
 """
 #Cap_info needs : event-type, urgency, serverity, certainty, effective time, expire time 
 
@@ -61,6 +67,7 @@ CAP_RESOURCE = """
 
 <cap:resourceDesc>%s</cap:resourceDesc>
 <cap:mimeType>%s</cap:mimeType>  <!-- RFC 2046 compliant or http://www.iana.org/assignments/media-types/ -->
+<cap:uri>%s</cap:uri>
 
 </resource>
 """
@@ -69,6 +76,7 @@ CAP_RESOURCE = """
 CAP_AREA = """
 <cap:area>
 <cap:areaDesc>%s</cap:areaDesc>
+<cap:geoCode>%s</cap:geoCode>
 
 <cap:polygon>
 """
@@ -92,7 +100,27 @@ CAP_ALERT_END = """
 </cap:alert>
 """
 
-def generate_file_cap_fare( selectString, dateto, db, filename, type, labelType ):
+def get_urgency( date_from, now ):
+	"""Finds the Urgency based on the valid from date 
+	and the current date """
+	
+	f = datetime.strptime( date_from, "%Y-%m-%dT%H:%M:00Z")
+	n = datetime.strptime( now      , "%Y-%m-%dT%H:00:00-00:00")
+	
+	dif = f - n
+	
+	# print "dif is ", dif, f, n, dif.total_seconds()
+	
+	if dif.total_seconds() < 0:
+		return "Immediate"
+	if dif.total_seconds() < 3600:
+		return "Expected"
+	
+	return "Future"
+	
+	
+
+def generate_file_cap_fare( selectString, dateto, db, filebase, type, labelType ):
 	"""Writes the given locations to a file. 
 	   Version for CAP use.
 
@@ -117,38 +145,52 @@ def generate_file_cap_fare( selectString, dateto, db, filename, type, labelType 
 	
 	results = retrieve_from_xml( doc )
 	
-	numAreas = 0
+#	print "# results : ", len(results)
+	
+	for i in results:
+	
+		numAreas = 0
 
-	fil = codecs.open(filename,'w','utf-8')
+		res = results[i]
+	
+		sender= res['sender']
+		eventname = res['eventname']
+		l_type = res['type']
+		mnr  = res['mnr']
 
-	symbols = []
+		tt = datetime.strptime(res['termin'],"%Y-%m-%d %H:%M:%S")
+		tt = tt.strftime("%Y-%m-%dT%H:%M:00Z")
+		
+		filename = filebase + "_" + tt + ".cap"	
+	
+		fil = codecs.open(filename,'w','utf-8')
 
-	now = time.strftime("%Y-%m-%dT%H:00:00-00:00")
+		symbols = []
 
-	name = "%s at %s" % ( type, now )
+		now = datetime.now().strftime("%Y-%m-%dT%H:00:00-00:00")
 
-	randomIdentifier= uuid.uuid4()
+		name = "%s at %s" % ( type, now )
 
-	fil.write(CAP_HEADING )
+#		identifier= uuid.uuid4()
+		identifier = res['id']
 
-	fil.write(CAP_ALERT % (
-				randomIdentifier, 
+		fil.write(CAP_HEADING )
+
+		fil.write(CAP_ALERT % (
+				identifier, 
 				"helpdesk@met.no",
 				now,
-				type,
+				l_type,
 				"Norway" )
 			  )
 
-
-	for i in results:
-	
-		res = results[i]
-	
-		dt = time.strptime(res['vto'],"%Y-%m-%d %H:%M:%S")
-		dt = time.strftime("%Y-%m-%dT%H:%M:00Z",dt)
+		dt = datetime.strptime(res['vto'],"%Y-%m-%d %H:%M:%S")
+		dt = dt.strftime("%Y-%m-%dT%H:%M:00Z")
 		
-		df = time.strptime(res['vfrom'],"%Y-%m-%d %H:%M:%S")
-		df = time.strftime("%Y-%m-%dT%H:%M:00Z",df)
+		df = datetime.strptime(res['vfrom'],"%Y-%m-%d %H:%M:%S")
+		df = df.strftime("%Y-%m-%dT%H:%M:00Z")
+		
+		urgency = get_urgency( dt, now )
 
 		for p in res['locations']:
 		
@@ -162,21 +204,32 @@ def generate_file_cap_fare( selectString, dateto, db, filename, type, labelType 
 			comm =  locs['kommentar']
 			sev  =  locs['severity']
 	
-			ty  =  locs['type']
+			ty  =   locs['type']
 			cer  =  locs['certainty']
 			tri  =  locs['triggerlevel']
 			eng  =  locs['english']
+			name =  locs['name']
+			l_id =  locs['id']
+			cons =  locs['consequence']
+			pict =  locs['pictlink']
+			info =  locs['infolink']
 		
+			if pict:
+				fil.write( CAP_RESOURCE %( "Grafiske beskrivelse av farevarslet","image/png",pict) )
+				
+			if info:
+				fil.write( CAP_RESOURCE %( "Tilleggsinformasjon tilgjengelig fra andre","text/html",info) )
+				
 			for name,lon,lat in latlon:
 				
 				if first == 0:
 					numAreas = numAreas + 1
 
 					#Cap_info needs : event-type, urgency, serverity, certainty, effective time, expire time 
-					fil.write(CAP_INFO % (ty, "Expected",sev, cer, df, dt  ))
+					fil.write(CAP_INFO % (ty, urgency, sev, cer, df, dt, value, cons, "http://www.yr.no", sender  ))
 	
 					#CAP_Area needs:  Description
-					area = unicode(CAP_AREA % value, "iso-8859-1")
+					area = unicode(CAP_AREA % (name, l_id ), "iso-8859-1")
 					
 					fil.write(area)
 					first_lat = lat
@@ -190,13 +243,13 @@ def generate_file_cap_fare( selectString, dateto, db, filename, type, labelType 
 	
 			fil.write(CAP_INFO_END)
 
-	fil.write(CAP_ALERT_END)
+		fil.write(CAP_ALERT_END)
 
-	fil.close()
+		fil.close()
 
-	# If no areas found, remove file.
-	if numAreas < 1:
-		os.remove(filename)
+		# If no areas found, remove file.
+		if numAreas < 1:
+			os.remove(filename)
 
 	return 0
 
