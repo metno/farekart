@@ -96,6 +96,10 @@ def get_xml_doc( db, dateto,select_string):
 		return None
 	
 	return result
+
+
+
+
 	
 def retrieve_from_xml( value ):
 	"""Retrieves some parameters from the XML text and returns as list."""
@@ -139,18 +143,21 @@ def retrieve_from_xml( value ):
  				
 				if nam == "type":
 					type = keyword.find('in').text
-				elif nam == "ID":
-					id = keyword.find('in').text
 				elif nam == "mnr":
 					mnr = keyword.find('in').text
 				elif nam == "sender":
 					sender = keyword.find('in').text
 				elif nam == "navn":
 					eventname = keyword.find('in').text
+					
 
-		for p in root.iter('productdescription'):
-	
-			termin = p.get('termin')
+			for header in root.iter('productheader'):
+				id=header.find('dockey').text
+			
+			for p in root.iter('productdescription'):
+				termin = p.get('termin')
+
+
 
  		# Foreach time, Ony one in each time.	
 		for location in root.iter('location'):
