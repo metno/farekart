@@ -4,7 +4,7 @@
 # Lese aktuelle Farevarsler fra TED databasen og lage Produkt som kan vises i DIANA.
 #
 # Author:
-#  BÃ¥rd Fjukstad.  Mar. 2015
+# Bård Fjukstad.  Mar. 2015
 import codecs
 import sys
 import MySQLdb
@@ -77,259 +77,398 @@ KML_AREA_NEW_FARE = """	<Placemark>
 		   <coordinates>"""
 
 
-def get_xml_doc( db, dateto,select_string):
-	"""Retrieve a full document from the data base."""
-	
-	# print db, dateto
-	
-# 	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
+def get_xml_docs(db, dateto, select_string):
+    """Retrieve a full document from the data base."""
 
-	# print select_string
-	
-	try:
-		cur = db.cursor()
-		cur.execute(select_string)
-		result = cur.fetchall()
+    # print db, dateto
 
-	except MySQLdb.Error, e:
-		print "Error %d: %s" % (e.args[0], e.args[1])
-		return None
-	
-	return result
+    # 	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
 
+    # print select_string
 
+    try:
+        cur = db.cursor()
+        cur.execute(select_string)
+        result = cur.fetchall()
+
+    except MySQLdb.Error, e:
+        print "Error %d: %s" % (e.args[0], e.args[1])
+        return None
+
+    return result
 
 
-	
-def retrieve_from_xml( value ):
-	"""Retrieves some parameters from the XML text and returns as list."""
+def retrieve_from_xml_fare(xmldoc):
+    """Retrieves some parameters from the XML text and returns as list."""
 
-	results = {}
-	i = 0
+    vto = None
+    vfrom = None
+    locations = {}
+    res={}
+    n = 0
 
-	for doc in value:
-	
-		vto = None
-		vfrom = None
-		locations = {}
-		res = {}
-	
-		n = 0
-	
-		xmldoc =  doc[0]
-	
-		# print xmldoc
-	
-		root		 = ET.fromstring(xmldoc)
-	
-		vto = None
-		vfrom = None
-		ty = None
-		sender = None
-		type = None
-		id = None
-		mnr = None
-		eventname=None
- 
-		for t in root.iter('time'):
-			# print "Tag: ",t.tag, " Attrib: ", t.attrib
-	
-			vto = t.get('vto')
-			vfrom = t.get('vfrom')
+    # print xmldoc
 
-			for keyword in t.iter('keyword'):
- 			
-				nam = keyword.get('name')
- 				
-				if nam == "type":
-					type = keyword.find('in').text
-				elif nam == "mnr":
-					mnr = keyword.find('in').text
-				elif nam == "sender":
-					sender = keyword.find('in').text
-				elif nam == "navn":
-					eventname = keyword.find('in').text
-					
+    root = ET.fromstring(xmldoc)
 
-			for header in root.iter('productheader'):
-				id=header.find('dockey').text
-			
-			for p in root.iter('productdescription'):
-				termin = p.get('termin')
+    vto = None
+    vfrom = None
+    ty = None
+    sender = None
+    type = None
+    id = None
+    mnr = None
+    eventname = None
+
+    for t in root.iter('time'):
+        # print "Tag: ",t.tag, " Attrib: ", t.attrib
+
+        vto = t.get('vto')
+        vfrom = t.get('vfrom')
+
+        for keyword in t.iter('keyword'):
+
+            nam = keyword.get('name')
+
+            if nam == "type":
+                type = keyword.find('in').text
+            elif nam == "mnr":
+                mnr = keyword.find('in').text
+            elif nam == "sender":
+                sender = keyword.find('in').text
+            elif nam == "navn":
+                eventname = keyword.find('in').text
+
+        for header in root.iter('productheader'):
+            id = header.find('dockey').text
+
+        for p in root.iter('productdescription'):
+            termin = p.get('termin')
 
 
 
- 		# Foreach time, Ony one in each time.	
-		for location in root.iter('location'):
-		
-			name = None
-			varsel = None
-			nam = None
-			severity = None
-			certainty = None
-			trigglevel = None
-			english = None
-			kommentar = None
-			pictlink = None
-			retperiode = None
-			consequence = None
-			infolink = None
-			
-			loc = {}
-		
-		
-			l_id = location.get('id')
-			l_name = location.find('header').text
-		
-			for param in location.findall('parameter'):
-			
-				nam =  param.get('name')
- 
-				if nam =="varsel" :
-					varsel = param.find('in').text
-				elif nam == "severity":
-					severity = param.find('in').text					
-				elif nam =="certainty":
-					certainty = param.find('in').text
-				elif nam == "picturelink":
-					pictlink = param.find('in').text
-				elif nam == "returnperiod":
-					retperiode = param.find('in').text
-				elif nam == "consequence":
-					consequence = param.find('in').text
-				elif nam == "infolink":
-					infolink = param.find('in').text
-				elif nam =="triggerlevel":
-					trigglevel = param.find('in').text
-				elif nam =="englishforecast":
-					english = param.find('in').text
-				elif nam =="coment":
-					kommentar = param.find('in').text
-				
- 
-			# print "---------------------"
-			if name:	  name = name.encode('iso-8859-1')
-			if ty:	  ty = ty.encode('iso-8859-1')
-			if varsel:	varsel = varsel.encode('iso-8859-1')
-			if severity:  severity = severity.encode('iso-8859-1')
-			if certainty:  certainty = certainty.encode('iso-8859-1')
-			if pictlink:  pictlink = pictlink.encode('iso-8859-1')
-			if infolink:  infolink = infolink.encode('iso-8859-1')
-			if retperiode:  retperiode = retperiode.encode('iso-8859-1')
-			if consequence:  consequence = consequence.encode('iso-8859-1')
-			if kommentar: kommentar = kommentar.encode('iso-8859-1')
-			if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
-			if english:  english = english.encode('iso-8859-1')
-			if l_name:  l_name = l_name.encode('iso-8859-1')
-			# print "---------------------"
+    # Foreach time, Ony one in each time.
+    for location in root.iter('location'):
 
-			loc['name'] = l_name
-			loc['id'] = l_id
-			loc['type'] = ty
-			loc['varsel'] = varsel
-			loc['severity'] = severity
-			loc['certainty'] = certainty
-			loc['pictlink'] = pictlink
-			loc['infolink'] = infolink
-			loc['retperiode'] = retperiode
-			loc['consequence'] = consequence
-			loc['kommentar'] = kommentar
-			loc['triggerlevel'] = trigglevel
-			loc['english'] = english
-	
-			n = n + 1
+        name = None
+        varsel = None
+        nam = None
+        severity = None
+        certainty = None
+        trigglevel = None
+        english = None
+        kommentar = None
+        pictlink = None
+        retperiode = None
+        consequence = None
+        infolink = None
 
-			locations[n] = loc
+        loc = {}
 
-		res['locations']= locations
-		res['vfrom']= vfrom
-		res['vto']=vto
-		res['termin']=termin
-		res['eventname']=eventname
-		res['sender']=sender
-		res['type']=type 
-		res['id']=id
-		res['mnr']=mnr
-		
-	
-		results[i] = res
-		i = i + 1
-	
-	
-	return results
+        l_id = location.get('id')
+        l_name = location.find('header').text
 
-def generate_file_fare( db, filename, type, labelType, dateto, selectString ):
-	"""Writes the given locations to a file. First as AREAS then as LABELs"""
-		
-	# fil = open(filename,'w')
-	fil = codecs.open(filename,'w','utf-8')
-	
-	fil.write(KML_HEADING_FARE)
-	
-	doc = get_xml_doc( db, dateto, selectString)
-	
-	# print doc
-	
-	results = retrieve_from_xml( doc )
-	
-	# print results
-	
-	# print results
-	
-	for i in results:
-	
-		res = results[i]
-	
-		dt = time.strptime(res['vto'],"%Y-%m-%d %H:%M:%S")
-		dt = time.strftime("%Y-%m-%dT%H:%M:00Z",dt)
-		
-		df = time.strptime(res['vfrom'],"%Y-%m-%d %H:%M:%S")
-		df = time.strftime("%Y-%m-%dT%H:%M:00Z",df)
-	
-		for p in res['locations']:
-		
-		  #print p
-	  
-		  locs = res['locations'][p]
-	  
-		  # print locs
-	  
-		  for n in locs['id'].split(":"):
-		  
-			# print n
-		
-			latlon = get_latlon(n,db)
-			first = 0
-			value = locs['varsel']
-			comm =  locs['kommentar']
-			sev  =  locs['severity']
-	
-			ty  =  locs['type']
-			cer  =  locs['certainty']
-			tri  =  locs['triggerlevel']
-			eng  =  locs['english']
-		
-			# print latlon
-				
-			for name,lon,lat in latlon:
-				
-				if first == 0:
-					area = unicode(KML_AREA_NEW_FARE % (name,value,df,dt,ty,sev,sev,comm,cer,tri,eng), "iso-8859-1")
-					fil.write(area) #name, description, vfrom,vto
-					first_lat = lat
-					first_lon = lon
-					
-				fil.write("%f,%f,0\n"%(lon,lat))
-				first= first + 1
-		
-			fil.write("%f,%f,0\n"%(first_lon,first_lat))
-			fil.write(KML_AREA_END_FARE)
+        for param in location.findall('parameter'):
 
-	fil.write(KML_END_FARE)
-	
-	fil.close()
-	
-	return 0
+            nam = param.get('name')
+
+            if nam == "varsel":
+                varsel = param.find('in').text
+            elif nam == "severity":
+                severity = param.find('in').text
+            elif nam == "certainty":
+                certainty = param.find('in').text
+            elif nam == "picturelink":
+                pictlink = param.find('in').text
+            elif nam == "returnperiod":
+                retperiode = param.find('in').text
+            elif nam == "consequence":
+                consequence = param.find('in').text
+            elif nam == "infolink":
+                infolink = param.find('in').text
+            elif nam == "triggerlevel":
+                trigglevel = param.find('in').text
+            elif nam == "englishforecast":
+                english = param.find('in').text
+            elif nam == "coment":
+                kommentar = param.find('in').text
+
+
+        # print "---------------------"
+        if name:      name = name.encode('iso-8859-1')
+        if ty:      ty = ty.encode('iso-8859-1')
+        if varsel:    varsel = varsel.encode('iso-8859-1')
+        if severity:  severity = severity.encode('iso-8859-1')
+        if certainty:  certainty = certainty.encode('iso-8859-1')
+        if pictlink:  pictlink = pictlink.encode('iso-8859-1')
+        if infolink:  infolink = infolink.encode('iso-8859-1')
+        if retperiode:  retperiode = retperiode.encode('iso-8859-1')
+        if consequence:  consequence = consequence.encode('iso-8859-1')
+        if kommentar: kommentar = kommentar.encode('iso-8859-1')
+        if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
+        if english:  english = english.encode('iso-8859-1')
+        if l_name:  l_name = l_name.encode('iso-8859-1')
+        # print "---------------------"
+
+        loc['name'] = l_name
+        loc['id'] = l_id
+        loc['type'] = ty
+        loc['varsel'] = varsel
+        loc['severity'] = severity
+        loc['certainty'] = certainty
+        loc['pictlink'] = pictlink
+        loc['infolink'] = infolink
+        loc['retperiode'] = retperiode
+        loc['consequence'] = consequence
+        loc['kommentar'] = kommentar
+        loc['triggerlevel'] = trigglevel
+        loc['english'] = english
+
+        n = n + 1
+
+        locations[n] = loc
+
+    res['locations'] = locations
+    res['vfrom'] = vfrom
+    res['vto'] = vto
+    res['termin'] = termin
+    res['eventname'] = eventname
+    res['sender'] = sender
+    res['type'] = type
+    res['id'] = id
+    res['mnr'] = mnr
+
+
+    return res
+
+
+def retrieve_from_xml(value):
+    """Retrieves some parameters from the XML text and returns as list."""
+
+    results = {}
+    i = 0
+
+    for doc in value:
+
+        vto = None
+        vfrom = None
+        locations = {}
+        res = {}
+
+        n = 0
+
+        xmldoc = doc[0]
+
+        # print xmldoc
+
+        root = ET.fromstring(xmldoc)
+
+        vto = None
+        vfrom = None
+        ty = None
+        sender = None
+        type = None
+        id = None
+        mnr = None
+        eventname = None
+
+        for t in root.iter('time'):
+            # print "Tag: ",t.tag, " Attrib: ", t.attrib
+
+            vto = t.get('vto')
+            vfrom = t.get('vfrom')
+
+            for keyword in t.iter('keyword'):
+
+                nam = keyword.get('name')
+
+                if nam == "type":
+                    type = keyword.find('in').text
+                elif nam == "mnr":
+                    mnr = keyword.find('in').text
+                elif nam == "sender":
+                    sender = keyword.find('in').text
+                elif nam == "navn":
+                    eventname = keyword.find('in').text
+
+            for header in root.iter('productheader'):
+                id = header.find('dockey').text
+
+            for p in root.iter('productdescription'):
+                termin = p.get('termin')
+
+
+
+        # Foreach time, Ony one in each time.
+        for location in root.iter('location'):
+
+            name = None
+            varsel = None
+            nam = None
+            severity = None
+            certainty = None
+            trigglevel = None
+            english = None
+            kommentar = None
+            pictlink = None
+            retperiode = None
+            consequence = None
+            infolink = None
+
+            loc = {}
+
+            l_id = location.get('id')
+            l_name = location.find('header').text
+
+            for param in location.findall('parameter'):
+
+                nam = param.get('name')
+
+                if nam == "varsel":
+                    varsel = param.find('in').text
+                elif nam == "severity":
+                    severity = param.find('in').text
+                elif nam == "certainty":
+                    certainty = param.find('in').text
+                elif nam == "picturelink":
+                    pictlink = param.find('in').text
+                elif nam == "returnperiod":
+                    retperiode = param.find('in').text
+                elif nam == "consequence":
+                    consequence = param.find('in').text
+                elif nam == "infolink":
+                    infolink = param.find('in').text
+                elif nam == "triggerlevel":
+                    trigglevel = param.find('in').text
+                elif nam == "englishforecast":
+                    english = param.find('in').text
+                elif nam == "coment":
+                    kommentar = param.find('in').text
+
+
+            # print "---------------------"
+            if name:      name = name.encode('iso-8859-1')
+            if ty:      ty = ty.encode('iso-8859-1')
+            if varsel:    varsel = varsel.encode('iso-8859-1')
+            if severity:  severity = severity.encode('iso-8859-1')
+            if certainty:  certainty = certainty.encode('iso-8859-1')
+            if pictlink:  pictlink = pictlink.encode('iso-8859-1')
+            if infolink:  infolink = infolink.encode('iso-8859-1')
+            if retperiode:  retperiode = retperiode.encode('iso-8859-1')
+            if consequence:  consequence = consequence.encode('iso-8859-1')
+            if kommentar: kommentar = kommentar.encode('iso-8859-1')
+            if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
+            if english:  english = english.encode('iso-8859-1')
+            if l_name:  l_name = l_name.encode('iso-8859-1')
+            # print "---------------------"
+
+            loc['name'] = l_name
+            loc['id'] = l_id
+            loc['type'] = ty
+            loc['varsel'] = varsel
+            loc['severity'] = severity
+            loc['certainty'] = certainty
+            loc['pictlink'] = pictlink
+            loc['infolink'] = infolink
+            loc['retperiode'] = retperiode
+            loc['consequence'] = consequence
+            loc['kommentar'] = kommentar
+            loc['triggerlevel'] = trigglevel
+            loc['english'] = english
+
+            n = n + 1
+
+            locations[n] = loc
+
+        res['locations'] = locations
+        res['vfrom'] = vfrom
+        res['vto'] = vto
+        res['termin'] = termin
+        res['eventname'] = eventname
+        res['sender'] = sender
+        res['type'] = type
+        res['id'] = id
+        res['mnr'] = mnr
+
+        results[i] = res
+        i = i + 1
+
+    return results
+
+
+def generate_file_fare(db, filename, type, labelType, dateto, selectString):
+    """Writes the given locations to a file. First as AREAS then as LABELs"""
+
+    # fil = open(filename,'w')
+    fil = codecs.open(filename, 'w', 'utf-8')
+
+    fil.write(KML_HEADING_FARE)
+
+    doc = get_xml_docs(db, dateto, selectString)
+
+    # print doc
+
+    results = retrieve_from_xml(doc)
+
+    # print results
+
+    # print results
+
+    for i in results:
+
+        res = results[i]
+
+        dt = time.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
+        dt = time.strftime("%Y-%m-%dT%H:%M:00Z", dt)
+
+        df = time.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
+        df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
+
+        for p in res['locations']:
+
+            #print p
+
+            locs = res['locations'][p]
+
+            # print locs
+
+            for n in locs['id'].split(":"):
+
+                # print n
+
+                latlon = get_latlon(n, db)
+                first = 0
+                value = locs['varsel']
+                comm = locs['kommentar']
+                sev = locs['severity']
+
+                ty = locs['type']
+                cer = locs['certainty']
+                tri = locs['triggerlevel']
+                eng = locs['english']
+
+                # print latlon
+
+                for name, lon, lat in latlon:
+
+                    if first == 0:
+                        area = unicode(KML_AREA_NEW_FARE % (name, value, df, dt, ty, sev, sev, comm, cer, tri, eng),
+                                       "iso-8859-1")
+                        fil.write(area)  #name, description, vfrom,vto
+                        first_lat = lat
+                        first_lon = lon
+
+                    fil.write("%f,%f,0\n" % (lon, lat))
+                    first = first + 1
+
+                fil.write("%f,%f,0\n" % (first_lon, first_lat))
+                fil.write(KML_AREA_END_FARE)
+
+    fil.write(KML_END_FARE)
+
+    fil.close()
+
+    return 0
 
 #
 # MAIN

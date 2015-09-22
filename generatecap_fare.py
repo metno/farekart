@@ -7,7 +7,7 @@
 #
 #
 # Author:
-#  BÃ¥rd Fjukstad.  Jan. 2015
+# Bård Fjukstad.  Jan. 2015
 #
 import codecs
 import sys
@@ -100,156 +100,162 @@ CAP_ALERT_END = """
 </cap:alert>
 """
 
-def get_urgency( date_from, now ):
-	"""Finds the Urgency based on the valid from date 
+
+def get_urgency(date_from, now):
+    """Finds the Urgency based on the valid from date
 	and the current date """
-	
-	f = datetime.strptime( date_from, "%Y-%m-%dT%H:%M:00Z")
-	n = datetime.strptime( now      , "%Y-%m-%dT%H:00:00-00:00")
-	
-	dif = f - n
-	
-	# print "dif is ", dif, f, n, dif.total_seconds()
-	
-	if dif.total_seconds() < 0:
-		return "Immediate"
-	if dif.total_seconds() < 3600:
-		return "Expected"
-	
-	return "Future"
-	
-	
 
-def generate_file_cap_fare( selectString, dateto, db, filebase, type, labelType ):
-	"""Writes the given locations to a file. 
-	   Version for CAP use.
+    f = datetime.strptime(date_from, "%Y-%m-%dT%H:%M:00Z")
+    n = datetime.strptime(now, "%Y-%m-%dT%H:00:00-00:00")
 
-	Structure:
+    dif = f - n
 
-			ALERT
-				|
-				| ---- One or more --  INFO
-				|						|
-				|						| -- one or more -- RESOURCE
-				|						|
-				|						| -- one or more -- AREA
-				|						|
-				|					end INFO
-				|
-			end ALERT
+    # print "dif is ", dif, f, n, dif.total_seconds()
+
+    if dif.total_seconds() < 0:
+        return "Immediate"
+    if dif.total_seconds() < 3600:
+        return "Expected"
+
+    return "Future"
+
+
+def generate_file_cap_fare(filename,xmldoc,db):
+        print ("generate_file_cap_fare",filename)
+        res = retrieve_from_xml_fare(xmldoc)
+        numAreas = 0
+        sender = res['sender']
+        eventname = res['eventname']
+        l_type = res['type']
+        mnr = res['mnr']
+
+
+        fil = codecs.open(filename, 'w', 'utf-8')
+
+        symbols = []
+
+        now = datetime.now().strftime("%Y-%m-%dT%H:00:00-00:00")
+
+        name = "%s at %s" % ( type, now )
+
+        #		identifier= uuid.uuid4()
+        identifier = res['id']
+
+        fil.write(CAP_HEADING)
+
+        fil.write(CAP_ALERT % (
+                    identifier,
+                    "helpdesk@met.no",
+                    now,
+                    l_type,
+                    "Norway" )
+                      )
+
+        dt = datetime.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
+        dt = dt.strftime("%Y-%m-%dT%H:%M:00Z")
+
+        df = datetime.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
+        df = df.strftime("%Y-%m-%dT%H:%M:00Z")
+
+        urgency = get_urgency(dt, now)
+
+        for p in res['locations']:
+
+            locs = res['locations'][p]
+
+            for n in locs['id'].split(":"):
+
+                latlon = get_latlon(n, db)
+                first = 0
+                value = locs['varsel']
+                comm = locs['kommentar']
+                sev = locs['severity']
+
+                ty = locs['type']
+                cer = locs['certainty']
+                tri = locs['triggerlevel']
+                eng = locs['english']
+                name = locs['name']
+                l_id = locs['id']
+                cons = locs['consequence']
+                pict = locs['pictlink']
+                info = locs['infolink']
+
+                if pict:
+                    fil.write(CAP_RESOURCE % ( "Grafiske beskrivelse av farevarslet", "image/png", pict))
+
+                if info:
+                        fil.write(CAP_RESOURCE % ( "Tilleggsinformasjon tilgjengelig fra andre", "text/html", info))
+
+                for name, lon, lat in latlon:
+
+                        if first == 0:
+                            numAreas = numAreas + 1
+
+                            #Cap_info needs : event-type, urgency, serverity, certainty, effective time, expire time
+                            fil.write(CAP_INFO % (ty, urgency, sev, cer, df, dt, value, cons, "http://www.yr.no", sender  ))
+
+                            #CAP_Area needs:  Description
+                            area = unicode(CAP_AREA % (name, l_id ), "iso-8859-1")
+
+                            fil.write(area)
+                            first_lat = lat
+                            first_lon = lon
+
+                        fil.write("%f,%f,0\n" % (lon, lat))
+                        first = first + 1
+
+                fil.write("%f,%f,0\n" % (first_lon, first_lat))
+                fil.write(CAP_AREA_END)
+
+            fil.write(CAP_INFO_END)
+
+        fil.write(CAP_ALERT_END)
+
+        fil.close()
+
+        print filename
+
+        # If no areas found, remove file.
+        if numAreas < 1:
+             os.remove(filename)
+        return 0
+
+
+def generate_files_cap_fare(selectString, dateto, db, filebase):
+        """Writes the given locations to a file.
+           Version for CAP use.
+
+        Structure:
+
+                ALERT
+                    |
+                    | ---- One or more --  INFO
+                    |						|
+                    |						| -- one or more -- RESOURCE
+                    |						|
+                    |						| -- one or more -- AREA
+                    |						|
+                    |					end INFO
+                    |
+                end ALERT
 
 """
 
+        docs = get_xml_docs(db, dateto, selectString)
+        for doc in docs:
 
-	doc = get_xml_doc( db, dateto, selectString)
-	
-	results = retrieve_from_xml( doc )
-	
-#	print "# results : ", len(results)
-	
-	for i in results:
-	
-		numAreas = 0
+            tt=doc[1]
+            tt = tt.strftime("%Y-%m-%dT%H:%M:00Z")
+            filename = filebase + "_" + tt + ".cap"
+            print filename
+            if (os.path.isfile(filename)):
+                print "File already exists!"
+            else:
+                xmldoc=doc[0]
+                generate_file_cap_fare(filename,xmldoc,db)
 
-		res = results[i]
-	
-		sender= res['sender']
-		eventname = res['eventname']
-		l_type = res['type']
-		mnr  = res['mnr']
 
-		tt = datetime.strptime(res['termin'],"%Y-%m-%d %H:%M:%S")
-		tt = tt.strftime("%Y-%m-%dT%H:%M:00Z")
-		
-		filename = filebase + "_" + tt + ".cap"	
-	
-		fil = codecs.open(filename,'w','utf-8')
 
-		symbols = []
-
-		now = datetime.now().strftime("%Y-%m-%dT%H:00:00-00:00")
-
-		name = "%s at %s" % ( type, now )
-
-#		identifier= uuid.uuid4()
-		identifier = res['id']
-
-		fil.write(CAP_HEADING )
-
-		fil.write(CAP_ALERT % (
-				identifier, 
-				"helpdesk@met.no",
-				now,
-				l_type,
-				"Norway" )
-			  )
-
-		dt = datetime.strptime(res['vto'],"%Y-%m-%d %H:%M:%S")
-		dt = dt.strftime("%Y-%m-%dT%H:%M:00Z")
-		
-		df = datetime.strptime(res['vfrom'],"%Y-%m-%d %H:%M:%S")
-		df = df.strftime("%Y-%m-%dT%H:%M:00Z")
-		
-		urgency = get_urgency( dt, now )
-
-		for p in res['locations']:
-		
-		  locs = res['locations'][p]
-	  
-		  for n in locs['id'].split(":"):
-		  
-			latlon = get_latlon(n,db)
-			first = 0
-			value = locs['varsel']
-			comm =  locs['kommentar']
-			sev  =  locs['severity']
-	
-			ty  =   locs['type']
-			cer  =  locs['certainty']
-			tri  =  locs['triggerlevel']
-			eng  =  locs['english']
-			name =  locs['name']
-			l_id =  locs['id']
-			cons =  locs['consequence']
-			pict =  locs['pictlink']
-			info =  locs['infolink']
-		
-			if pict:
-				fil.write( CAP_RESOURCE %( "Grafiske beskrivelse av farevarslet","image/png",pict) )
-				
-			if info:
-				fil.write( CAP_RESOURCE %( "Tilleggsinformasjon tilgjengelig fra andre","text/html",info) )
-				
-			for name,lon,lat in latlon:
-				
-				if first == 0:
-					numAreas = numAreas + 1
-
-					#Cap_info needs : event-type, urgency, serverity, certainty, effective time, expire time 
-					fil.write(CAP_INFO % (ty, urgency, sev, cer, df, dt, value, cons, "http://www.yr.no", sender  ))
-	
-					#CAP_Area needs:  Description
-					area = unicode(CAP_AREA % (name, l_id ), "iso-8859-1")
-					
-					fil.write(area)
-					first_lat = lat
-					first_lon = lon
-					
-				fil.write("%f,%f,0\n"%(lon,lat))
-				first= first + 1
-		
-			fil.write("%f,%f,0\n"%(first_lon,first_lat))
-			fil.write(CAP_AREA_END)
-	
-			fil.write(CAP_INFO_END)
-
-		fil.write(CAP_ALERT_END)
-
-		fil.close()
-
-		# If no areas found, remove file.
-		if numAreas < 1:
-			os.remove(filename)
-
-	return 0
+        return 0
 

@@ -367,7 +367,7 @@ if __name__ == "__main__":
 
 ### Farevarsler
 
- 	select_string="select value from document where name = \"MIfare\" and vto > \"%s \" " %	now
+ 	select_string="select value,termin from document where name = \"MIfare\" and vto > \"%s \" " %	now
 
 	filename = "%s/Current_fare.kml" %  dirname
 
@@ -375,7 +375,7 @@ if __name__ == "__main__":
 
 	filebase = "%s/MIfare" %  dirname
 
-	generate_file_cap_fare(select_string,  now ,db, filebase, "Dangerous weather warning", "Weather warnings")
+	generate_files_cap_fare(select_string,  now ,db, filebase)
 
 ### Farevarsler TEST
 
