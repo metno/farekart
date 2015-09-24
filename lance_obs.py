@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 #
-# Author:  BÃ¥rd Fjukstad
+# Author:  Bård Fjukstad
 #
 # CGI script for requesting observations from LANCE and presenting these in a table.
 #

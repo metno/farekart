@@ -5,7 +5,7 @@
 #
 #
 # Author:
-#  BÃ¥rd Fjukstad.  Jan. 2015
+#  Bård Fjukstad.  Jan. 2015
 #
 import json
 

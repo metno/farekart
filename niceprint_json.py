@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 #
-# Author:  BÃ¥rd Fjukstad
+# Author:  Bård Fjukstad
 #
 # Script for nice printing of json content using JSON module dumps function for content formatting.
 #

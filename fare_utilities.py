@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 #
-# Utilities for Ã¥ lese aktuelle kulingvarsler fra TED databasen og lage Produkt som kan vises i DIANA.
+# Utilities for å lese aktuelle kulingvarsler fra TED databasen og lage Produkt som kan vises i DIANA.
 #
 #
 # Author:
-#  BÃ¥rd Fjukstad.  Jan. 2015
+#  Bård Fjukstad.  Jan. 2015
 #
 import sys
 import MySQLdb
