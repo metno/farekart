@@ -15,6 +15,11 @@ import uuid
 from datetime import datetime
 import os
 
+from xml.dom import minidom
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring, fromstring
+import glob
+
+
 from fare_utilities import *
 from faremeldinger_v2 import *
 
@@ -99,6 +104,55 @@ CAP_ALERT_END = """
 <!-- END ALERT -->
 </cap:alert>
 """
+
+
+
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ", encoding='utf-8')
+
+
+
+def make_list_of_valid_files(filebase):
+
+    files = []
+    filesearch = "{0}*.cap".format(filebase)
+    filenames = glob.glob(filesearch)
+    for fname in filenames:
+        print(fname)
+        file = open(fname, 'r')
+        xmldoc = file.read()
+        root = fromstring(xmldoc)
+        attributes = {}
+        for info in root.iter('{urn:oasis:names:tc:emergency:cap:1.2}info'):
+            valid_from = info.find('{urn:oasis:names:tc:emergency:cap:1.2}effective').text
+            valid_to = info.find('{urn:oasis:names:tc:emergency:cap:1.2}expires').text
+            attributes["valid_from"] = valid_from
+            attributes["valid_to"] = valid_to
+        file = [fname, attributes]
+        #TODO- check if file is valid before appending
+        files.append(file)
+
+
+    # produce the xml-file
+
+    root = Element('files')
+    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    root.set(" xsi:schemaLocation", "mifare-index.xsd")
+
+    for file in files:
+        child = SubElement(root, 'file', file[1])
+        child.text = file[0]
+
+    listfilename="{0}-index.xml".format(filebase)
+    listfile = open(listfilename, "w")
+    listfile.write(prettify(root))
+    listfile.close()
+
+
 
 
 def get_urgency(date_from, now):
@@ -256,6 +310,11 @@ def generate_files_cap_fare(selectString, dateto, db, filebase):
                 generate_file_cap_fare(filename,xmldoc,db)
 
 
-
+        make_list_of_valid_files(filebase)
         return 0
+
+
+
+
+
 
