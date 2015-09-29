@@ -1,94 +1,34 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 #
-# Lese aktuelle Farevarsler fra TED databasen og lage Produkt som kan vises i DIANA.
+# Lese aktuelle Farevarsler fra TED databasen og lage Produkt som kan vises i Diana.
 #
 # Author:
 # Bård Fjukstad.  Mar. 2015
+
+"""Writes farevarsel (dangerous weather warning) products using data obtained
+from a TED database.
+"""
+
 import codecs
 import sys
 import MySQLdb
 import time
 import os
-import xml.etree.ElementTree as ET
+from lxml.etree import Element, SubElement, tostring
 
 from fare_utilities import *
 from generatecap import *
 
-KML_HEADING_FARE = """<?xml version="1.0" encoding="UTF-8"?>
-
-<kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document>
-"""
-
-KML_END_FARE = """  </Document>
-</kml>
-"""
-
-KML_AREA_END_FARE = """			</coordinates>		 
-		  </LinearRing>
-		</outerBoundaryIs>
-	  </Polygon>
-	</Placemark>
-"""
-
-KML_AREA_NEW_FARE = """	<Placemark>
-	  <name>%s</name>
-	  <description>
-	  %s
-	  </description>
-	  <TimeSpan>
-		<begin>%s</begin>
-		<end>%s</end>
-	  </TimeSpan>
-	  <ExtendedData>
-		<Data name="met:objectType">
-		  <value>PolyLine</value>
-		</Data>
-		<Data name="met:style:type">
-           <value>Dangerous weather warning</value>
-        </Data>
-		<Data name="met:info:type">
-		  <value>%s</value>
-		</Data>
-        <Data name="met:style:fillcolour">
-           <value>%s</value>
-        </Data>
-		<Data name="met:info:severity">
-		  <value>%s</value>
-		</Data>	
-		<Data name="met:info:comment">
-		  <value>%s</value>
-		</Data>
-		<Data name="met:info:Certainty">
- 		  <value>%s</value>
- 		</Data>
- 		<Data name="met:info:Triggerlevel">
- 		  <value>%s</value>
- 		</Data>
- 		<Data name="met:info:English">
- 		  <value>%s</value>
- 		</Data>
-	  </ExtendedData>
-	  <Polygon>
-		<tessellate>1</tessellate>
-		<outerBoundaryIs>
-		  <LinearRing>
-		   <coordinates>"""
-
 
 def get_xml_docs(db, dateto, select_string):
-    """Retrieve a full document from the data base."""
-
-    # print db, dateto
-
-    # 	select_string="select value from document where name in (\"X_test_Farevarsel_B\",\"MIfare\")  and vto > \"%s \" " %	dateto
-
-    # print select_string
+    """Retrieves a full set of documents from the database, db, using the given
+    SQL select_string. The end of the period for which forecasts are obtained
+    is given by the dateto string."""
 
     try:
         cur = db.cursor()
-        cur.execute(select_string)
+        cur.execute(select_string, dateto)
         result = cur.fetchall()
 
     except MySQLdb.Error, e:
@@ -99,7 +39,8 @@ def get_xml_docs(db, dateto, select_string):
 
 
 def retrieve_from_xml_fare(xmldoc):
-    """Retrieves some parameters from the XML text and returns as list."""
+    """Retrieves some parameters from the XML text for a faremelding specified
+    by xmldoc and returns them as a list of values."""
 
     vto = None
     vfrom = None
@@ -144,8 +85,6 @@ def retrieve_from_xml_fare(xmldoc):
 
         for p in root.iter('productdescription'):
             termin = p.get('termin')
-
-
 
     # Foreach time, Ony one in each time.
     for location in root.iter('location'):
@@ -193,23 +132,6 @@ def retrieve_from_xml_fare(xmldoc):
             elif nam == "coment":
                 kommentar = param.find('in').text
 
-
-        # print "---------------------"
-        if name:      name = name.encode('iso-8859-1')
-        if ty:      ty = ty.encode('iso-8859-1')
-        if varsel:    varsel = varsel.encode('iso-8859-1')
-        if severity:  severity = severity.encode('iso-8859-1')
-        if certainty:  certainty = certainty.encode('iso-8859-1')
-        if pictlink:  pictlink = pictlink.encode('iso-8859-1')
-        if infolink:  infolink = infolink.encode('iso-8859-1')
-        if retperiode:  retperiode = retperiode.encode('iso-8859-1')
-        if consequence:  consequence = consequence.encode('iso-8859-1')
-        if kommentar: kommentar = kommentar.encode('iso-8859-1')
-        if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
-        if english:  english = english.encode('iso-8859-1')
-        if l_name:  l_name = l_name.encode('iso-8859-1')
-        # print "---------------------"
-
         loc['name'] = l_name
         loc['id'] = l_id
         loc['type'] = ty
@@ -238,12 +160,12 @@ def retrieve_from_xml_fare(xmldoc):
     res['id'] = id
     res['mnr'] = mnr
 
-
     return res
 
 
 def retrieve_from_xml(value):
-    """Retrieves some parameters from the XML text and returns as list."""
+    """Retrieves some parameters from the XML text specified by xmldoc and
+    returns them as a list of values."""
 
     results = {}
     i = 0
@@ -297,8 +219,6 @@ def retrieve_from_xml(value):
             for p in root.iter('productdescription'):
                 termin = p.get('termin')
 
-
-
         # Foreach time, Ony one in each time.
         for location in root.iter('location'):
 
@@ -345,23 +265,6 @@ def retrieve_from_xml(value):
                 elif nam == "coment":
                     kommentar = param.find('in').text
 
-
-            # print "---------------------"
-            if name:      name = name.encode('iso-8859-1')
-            if ty:      ty = ty.encode('iso-8859-1')
-            if varsel:    varsel = varsel.encode('iso-8859-1')
-            if severity:  severity = severity.encode('iso-8859-1')
-            if certainty:  certainty = certainty.encode('iso-8859-1')
-            if pictlink:  pictlink = pictlink.encode('iso-8859-1')
-            if infolink:  infolink = infolink.encode('iso-8859-1')
-            if retperiode:  retperiode = retperiode.encode('iso-8859-1')
-            if consequence:  consequence = consequence.encode('iso-8859-1')
-            if kommentar: kommentar = kommentar.encode('iso-8859-1')
-            if trigglevel:  trigglevel = trigglevel.encode('iso-8859-1')
-            if english:  english = english.encode('iso-8859-1')
-            if l_name:  l_name = l_name.encode('iso-8859-1')
-            # print "---------------------"
-
             loc['name'] = l_name
             loc['id'] = l_id
             loc['type'] = ty
@@ -396,23 +299,20 @@ def retrieve_from_xml(value):
     return results
 
 
-def generate_file_fare(db, filename, type, labelType, dateto, selectString):
-    """Writes the given locations to a file. First as AREAS then as LABELs"""
+def generate_file_fare(db, filename, type, labelType, dateto, select_string):
+    """Obtains warnings from the database, db, and writes a KML file with the
+    given filename. The warnings are selected for the period ending with the
+    data, dateto, using the given SQL select_string.
 
-    # fil = open(filename,'w')
-    fil = codecs.open(filename, 'w', 'utf-8')
+    The strings passed as arguments to the type and labelType parameters are
+    unused."""
 
-    fil.write(KML_HEADING_FARE)
+    kml = Element('kml')
+    kml.set('xmlns', "http://www.opengis.net/kml/2.2")
+    document = SubElement(kml, 'Document')
 
-    doc = get_xml_docs(db, dateto, selectString)
-
-    # print doc
-
+    doc = get_xml_docs(db, dateto, select_string)
     results = retrieve_from_xml(doc)
-
-    # print results
-
-    # print results
 
     for i in results:
 
@@ -426,15 +326,9 @@ def generate_file_fare(db, filename, type, labelType, dateto, selectString):
 
         for p in res['locations']:
 
-            #print p
-
             locs = res['locations'][p]
 
-            # print locs
-
             for n in locs['id'].split(":"):
-
-                # print n
 
                 latlon = get_latlon(n, db)
                 first = 0
@@ -447,65 +341,52 @@ def generate_file_fare(db, filename, type, labelType, dateto, selectString):
                 tri = locs['triggerlevel']
                 eng = locs['english']
 
-                # print latlon
+                placemark = SubElement(document, 'Placemark')
+                SubElement(placemark, 'name').text = name
+                SubElement(placemark, 'description').text = value
+
+                timespan = SubElement(placemark, 'TimeSpan')
+                begin = SubElement(timespan, 'begin')
+                begin.text = df
+                end = SubElement(timespan, 'end')
+                end.text = dt
+
+                extdata = SubElement(placemark, 'ExtendedData')
+
+                # Convert the properties associated with this polygon into
+                # extended data values.
+                properties = [
+                    ("met:objectType",          "PolyLine"),
+                    ("met:style:type",          "Dangerous weather warning"),
+                    ("met:info:type",           locs['type']),
+                    ("met:style:fillcolour",    locs['severity']),
+                    ("met:info:severity",       locs['severity']),
+                    ("met:info:comment",        locs['kommentar']),
+                    ("met:info:Certainty",      locs['certainty']),
+                    ("met:info:Triggerlevel",   locs['triggerlevel']),
+                    ("met:info:English",        locs['english'])
+                    ]
+
+                for key, value in properties:
+                    data = SubElement(extdata, 'Data')
+                    data.set('name', key)
+                    SubElement(data, 'value').text = value
+
+                polygon = SubElement(placemark, 'Polygon')
+                SubElement(polygon, 'tessellate').text = '1'
+
+                boundary = SubElement(polygon, 'outerBoundaryIs')
+                ring = SubElement(boundary, 'LinearRing')
+                coordinates = SubElement(ring, 'coordinates')
+
+                text = u''
 
                 for name, lon, lat in latlon:
+                    line = u"%f,%f,0\n" % (lon, lat)
+                    text += line
 
-                    if first == 0:
-                        area = unicode(KML_AREA_NEW_FARE % (name, value, df, dt, ty, sev, sev, comm, cer, tri, eng),
-                                       "iso-8859-1")
-                        fil.write(area)  #name, description, vfrom,vto
-                        first_lat = lat
-                        first_lon = lon
+                coordinates.text = text
 
-                    fil.write("%f,%f,0\n" % (lon, lat))
-                    first = first + 1
-
-                fil.write("%f,%f,0\n" % (first_lon, first_lat))
-                fil.write(KML_AREA_END_FARE)
-
-    fil.write(KML_END_FARE)
-
-    fil.close()
-
-    return 0
-
-#
-# MAIN
-#
-if __name__ == "__main__":
-
-	if len(sys.argv) < 6:
-		print "Wrong number of arguments\nUsage faremeldinger.py <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> <Optional: OpenLayerDir>"
-		exit(1)
-
-	db = MySQLdb.connect(user=sys.argv[1],
-						passwd=sys.argv[2],
-						host=sys.argv[3],
-						port=int(sys.argv[4]),
-						db="ted",
-						)
-
-	dirname = sys.argv[5]
-	OpenLayer = False
-	
-	
-	if len(sys.argv) >6:
-		ol_dirname = sys.argv[6]
-		OpenLayer = True
-
-	now = time.strftime("%Y-%m-%d %H:%M:00")
-
-### Farevarsler
-
- 	select_string="select value from document where name = \"MIfare\" and vto > \"%s \" " %	now
-
-	filename = "%s/Current_fare.kml" %  dirname
-
-	generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
-
-
-## Close
-
-	if db:
-		db.close()
+    f = open(filename, 'w')
+    f.write(tostring(kml, encoding="UTF-8", xml_declaration=True, pretty_print=True))
+    f.close()
