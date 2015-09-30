@@ -15,7 +15,7 @@ import sys
 import MySQLdb
 import time
 import os
-from lxml.etree import Element, SubElement, tostring
+from lxml.etree import Element, SubElement, fromstring, tostring
 
 from fare_utilities import *
 from generatecap import *
@@ -48,9 +48,7 @@ def retrieve_from_xml_fare(xmldoc):
     res={}
     n = 0
 
-    # print xmldoc
-
-    root = ET.fromstring(xmldoc)
+    root = fromstring(xmldoc)
 
     vto = None
     vfrom = None
@@ -164,7 +162,7 @@ def retrieve_from_xml_fare(xmldoc):
 
 
 def retrieve_from_xml(value):
-    """Retrieves some parameters from the XML text specified by xmldoc and
+    """Retrieves some parameters from the XML text held by the given value and
     returns them as a list of values."""
 
     results = {}
@@ -183,7 +181,7 @@ def retrieve_from_xml(value):
 
         # print xmldoc
 
-        root = ET.fromstring(xmldoc)
+        root = fromstring(xmldoc)
 
         vto = None
         vfrom = None
@@ -324,15 +322,11 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
         df = time.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
         df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
 
-        for p in res['locations']:
-
-            locs = res['locations'][p]
+        for locs in res['locations'].values():
 
             for n in locs['id'].split(":"):
 
                 latlon = get_latlon(n, db)
-                first = 0
-                value = locs['varsel']
                 comm = locs['kommentar']
                 sev = locs['severity']
 
@@ -342,8 +336,8 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
                 eng = locs['english']
 
                 placemark = SubElement(document, 'Placemark')
-                SubElement(placemark, 'name').text = name
-                SubElement(placemark, 'description').text = value
+                SubElement(placemark, 'name').text = locs['name']
+                SubElement(placemark, 'description').text = locs['varsel']
 
                 timespan = SubElement(placemark, 'TimeSpan')
                 begin = SubElement(timespan, 'begin')

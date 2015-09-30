@@ -16,7 +16,7 @@ import time
 import os
 
 from fare_utilities import *
-from generatecap_fare import *
+from generatecap_fare import generate_files_cap_fare
 from faremeldinger_v2 import *
 
 
@@ -296,7 +296,6 @@ if __name__ == "__main__":
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
     filebase = os.path.join(dirname, "MIfare")
-
     generate_files_cap_fare(select_string, now, db, filebase)
 
 ### Farevarsler TEST
