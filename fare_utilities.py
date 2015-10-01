@@ -18,8 +18,9 @@ import os
 
 
 
-def get_latlon(n,db):
-    """Retrieves the Geographical corners for the given TED defined area ID"""
+def get_latlon(n, db):
+    """Retrieves the Geographical corners for the given TED defined area ID, n,
+    from the database, db."""
 
     select_string = "select name, corners from location where id = %s"
 

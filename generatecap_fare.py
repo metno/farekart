@@ -36,10 +36,10 @@ def make_list_of_valid_files(filebase):
         root = fromstring(xmldoc)
         attributes = {}
         for info in root.iter('{urn:oasis:names:tc:emergency:cap:1.2}info'):
-            valid_from = info.find('{urn:oasis:names:tc:emergency:cap:1.2}effective').text
-            valid_to = info.find('{urn:oasis:names:tc:emergency:cap:1.2}expires').text
-            attributes["valid_from"] = valid_from
-            attributes["valid_to"] = valid_to
+            valid_from = time.strptime(info.find('{urn:oasis:names:tc:emergency:cap:1.2}effective').text, "%Y-%m-%dT%H:%M:%S+00:00")
+            valid_to = time.strptime(info.find('{urn:oasis:names:tc:emergency:cap:1.2}expires').text, "%Y-%m-%dT%H:%M:%S+00:00")
+            attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
+            attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
         file = [fname, attributes]
         #TODO- check if file is valid before appending
         files.append(file)
@@ -47,17 +47,16 @@ def make_list_of_valid_files(filebase):
 
     # produce the xml-file
 
-    root = Element('files')
-    root.set('xsi', "http://www.w3.org/2001/XMLSchema-instance")
-    #root.set("xsi:schemaLocation", "mifare-index.xsd")
+    root = Element('files', nsmap = {'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
+    root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
 
-    for file in files:
-        child = SubElement(root, 'file', file[1])
-        child.text = file[0]
+    for filename, valid in files:
+        child = SubElement(root, 'file', valid)
+        child.text = os.path.split(filename)[1]
 
     listfilename="{0}-index.xml".format(filebase)
     listfile = open(listfilename, "w")
-    listfile.write(tostring(root, xml_declaration=True, encoding="UTF-8", standalone=True, pretty_print=True))
+    listfile.write(tostring(root, xml_declaration=True, encoding="UTF-8", pretty_print=True))
     listfile.close()
 
 
@@ -208,13 +207,16 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
 
 def generate_files_cap_fare(selectString, dateto, db, filebase):
+    """Generates CAP files for the warnings obtained from the database, db,
+    using the given selectString and dateto string.
+    """
 
     docs = get_xml_docs(db, dateto, selectString)
     for doc in docs:
 
         tt=doc[1]
-        tt = tt.strftime("%Y-%m-%dT%H:%M:00Z")
-        filename = filebase + "_" + tt + ".cap"
+        tt = tt.strftime("%Y%m%dT%H%M00")
+        filename = filebase + "-" + tt + ".cap"
         if (os.path.isfile(filename)):
             print "File already exists!"
         else:

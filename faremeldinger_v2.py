@@ -18,7 +18,6 @@ import os
 from lxml.etree import Element, SubElement, fromstring, tostring
 
 from fare_utilities import *
-from generatecap import *
 
 
 def get_xml_docs(db, dateto, select_string):
