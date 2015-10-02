@@ -25,6 +25,10 @@ from faremeldinger_v2 import *
 
 
 def make_list_of_valid_files(filebase):
+    """Compiles an index file containing information about each of the CAP
+    files that start with the given filebase, writing the index file to the
+    directory containing the files.
+    """
 
     files = []
     filesearch = "{0}*.cap".format(filebase)
@@ -36,6 +40,7 @@ def make_list_of_valid_files(filebase):
 
     for fname in filenames:
 
+        # Parse and validate each CAP file found.
         root = etree.parse(fname)
         nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 
@@ -52,9 +57,14 @@ def make_list_of_valid_files(filebase):
                 attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
                 attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
 
+            # Append the file name and validity of each validated CAP file to the list
+            # that will be used to compile the index.
             files.append((fname, attributes))
 
-    # produce the xml-file
+        else:
+            sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
+
+    # Produce the XML index file.
 
     root = Element('files', nsmap = {'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
     root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
@@ -111,7 +121,6 @@ def generate_file_cap_fare(filename, xmldoc, db):
     mnr = res['mnr']
 
     now = datetime.now()
-    name = "%s at %s" % (type, now.strftime("%Y-%m-%dT%H:00:00+00:00"))
     identifier = res['id']
 
     alert = Element('alert')
@@ -217,7 +226,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
 def generate_files_cap_fare(selectString, dateto, db, filebase):
     """Generates CAP files for the warnings obtained from the database, db,
-    using the given selectString and dateto string.
+    using the given selectString and dateto string. Writes an index file
+    for the CAP files with names that begin with the given filebase string.
     """
 
     docs = get_xml_docs(db, dateto, selectString)
