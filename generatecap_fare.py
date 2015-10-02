@@ -18,6 +18,7 @@ import glob, os, sys, uuid
 from datetime import datetime
 
 from lxml.etree import Element, SubElement, tostring
+from lxml import etree
 
 from fare_utilities import get_latlon
 from faremeldinger_v2 import *
@@ -29,21 +30,29 @@ def make_list_of_valid_files(filebase):
     filesearch = "{0}*.cap".format(filebase)
     filenames = glob.glob(filesearch)
 
-    for fname in filenames:
-        print(fname)
-        file = open(fname, 'r')
-        xmldoc = file.read()
-        root = fromstring(xmldoc)
-        attributes = {}
-        for info in root.iter('{urn:oasis:names:tc:emergency:cap:1.2}info'):
-            valid_from = time.strptime(info.find('{urn:oasis:names:tc:emergency:cap:1.2}effective').text, "%Y-%m-%dT%H:%M:%S+00:00")
-            valid_to = time.strptime(info.find('{urn:oasis:names:tc:emergency:cap:1.2}expires').text, "%Y-%m-%dT%H:%M:%S+00:00")
-            attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
-            attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
-        file = [fname, attributes]
-        #TODO- check if file is valid before appending
-        files.append(file)
+    # Load the CAP schema.
+    schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
+    schema = etree.XMLSchema(schema_doc)
 
+    for fname in filenames:
+
+        root = etree.parse(fname)
+        nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+
+        if schema.validate(root):
+
+            attributes = {}
+
+            for info in root.findall('cap:info', nsmap):
+
+                vf = info.find('cap:effective', nsmap).text
+                vt = info.find('cap:expires', nsmap).text
+                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S+00:00")
+                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S+00:00")
+                attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
+                attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
+
+            files.append((fname, attributes))
 
     # produce the xml-file
 

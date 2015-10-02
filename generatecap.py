@@ -21,7 +21,7 @@ from lxml.etree import Element, SubElement, tostring
 from fare_utilities import get_latlon
 
 
-def generate_file_cap( locations, db, filename, type, labelType ):
+def generate_file_cap(locations, db, filename, type):
     """Writes the given locations to a CAP file.
 
     Structure:
