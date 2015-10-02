@@ -5,11 +5,11 @@ from distutils.core import setup
 
 setup(
     name="python-farekart",
-    description="Generate kml and cap-files from text warnings in Ted database",
+    description="Generate KML and CAP files from text warnings in the TED database",
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.1.4",
-    py_modules=["generatecap","fare_utilities","faremeldinger_v2","generatecap_fare"],
+    version="0.2.0",
+    py_modules=["generatecap", "fare_utilities", "fare_common", "generatecap_fare"],
     scripts=["faremeldinger.py"]
     )

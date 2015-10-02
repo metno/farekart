@@ -20,8 +20,7 @@ from datetime import datetime
 from lxml.etree import Element, SubElement, tostring
 from lxml import etree
 
-from fare_utilities import get_latlon
-from faremeldinger_v2 import *
+from fare_common import *
 
 
 def make_list_of_valid_files(filebase):
@@ -145,45 +144,45 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
         locs = res['locations'][p]
 
+        comm = locs['kommentar']
+        tri = locs['triggerlevel']
+        eng = locs['english']
+        pict = locs['pictlink']
+        infolink = locs['infolink']
+
+        info = SubElement(alert, 'info')
+        SubElement(info, 'language').text = 'no'
+        SubElement(info, 'category').text = 'Met'
+        SubElement(info, 'event').text = locs['type']
+        SubElement(info, 'urgency').text = urgency
+        SubElement(info, 'severity').text = locs['severity']
+        SubElement(info, 'certainty').text = locs['certainty']
+
+        # Write UTC times to the CAP file.
+        SubElement(info, 'effective').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
+        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
+
+        SubElement(info, 'senderName').text = sender
+        SubElement(info, 'description').text = locs['varsel']
+        SubElement(info, 'instruction').text = locs['consequence']
+        SubElement(info, 'web').text = 'http://www.yr.no'
+
+        if pict:
+            resource = SubElement(info, 'resource')
+            SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
+            SubElement(resource, 'mimeType').text = "image/png"
+            SubElement(resource, 'uri').text = pict
+
+        if infolink:
+            resource = SubElement(info, 'resource')
+            SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
+            SubElement(resource, 'mimeType').text = "text/html"
+            SubElement(resource, 'uri').text = infolink
+
         # Although the CAP format allows multiple areas per info element,
         # we only include one in each element.
 
         for n in locs['id'].split(":"):
-
-            comm = locs['kommentar']
-            tri = locs['triggerlevel']
-            eng = locs['english']
-            pict = locs['pictlink']
-            infolink = locs['infolink']
-
-            info = SubElement(alert, 'info')
-            SubElement(info, 'language').text = 'no'
-            SubElement(info, 'category').text = 'Met'
-            SubElement(info, 'event').text = locs['type']
-            SubElement(info, 'urgency').text = urgency
-            SubElement(info, 'severity').text = locs['severity']
-            SubElement(info, 'certainty').text = locs['certainty']
-
-            # Write UTC times to the CAP file.
-            SubElement(info, 'effective').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
-            SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
-
-            SubElement(info, 'senderName').text = sender
-            SubElement(info, 'description').text = locs['varsel']
-            SubElement(info, 'instruction').text = locs['consequence']
-            SubElement(info, 'web').text = 'http://www.yr.no'
-
-            if pict:
-                resource = SubElement(info, 'resource')
-                SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
-                SubElement(resource, 'mimeType').text = "image/png"
-                SubElement(resource, 'uri').text = pict
-
-            if infolink:
-                resource = SubElement(info, 'resource')
-                SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
-                SubElement(resource, 'mimeType').text = "text/html"
-                SubElement(resource, 'uri').text = infolink
 
             area = SubElement(info, 'area')
             SubElement(area, 'areaDesc').text = locs['name']
