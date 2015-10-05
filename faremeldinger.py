@@ -6,8 +6,18 @@
 # Author:
 #  Bård Fjukstad.  Jan. 2015
 
-"""Writes farevarsel (dangerous weather warning) products using data obtained
+"""Writes farevarsel (severe weather warning) products using data obtained
 from a TED database.
+
+  Usage: faremeldinger.py <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> [directory for OpenLayers files]
+
+KML files for Diana (and optionally OpenLayers) are created for gale warnings,
+observed weather warnings and extreme weather warnings. This is handled by the
+fare_common module.
+
+KML files and CAP files are created for severe (dangerous) weather warnings,
+both for official and test reports. This is handled by the fare_common and
+generatecap_fare modules.
 """
 
 import os, sys, time

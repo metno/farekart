@@ -11,8 +11,7 @@
 #
 
 """Generates Common Alerting Protocol (CAP) files for farevarsel (dangerous
-weather warning) reports obtained from a TED database.
-"""
+weather warning) reports obtained from a TED database."""
 
 import glob, os, sys, uuid
 from datetime import datetime
@@ -26,8 +25,7 @@ from fare_common import *
 def make_list_of_valid_files(filebase):
     """Compiles an index file containing information about each of the CAP
     files that start with the given filebase, writing the index file to the
-    directory containing the files.
-    """
+    directory containing the files."""
 
     files = []
     filesearch = "{0}*.cap".format(filebase)
@@ -226,8 +224,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
 def generate_files_cap_fare(selectString, dateto, db, filebase):
     """Generates CAP files for the warnings obtained from the database, db,
     using the given selectString and dateto string. Writes an index file
-    for the CAP files with names that begin with the given filebase string.
-    """
+    for the CAP files with names that begin with the given filebase string."""
 
     docs = get_xml_docs(db, dateto, selectString)
     for doc in docs:
