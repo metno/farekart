@@ -16,12 +16,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""Converts Common Alerting Protocol (CAP) files into KML files suitable for
+use with Diana (http://diana.met.no)."""
+
 import os, sys
 import dateutil.parser
 from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
 
 def find_properties(element, names, nsmap):
+
+    """Finds the subelements of the given element that correspond to properties
+    with the specified names, using the namespace map, nsmap, to enable XPath
+    searches with the cap: prefix."""
 
     properties = {}
 
@@ -33,6 +40,10 @@ def find_properties(element, names, nsmap):
     return properties
 
 def write_extended_data_values(properties, extdata, prefix):
+
+    """Writes the contents of the properties dictionary to the XML element,
+    extdata, containing the extended data values, giving each piece of data
+    the specified prefix string."""
 
     for key, value in properties.items():
         if type(value) == dict:
