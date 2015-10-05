@@ -51,8 +51,8 @@ def make_list_of_valid_files(filebase):
 
                 vf = info.find('cap:effective', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
-                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S+00:00")
-                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S+00:00")
+                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S-00:00")
+                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S-00:00")
                 attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
                 attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
 
@@ -127,7 +127,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     SubElement(alert, 'identifier').text = identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
-    SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00-00:00")
     SubElement(alert, 'status').text = 'Actual'
     SubElement(alert, 'msgType').text = 'Alert'
     SubElement(alert, 'scope').text = 'Public'
@@ -153,14 +153,14 @@ def generate_file_cap_fare(filename, xmldoc, db):
         info = SubElement(alert, 'info')
         SubElement(info, 'language').text = 'no'
         SubElement(info, 'category').text = 'Met'
-        SubElement(info, 'event').text = locs['type']
+        SubElement(info, 'event').text = eventname
         SubElement(info, 'urgency').text = urgency
         SubElement(info, 'severity').text = locs['severity']
         SubElement(info, 'certainty').text = locs['certainty']
 
         # Write UTC times to the CAP file.
-        SubElement(info, 'effective').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
-        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
+        SubElement(info, 'effective').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
 
         SubElement(info, 'senderName').text = sender
         SubElement(info, 'description').text = locs['varsel']
