@@ -30,11 +30,17 @@ if __name__ == "__main__":
                          db="ted")
 
     dirname = sys.argv[5]
+
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
     OpenLayer = False
 
     if len(sys.argv) == 7:
         ol_dirname = sys.argv[6]
         OpenLayer = True
+        if not os.path.exists(ol_dirname):
+            os.mkdir(ol_dirname)
 
     # Obtain a string containing the local time for the start of the current hour.
     now = time.strftime("%Y-%m-%d %H:%M:00")
