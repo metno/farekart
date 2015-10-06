@@ -17,7 +17,16 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """Converts Common Alerting Protocol (CAP) files into KML files suitable for
-use with Diana (http://diana.met.no)."""
+use with Diana (http://diana.met.no).
+
+  Usage: cap2kml.py <CAP file> [<KML file for Diana> [<input file for bdiana>]]
+
+Parses and validates the given CAP file. If an output KML file is specified,
+the KML text is written to the file; otherwise it is written to stdout.
+
+If a bdiana input file is specified, this is created to contain the necessary
+plot commands used to generate image files for each of the times used in the
+original CAP file."""
 
 import math, os, sys
 import datetime, dateutil.parser
@@ -74,7 +83,7 @@ if __name__ == "__main__":
 
     if not 2 <= len(sys.argv) <= 4:
 
-        sys.stderr.write("Usage: %s <CAP file> [<KML file for Diana> [<input file for Diana>]]\n" % sys.argv[0])
+        sys.stderr.write("Usage: %s <CAP file> [<KML file for Diana> [<input file for bdiana>]]\n" % sys.argv[0])
         sys.exit(1)
     
     cap_file = sys.argv[1]
