@@ -12,12 +12,15 @@ from a TED database.
   Usage: faremeldinger.py <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> [directory for OpenLayers files]
 
 KML files for Diana (and optionally OpenLayers) are created for gale warnings,
-observed weather warnings and extreme weather warnings. This is handled by the
-fare_common module.
+observed weather warnings and extreme weather warnings.
 
-KML files and CAP files are created for severe (dangerous) weather warnings,
-both for official and test reports. This is handled by the fare_common and
-generatecap_fare modules.
+KML files for Diana are created for severe (dangerous) weather warnings, both
+for official reports and test reports.
+
+CAP files are created for official severe weather warnings.
+
+KML file creation is handled by the fare_common module. CAP file creation is
+handled by the generatecap_fare module.
 """
 
 import os, sys, time
@@ -114,7 +117,7 @@ if __name__ == "__main__":
 
     filename = os.path.join(dirname, "Current_fare_test.kml")
 
-    generate_file_fare( db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string )
+    generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
     # Close the database connection.
 
