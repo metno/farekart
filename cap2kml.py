@@ -20,9 +20,26 @@
 use with Diana (http://diana.met.no)."""
 
 import math, os, sys
-import dateutil.parser
+import datetime, dateutil.parser
 from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
+
+bdiana_template = """
+buffersize=600x800
+colour=COLOUR
+filename=%(image file)s
+output=PNG
+setupfile=/etc/diana/setup/diana.setup-COMMON
+settime=%(warning time)s
+
+PLOT
+MAP backcolour=white map=Gshhs-Auto contour=on cont.colour=black cont.linewidth=1 cont.linetype=solid cont.zorder=1 land=on land.colour=200:200:200 land.zorder=0 lon=off lat=off frame=off
+AREA name=Norge
+DRAWING file=%(kml file)s
+LABEL data font=BITMAPFONT fontsize=8
+LABEL text="$day $date $auto UTC" tcolour=red bcolour=black fcolour=white:200 polystyle=both halign=left valign=top font=BITMAPFONT fontsize=8
+ENDPLOT
+"""
 
 def find_properties(element, names, nsmap):
 
@@ -55,17 +72,25 @@ def write_extended_data_values(properties, extdata, prefix):
 
 if __name__ == "__main__":
 
-    if not 2 <= len(sys.argv) <= 3:
+    if not 2 <= len(sys.argv) <= 4:
 
-        sys.stderr.write("Usage: %s <CAP file> [KML file for Diana]\n" % sys.argv[0])
+        sys.stderr.write("Usage: %s <CAP file> [<KML file for Diana> [<input file for Diana>]]\n" % sys.argv[0])
         sys.exit(1)
     
     cap_file = sys.argv[1]
     
-    if len(sys.argv) == 3:
+    if len(sys.argv) >= 3:
         kml_file = sys.argv[2]
     else:
         kml_file = None
+
+    if len(sys.argv) == 4:
+        input_file = sys.argv[3]
+    else:
+        input_file = None
+
+    # Collect the starting times used in the CAP file.
+    times = set()
 
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
@@ -117,6 +142,9 @@ if __name__ == "__main__":
             else:
                 fromtime = dateutil.parser.parse(basic_info['sent']).strftime('%Y-%m-%dT%H:%M:%SZ')
 
+            # Record the starting time for later use.
+            times.add(fromtime)
+
             timespan = SubElement(folder, 'TimeSpan')
             begin = SubElement(timespan, 'begin')
             begin.text = fromtime
@@ -126,6 +154,7 @@ if __name__ == "__main__":
         # Compile a dictionary of properties for attributes in the info
         # element for inclusion in each Placemark.
         properties = find_properties(info, ['category', 'severity', 'urgency', 'certainty'], nsmap)
+        properties['style:type'] = 'Dangerous weather warning'
 
         # Examine each area element in the info element.
 
@@ -208,6 +237,29 @@ if __name__ == "__main__":
         f = sys.stdout
     else:
         f = open(kml_file, 'wb')
-    
+
+    # Write the KML file.
     ElementTree(kml).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
+    f.close()
+
+    if input_file:
+
+        stem = os.path.splitext(kml_file)[0]
+
+        f = open(input_file, 'w')
+        f.write("# Created by cap2kml.py at %s.\n" % datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
+
+        # Create an input specification for bdiana and write it to a file.
+        times = list(times)
+        times.sort()
+        i = 0
+
+        for time in times:
+            f.write(bdiana_template % {'image file': '%s-%i.png' % (stem, i),
+                                       'warning time': time,
+                                       'kml file': kml_file})
+            i += 1
+
+        f.close()
+
     sys.exit()
