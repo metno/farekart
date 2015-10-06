@@ -76,8 +76,6 @@ def make_list_of_valid_files(filebase):
     listfile.close()
 
 
-
-
 def get_urgency(date_from, now):
     """Finds the urgency based on the valid from date, date_from, and the
     current date, now."""
@@ -177,8 +175,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
             SubElement(resource, 'mimeType').text = "text/html"
             SubElement(resource, 'uri').text = infolink
 
-        # Although the CAP format allows multiple areas per info element,
-        # we only include one in each element.
+        # Write multiple areas per info element,
 
         for n in locs['id'].split(":"):
 
@@ -190,19 +187,20 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
                 # Optional polygon element with three unique points and the last
                 # point identical to the first to close the polygon (at least
-                # four points in total).
+                # four points in total). Each point is specified by coordinates
+                # of the form, latitude,longitude.
                 polygon = SubElement(area, 'polygon')
 
                 text = u''
 
                 for name, lon, lat in latlon:
-                    line = u"%f,%f\n" % (lon, lat)
+                    line = u"%f,%f\n" % (lat, lon)
                     text += line
 
                 # Include the first point again to close the polygon.
                 if latlon:
                     name, lon, lat = latlon[0]
-                    text += u"%f,%f\n" % (lon, lat)
+                    text += u"%f,%f\n" % (lat, lon)
 
                 polygon.text = text
 

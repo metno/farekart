@@ -153,7 +153,13 @@ if __name__ == "__main__":
                 boundary = SubElement(kml_polygon, 'outerBoundaryIs')
                 ring = SubElement(boundary, 'LinearRing')
                 coordinates = SubElement(ring, 'coordinates')
-                coordinates.text = polygon.text
+                coordinates.text = ''
+
+                # Coordinates are specified as latitude,longitude in CAP files
+                # so we need to transpose them for KML.
+                for coord in polygon.text.split():
+                    lat, lon = coord.split(',')
+                    coordinates.text += lon + ',' + lat + '\n'
     
     if not kml_file:
         f = sys.stdout
