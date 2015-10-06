@@ -121,11 +121,7 @@ if __name__ == "__main__":
         name = SubElement(folder, 'name')
         name.text = info.find('.//cap:event', nsmap).text
 
-        desc = info.find('.//cap:description', nsmap)
-        if desc is not None:
-            description = desc.text
-        else:
-            description = ''
+        optional_info = find_properties(info, ['headline', 'description'], nsmap)
 
         # Each info element may have effective and expires elements, but they
         # are optional.
@@ -163,7 +159,7 @@ if __name__ == "__main__":
             areaDesc = area.find('.//cap:areaDesc', nsmap)
 
             placemark = SubElement(folder, 'Placemark')
-            SubElement(placemark, 'name').text = areaDesc.text
+            SubElement(placemark, 'name').text = optional_info['headline']
             SubElement(placemark, 'description').text = areaDesc.text
             
             extdata = SubElement(placemark, 'ExtendedData')
