@@ -19,7 +19,7 @@
 """Converts Common Alerting Protocol (CAP) files into KML files suitable for
 use with Diana (http://diana.met.no)."""
 
-import os, sys
+import math, os, sys
 import dateutil.parser
 from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
@@ -79,6 +79,10 @@ if __name__ == "__main__":
         sys.stderr.write("Error: CAP file '%s' is not valid.\n" % cap_file)
         sys.exit(1)
 
+    # Obtain basic information about the alert.
+    basic_info = find_properties(root, ['identifier', 'sender', 'sent',
+        'status', 'msgType', 'scope'], nsmap)
+
     kml = Element('kml')
     kml.set('xmlns', "http://www.opengis.net/kml/2.2")
     doc = SubElement(kml, 'Document')
@@ -103,10 +107,19 @@ if __name__ == "__main__":
         effective = info.find('.//cap:effective', nsmap)
         expires = info.find('.//cap:expires', nsmap)
 
-        if effective is not None and expires is not None:
+        # We need either effective and expires properties or the time the
+        # message was sent and the expires property.
+
+        if expires is not None:
+
+            if effective is not None:
+                fromtime = dateutil.parser.parse(effective.text).strftime('%Y-%m-%dT%H:%M:%SZ')
+            else:
+                fromtime = dateutil.parser.parse(basic_info['sent']).strftime('%Y-%m-%dT%H:%M:%SZ')
+
             timespan = SubElement(folder, 'TimeSpan')
             begin = SubElement(timespan, 'begin')
-            begin.text = dateutil.parser.parse(effective.text).strftime('%Y-%m-%dT%H:%M:%SZ')
+            begin.text = fromtime
             end = SubElement(timespan, 'end')
             end.text = dateutil.parser.parse(expires.text).strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -156,10 +169,40 @@ if __name__ == "__main__":
                 coordinates.text = ''
 
                 # Coordinates are specified as latitude,longitude in CAP files
-                # so we need to transpose them for KML.
+                # so we need to transpose them for KML. The first and last
+                # points should already be the same.
                 for coord in polygon.text.split():
+                    if not coord:
+                        continue
                     lat, lon = coord.split(',')
                     coordinates.text += lon + ',' + lat + '\n'
+
+            # If the area contains a circle then transfer its coordinates
+            # to the KML file as a polygon.
+            circle = area.find('.//cap:circle', nsmap)
+
+            if circle is not None:
+
+                kml_polygon = SubElement(placemark, 'Polygon')
+                SubElement(kml_polygon, 'tessellate').text = '1'
+
+                boundary = SubElement(kml_polygon, 'outerBoundaryIs')
+                ring = SubElement(boundary, 'LinearRing')
+                coordinates = SubElement(ring, 'coordinates')
+                coordinates.text = ''
+
+                # Convert the circle with the given centre and radius to a
+                # polygon with 20 points plus the first point again.
+                centre, radius = circle.text.strip().split()
+                clat, clon = map(float, centre.split(','))
+                radius = float(radius)
+
+                i = 0
+                while i <= 20:
+                    lat = clat + (radius * math.cos((i/20.0) * (math.pi/180)))
+                    lon = clon + (radius * math.sin((i/20.0) * (math.pi/180)))
+                    coordinates.text += '%f,%f\n' % (lon, lat)
+                    i += 1
     
     if not kml_file:
         f = sys.stdout
