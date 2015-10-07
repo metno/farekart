@@ -50,6 +50,9 @@ LABEL text="$day $date $auto UTC" tcolour=red bcolour=black fcolour=white:200 po
 ENDPLOT
 """
 
+# Define some common style properties.
+style_properties = {'type': 'Dangerous weather warning'}
+
 def find_properties(element, names, nsmap):
 
     """Finds the subelements of the given element that correspond to properties
@@ -159,7 +162,6 @@ if __name__ == "__main__":
         # Compile a dictionary of properties for attributes in the info
         # element for inclusion in each Placemark.
         properties = find_properties(info, ['category', 'severity', 'urgency', 'certainty'], nsmap)
-        properties['style:type'] = 'Dangerous weather warning'
 
         # Examine each area element in the info element.
 
@@ -168,7 +170,7 @@ if __name__ == "__main__":
             areaDesc = area.find('.//cap:areaDesc', nsmap)
 
             placemark = SubElement(folder, 'Placemark')
-            SubElement(placemark, 'name').text = optional_info['headline']
+            SubElement(placemark, 'name').text = optional_info.get('headline', '')
             SubElement(placemark, 'description').text = areaDesc.text
             
             extdata = SubElement(placemark, 'ExtendedData')
@@ -187,12 +189,12 @@ if __name__ == "__main__":
 
             # Write the info properties as extended data values.
             write_extended_data_values(area_properties, extdata, "met:info:cap:")
+            # Write the common style properties.
+            write_extended_data_values(style_properties, extdata, "met:style:")
 
-            # If the area contains a polygon then transfer its coordinates
+            # If the area contains polygons then transfer their coordinates
             # to the KML file.
-            polygon = area.find('.//cap:polygon', nsmap)
-
-            if polygon is not None:
+            for polygon in area.findall('.//cap:polygon', nsmap):
 
                 kml_polygon = SubElement(placemark, 'Polygon')
                 SubElement(kml_polygon, 'tessellate').text = '1'
@@ -211,11 +213,9 @@ if __name__ == "__main__":
                     lat, lon = coord.split(',')
                     coordinates.text += lon + ',' + lat + '\n'
 
-            # If the area contains a circle then transfer its coordinates
+            # If the area contains circles then transfer their coordinates
             # to the KML file as a polygon.
-            circle = area.find('.//cap:circle', nsmap)
-
-            if circle is not None:
+            for circle in area.findall('.//cap:circle', nsmap):
 
                 kml_polygon = SubElement(placemark, 'Polygon')
                 SubElement(kml_polygon, 'tessellate').text = '1'
