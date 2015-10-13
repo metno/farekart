@@ -76,18 +76,29 @@ def make_list_of_valid_files(filebase):
     listfile.close()
 
 
-def get_urgency(date_from, now):
-    """Finds the urgency based on the valid from date, date_from, and the
-    current date, now."""
+def get_urgency(date_from, date_to, now):
+    """Finds the urgency based on the period, beginning at date_from and
+    ending at date_to, and the current date, now."""
 
-    dif = date_from - now
+    # Sanity check the period times.
+    if date_from > date_to:
+        return "Unknown"
 
-    if dif.total_seconds() < 0:
+    # If we are already in the forecast period, the urgency is Immediate.
+    if date_from <= now <= date_to:
         return "Immediate"
-    if dif.total_seconds() < 3600:
-        return "Expected"
 
-    return "Future"
+    # Check for a period in the past.
+    if date_to <= now:
+        return "Past"
+
+    # The period is in the future.
+    s = (date_from - now).total_seconds()
+
+    if s < 3600:
+        return "Expected"
+    else:
+        return "Future"
 
 
 def generate_file_cap_fare(filename, xmldoc, db):
@@ -110,18 +121,22 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     res = retrieve_from_xml_fare(xmldoc)
     numAreas = 0
-    sender = res['sender']
+    senders = {"no": "Meteorologisk Institutt",
+               "nb": "Meteorologisk Institutt",
+               "nn": "Meteorologisk Institutt",
+               "en": "Norwegian Meteorological Institute"}
+
     eventname = res['eventname']
     l_type = res['type']
-    mnr = res['mnr']
 
     now = datetime.now()
-    identifier = res['id']
 
     alert = Element('alert')
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
 
-    SubElement(alert, 'identifier').text = identifier
+    identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
+
+    SubElement(alert, 'identifier').text = now.strftime("2.49.0.0.578.0.NO.%y%m%d%H%M%S.") + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
     SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00-00:00")
     SubElement(alert, 'status').text = 'Actual'
@@ -134,20 +149,19 @@ def generate_file_cap_fare(filename, xmldoc, db):
     dt = datetime.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
     df = datetime.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
 
-    urgency = get_urgency(dt, now)
+    urgency = get_urgency(df, dt, now)
 
     for p in res['locations']:
 
         locs = res['locations'][p]
 
-        comm = locs['kommentar']
-        tri = locs['triggerlevel']
         eng = locs['english']
         pict = locs['pictlink']
         infolink = locs['infolink']
+        language = "no"
 
         info = SubElement(alert, 'info')
-        SubElement(info, 'language').text = 'no'
+        SubElement(info, 'language').text = language
         SubElement(info, 'category').text = 'Met'
         SubElement(info, 'event').text = eventname
         SubElement(info, 'urgency').text = urgency
@@ -155,10 +169,11 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info, 'certainty').text = locs['certainty']
 
         # Write UTC times to the CAP file.
-        SubElement(info, 'effective').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
         SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
 
-        SubElement(info, 'senderName').text = sender
+        SubElement(info, 'senderName').text = senders[language.split("-")[0]]
         SubElement(info, 'description').text = locs['varsel']
         SubElement(info, 'instruction').text = locs['consequence']
         SubElement(info, 'web').text = 'http://www.yr.no'
