@@ -37,6 +37,11 @@ from lxml import etree
 CAP_nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 
 def parse_cap_file(cap_schema, cap_file = None, cap_text = None):
+    """Parses the CAP document supplied by the file, cap_file, or passed as a
+    string, cap_text, and validates it againts the schema, cap_schema.
+
+    Returns the root element if successful or raises a ValueError exception
+    if not."""
 
     if cap_file:
         # Parse and validate the CAP file.
@@ -46,13 +51,13 @@ def parse_cap_file(cap_schema, cap_file = None, cap_text = None):
         root = etree.fromstring(cap_text)
     
     if not cap_schema.validate(root):
-        sys.stderr.write("Error: CAP file '%s' is not valid.\n" % cap_file)
-        sys.exit(1)
-
+        raise ValueError
+    
     return root
 
 
 def find_id_and_type(cap):
+    """Returns the identifier and message type for the CAP document given by cap."""
 
     identifier = cap.find('.//cap:identifier', CAP_nsmap).text
     msgType = cap.find('.//cap:msgType', CAP_nsmap).text
@@ -60,6 +65,7 @@ def find_id_and_type(cap):
 
 
 def find_latest_time(cap):
+    """Finds the latest expiry time in a CAP document given by cap."""
 
     expires_list = []
     for expires in cap.iterfind('.//cap:expires', CAP_nsmap):
@@ -69,6 +75,8 @@ def find_latest_time(cap):
 
 
 def find_cancel_references(cap):
+    """Finds the references in a CAP document, cap, and yields each identifier
+    in turn."""
 
     references = cap.find('.//cap:references', CAP_nsmap).text.strip().split()
     references = filter(lambda word: word, references)
@@ -84,25 +92,32 @@ def find_cancel_references(cap):
 
 
 def process_message(file_name, cap, items, cancel, order):
+    """Processes the CAP message, cap, with the associated file_name, updating
+    the items and cancellation dictionaries, and order list.
+    
+    Messages that are identified as duplicates are discarded."""
 
     identifier, msgType = find_id_and_type(cap)
     
-    # Check for duplicates messages.
+    # Check for duplicate messages.
     if identifier in items:
-        sys.stderr.write("Warning: CAP file '%s' has identifier that has already been registed. Skipping.\n" % identifier)
+        sys.stderr.write("Warning: CAP file '%s' has identifier '%s' that has already been registered. Skipping.\n" % (file_name, identifier))
         return
     
     if msgType == "Cancel":
     
         # Record the relationship between messages in the cancellation dictionary.
         for original_id in find_cancel_references(cap):
-            cancel.append((original_id, identifier))
+            cancel[original_id] = identifier
     
     items[identifier] = (msgType, file_name, cap)
     order.append(identifier)
 
 
-def expire_message(expiry_time, identifier, msgType, cap):
+def expire_message(expiry_time, cap):
+    """Returns True if the CAP document, cap, has a latest expiry time that is
+    earlier than the given expiry_time, or returns False if the document is
+    still valid."""
 
     # Find the latest expiry time in the file.
     latest = find_latest_time(cap)
@@ -124,8 +139,8 @@ def parse_index_file(index_schema, cap_schema, index_file):
 
     The message dictionary maps the identifier of each CAP file to the message
     type, file name and CAP document itself. The cancellation dictionary maps
-    identifiers of messages that should be cancelled to the cancellation message
-    identifier.
+    identifiers of messages that should be cancelled to the corresponding
+    cancellation message identifiers.
     
     Since these messages have not been published, any that have corresponding
     cancellation messages, and the cancellations themselves, are not included
@@ -148,7 +163,7 @@ def parse_index_file(index_schema, cap_schema, index_file):
     items = {}
     # Create a list mapping cancelled message identifiers to the identifiers
     # of the Cancel messages that refer to them.
-    cancel = []
+    cancel = {}
     # Record the identifiers in a list to maintain the order of the messages.
     order = []
 
@@ -163,13 +178,13 @@ def parse_index_file(index_schema, cap_schema, index_file):
         
         try:
             cap = parse_cap_file(cap_schema, cap_file = file_path)
-        except etree.XMLSyntaxError:
+        except (ValueError, etree.XMLSyntaxError):
             sys.stderr.write("Error: CAP file '%s' is not valid.\n" % file_path)
             sys.exit(1)
         
         process_message(file_name, cap, items, cancel, order)
     
-    for reference_id, cancel_id in cancel:
+    for reference_id, cancel_id in cancel.items():
 
         # If the identifier referred to by the Cancel message is in the index
         # then remove it before it is sent. Also remove the Cancel message.
@@ -191,7 +206,8 @@ def parse_rss_file(cap_schema, rss_file):
 
     The message dictionary maps the identifier of each CAP file to the CAP
     document itself. The cancellation dictionary maps identifiers of
-    messages that should be cancelled to the cancellation message identifier."""
+    messages that should be cancelled to the corresponding cancellation
+    message identifiers."""
 
     try:
         rss = etree.parse(rss_file)
@@ -204,7 +220,7 @@ def parse_rss_file(cap_schema, rss_file):
     items = {}
     # Create a list mapping cancelled message identifiers to the identifiers
     # of the Cancel messages that refer to them.
-    cancel = []
+    cancel = {}
     # Record the identifiers in a list to maintain the order of the messages.
     order = []
     
@@ -222,8 +238,8 @@ def parse_rss_file(cap_schema, rss_file):
         
         try:
             cap = parse_cap_file(cap_schema, cap_text = cap_text)
-        except etree.XMLSyntaxError:
-            sys.stderr.write("Warning: failed to obtain CAP file from URL '%s'.\n" % item.link)
+        except (ValueError, etree.XMLSyntaxError):
+            sys.stderr.write("Warning: CAP file from URL '%s' is not valid.\n" % url)
             continue
         
         process_message(url, cap, items, cancel, order)
@@ -232,6 +248,8 @@ def parse_rss_file(cap_schema, rss_file):
 
 
 def main(args):
+    """Controls the overall processing of CAP and index files to create an RSS feed.
+    The given args are the arguments supplied by the user on the command line."""
 
     index_file = args[1]
     rss_file = args[2]
@@ -266,16 +284,23 @@ def main(args):
             if i not in s:
                 old_order.append(i)
             else:
+                # Warn about the duplicate but leave the entry in the message
+                # dictionary. The merging below will keep the existing messages
+                # from the RSS feed.
                 msgType, file_name, cap = items[i]
                 sys.stderr.write("Warning: CAP file '%s' with identifier '%s' was already present in the published feed. Skipping.\n" % (file_name, i))
 
         order = old_order
 
-        # Merge the item dictionaries from the RSS and index files.
+        # Merge the item dictionaries from the RSS and index files, keeping
+        # any messages that have already been published.
         items.update(old_items)
 
-        # Append the new cancellations to the old ones.
-        cancel = old_cancel + cancel
+        # Merge the cancellation dictionaries from the RSS and index files.
+        # If there were duplicate cancellations then those messages will have
+        # been discarded but the relationship between messages should still be
+        # valid since it describes a single pair of existing messages.
+        cancel.update(old_cancel)
     
     # At this point, we should only have new alerts and new cancellations
     # from the index and old alerts and cancellations from the RSS file.
@@ -293,7 +318,7 @@ def main(args):
         msgType, file_name, cap = items[identifier]
         if msgType == "Alert":
 
-            if expire_message(now, identifier, msgType, cap):
+            if expire_message(now, cap):
 
                 # Expire the message (do not include it in the new list).
                 if identifier in cancel:
