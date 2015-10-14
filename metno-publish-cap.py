@@ -28,11 +28,11 @@ If an RSS file already exists, it will be updated with new items for the CAP
 files supplied and expired items will be removed from the list it contains.
 """
 
-import os, sys, urllib2, urlparse
+import os, shutil, sys, urllib2, urlparse
 import datetime
 import dateutil.parser, dateutil.tz
+from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
-from PyRSS2Gen import RSS2, RSSItem
 
 CAP_nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 
@@ -87,14 +87,19 @@ def process_message(file_name, cap, items, cancel, order):
 
     identifier, msgType = find_id_and_type(cap)
     
+    # Check for duplicates messages.
+    if identifier in items:
+        sys.stderr.write("Warning: CAP file '%s' has identifier that has already been registed. Skipping.\n" % identifier)
+        return
+    
     if msgType == "Cancel":
     
         # Record the relationship between messages in the cancellation dictionary.
         for original_id in find_cancel_references(cap):
             cancel.append((original_id, identifier))
     
-    items[identifier] = (msgType, cap)
-    order.append((identifier, file_name))
+    items[identifier] = (msgType, file_name, cap)
+    order.append(identifier)
 
 
 def expire_message(expiry_time, identifier, msgType, cap):
@@ -117,9 +122,10 @@ def parse_index_file(index_schema, cap_schema, index_file):
     Uses the cap_schema and index_schema to validate CAP and MIfare index files
     respectively.
 
-    The message dictionary maps the identifier of each CAP file to the CAP
-    document itself. The cancellation dictionary maps identifiers of
-    messages that should be cancelled to the cancellation message identifier.
+    The message dictionary maps the identifier of each CAP file to the message
+    type, file name and CAP document itself. The cancellation dictionary maps
+    identifiers of messages that should be cancelled to the cancellation message
+    identifier.
     
     Since these messages have not been published, any that have corresponding
     cancellation messages, and the cancellations themselves, are not included
@@ -137,13 +143,13 @@ def parse_index_file(index_schema, cap_schema, index_file):
     
     index_dir = os.path.split(index_file)[0]
 
-    # Create a dictionary mapping identifiers to tuples containing message types
-    # and CAP documents.
+    # Create a dictionary mapping identifiers to tuples containing message types,
+    # file names and CAP documents.
     items = {}
     # Create a list mapping cancelled message identifiers to the identifiers
     # of the Cancel messages that refer to them.
     cancel = []
-    # Maintain the order of the messages and their file names.
+    # Record the identifiers in a list to maintain the order of the messages.
     order = []
 
     for element in tree.iterfind('.//file'):
@@ -190,16 +196,16 @@ def parse_rss_file(cap_schema, rss_file):
     try:
         rss = etree.parse(rss_file)
     except etree.XMLSyntaxError:
-        sys.stderr.write("Error: RSS file '%s' is not valid.\n" % index_file)
+        sys.stderr.write("Error: RSS file '%s' is not valid.\n" % rss_file)
         sys.exit(1)
     
-    # Create a dictionary mapping identifiers to tuples containing message types
-    # and CAP documents.
+    # Create a dictionary mapping identifiers to tuples containing message types,
+    # file names and CAP documents.
     items = {}
     # Create a list mapping cancelled message identifiers to the identifiers
     # of the Cancel messages that refer to them.
     cancel = []
-    # Maintain the order of the messages and their file names.
+    # Record the identifiers in a list to maintain the order of the messages.
     order = []
     
     for element in rss.iterfind('.//item'):
@@ -220,22 +226,17 @@ def parse_rss_file(cap_schema, rss_file):
             sys.stderr.write("Warning: failed to obtain CAP file from URL '%s'.\n" % item.link)
             continue
         
-        process_message(item.link, cap, items, cancel, order)
+        process_message(url, cap, items, cancel, order)
     
     return items, cancel, order
 
 
-if __name__ == "__main__":
+def main(args):
 
-    if len(sys.argv) != 5:
-
-        sys.stderr.write(__doc__)
-        sys.exit(1)
-    
-    index_file = sys.argv[1]
-    rss_file = sys.argv[2]
-    output_dir = sys.argv[3]
-    base_url = sys.argv[4]
+    index_file = args[1]
+    rss_file = args[2]
+    output_dir = args[3]
+    base_url = args[4]
     
     # Get the current time.
     now = datetime.datetime.now(dateutil.tz.tzutc())
@@ -256,16 +257,25 @@ if __name__ == "__main__":
     
     # Parse the RSS file, if found.
     if os.path.exists(rss_file):
-        rss_items, rss_cancel, rss_order = parse_rss_file(cap_schema, rss_file)
+
+        old_items, old_cancel, old_order = parse_rss_file(cap_schema, rss_file)
         
+        # Append the new identifiers to the old ones, removing any duplicates.
+        s = set(old_order)
+        for i in order:
+            if i not in s:
+                old_order.append(i)
+            else:
+                msgType, file_name, cap = items[i]
+                sys.stderr.write("Warning: CAP file '%s' with identifier '%s' was already present in the published feed. Skipping.\n" % (file_name, i))
+
+        order = old_order
+
         # Merge the item dictionaries from the RSS and index files.
-        items.update(rss_items)
+        items.update(old_items)
 
         # Append the new cancellations to the old ones.
-        cancel = rss_cancel + cancel
-        
-        # Append the new identifiers to the old ones.
-        order = rss_order + order
+        cancel = old_cancel + cancel
     
     # At this point, we should only have new alerts and new cancellations
     # from the index and old alerts and cancellations from the RSS file.
@@ -278,9 +288,9 @@ if __name__ == "__main__":
     expired = set()
     new_items = []
 
-    for identifier, file_name in order:
+    for identifier in order:
     
-        msgType, cap = items[identifier]
+        msgType, file_name, cap = items[identifier]
         if msgType == "Alert":
 
             if expire_message(now, identifier, msgType, cap):
@@ -297,31 +307,56 @@ if __name__ == "__main__":
             if identifier not in expired:
                 new_items.append((file_name, cap))
     
-    new_rss_items = []
+    # Copy the local CAP files to the output directory.
+    index_dir = os.path.split(index_file)[0]
 
+    for file_name, cap in new_items:
+
+        if "/" not in file_name:
+            shutil.copy2(os.path.join(index_dir, file_name),
+                         os.path.join(output_dir, file_name))
+    
+    # Create a RSS feed.
+    rss = Element('rss')
+    rss.set('version', '2.0')
+    
+    channel = SubElement(rss, 'channel')
+    SubElement(channel, 'title').text = "Weather alerts"
+    SubElement(channel, 'link').text = base_url
+    SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
+    SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
+    
     for file_name, cap in new_items:
     
         # Check if the file name is actually a URL.
         if "/" in file_name:
+            # Use the URL supplied.
             url = file_name
         else:
+            # Create the intended URL from the base URL and the file name.
             url = urlparse.urljoin(base_url, file_name)
+        
+        item = SubElement(channel, 'item')
+        SubElement(item, 'title').text = cap.find('.//cap:headline', CAP_nsmap).text
+        SubElement(item, 'link').text = url
+        SubElement(item, 'description').text = cap.find('.//cap:description', CAP_nsmap).text
+        SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
+        SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
+        SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
+        SubElement(item, 'category').text = cap.find('.//cap:category', CAP_nsmap).text
+    
+    # Write the new RSS feed file.
+    f = open(rss_file, 'wb')
+    ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
+    f.close()
 
-        new_rss_items.append(RSSItem(
-            title = cap.find('.//cap:headline', CAP_nsmap).text,
-            link = url,
-            description = cap.find('.//cap:description', CAP_nsmap).text,
-            guid = cap.find('.//cap:identifier', CAP_nsmap).text,
-            pubDate = cap.find('.//cap:sent', CAP_nsmap).text,
-            author = cap.find('.//cap:sender', CAP_nsmap).text,
-            categories = [cap.find('.//cap:category', CAP_nsmap).text]
-            ))
-    
-    # Create a RSS feed.
-    rss = RSS2(title = "Weather alerts",
-               link = base_url,
-               description = "Weather alerts from the Norwegian Meteorological Institute",
-               lastBuildDate = now, items = new_rss_items)
-    
-    rss.write_xml(open(rss_file, "w"))
+
+if __name__ == "__main__":
+
+    if len(sys.argv) != 5:
+        sys.stderr.write(__doc__)
+        sys.exit(1)
+
+    main(sys.argv)
+
     sys.exit()
