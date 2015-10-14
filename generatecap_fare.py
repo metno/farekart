@@ -174,6 +174,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
 
         SubElement(info, 'senderName').text = senders[language.split("-")[0]]
+        SubElement(info, 'headline').text = locs['varsel'][:160]
         SubElement(info, 'description').text = locs['varsel']
         SubElement(info, 'instruction').text = locs['consequence']
         SubElement(info, 'web').text = 'http://www.yr.no'
