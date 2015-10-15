@@ -28,6 +28,7 @@ If an RSS file already exists, it will be updated with new items for the CAP
 files supplied and expired items will be removed from the list it contains.
 """
 
+from collections import OrderedDict
 import os, shutil, sys, urllib2, urlparse
 import datetime
 import dateutil.parser, dateutil.tz
@@ -74,7 +75,7 @@ def find_latest_time(cap):
     return max(expires_list)
 
 
-def find_cancel_references(cap):
+def find_references(cap):
     """Finds the references in a CAP document, cap, and yields each identifier
     in turn."""
 
@@ -91,27 +92,45 @@ def find_cancel_references(cap):
         yield original_id
 
 
-def process_message(file_name, cap, items, cancel, order):
+def process_message(file_name, cap, messages, cancel, update):
     """Processes the CAP message, cap, with the associated file_name, updating
-    the items and cancellation dictionaries, and order list.
+    the message and cancellation dictionaries.
     
     Messages that are identified as duplicates are discarded."""
 
     identifier, msgType = find_id_and_type(cap)
     
     # Check for duplicate messages.
-    if identifier in items:
+    if identifier in messages:
         sys.stderr.write("Warning: CAP file '%s' has identifier '%s' that has already been registered. Skipping.\n" % (file_name, identifier))
         return
     
     if msgType == "Cancel":
     
         # Record the relationship between messages in the cancellation dictionary.
-        for original_id in find_cancel_references(cap):
+        for original_id in find_references(cap):
             cancel[original_id] = identifier
     
-    items[identifier] = (msgType, file_name, cap)
-    order.append(identifier)
+    elif msgType == "Update":
+
+        # Record the relationship between messages in the update dictionary.
+        for original_id in find_references(cap):
+            update[original_id] = identifier
+
+    messages[identifier] = (msgType, file_name, cap)
+
+
+def update_message(messages, update, reference_id, update_id):
+
+    msgType, file_name, cap = messages[update_id]
+    
+    # Convert the Update message into an Alert message.
+    cap.find('.//cap:msgType', CAP_nsmap).text = "Alert"
+
+    # Remove the references element.
+    references = cap.find('.//cap:references', CAP_nsmap)
+    alert = references.getparent()
+    alert.remove(references)
 
 
 def expire_message(expiry_time, cap):
@@ -127,12 +146,12 @@ def expire_message(expiry_time, cap):
         return True
     
     return False
-    
+
 
 def parse_index_file(index_schema, cap_schema, index_file):
-    """Parses the given index_file, returning a message dictionary, a cancellation
-    dictionary and a list of identifiers and file names in the order in which
-    they appeared in the index file.
+    """Parses the given index_file, returning message, cancellation and update
+    dictionaries. The message dictionary contains messages in the order in
+    which they appeared in the index file.
     
     Uses the cap_schema and index_schema to validate CAP and MIfare index files
     respectively.
@@ -160,12 +179,12 @@ def parse_index_file(index_schema, cap_schema, index_file):
 
     # Create a dictionary mapping identifiers to tuples containing message types,
     # file names and CAP documents.
-    items = {}
-    # Create a list mapping cancelled message identifiers to the identifiers
-    # of the Cancel messages that refer to them.
+    messages = OrderedDict()
+    # Create a dictionary mapping cancelled message identifiers to the identifiers
+    # of the Cancel messages that refer to them, and a dictionary mapping updated
+    # messages to the Update messages that refer to them.
     cancel = {}
-    # Record the identifiers in a list to maintain the order of the messages.
-    order = []
+    update = {}
 
     for element in tree.iterfind('.//file'):
 
@@ -182,23 +201,48 @@ def parse_index_file(index_schema, cap_schema, index_file):
             sys.stderr.write("Error: CAP file '%s' is not valid.\n" % file_path)
             sys.exit(1)
         
-        process_message(file_name, cap, items, cancel, order)
+        process_message(file_name, cap, messages, cancel, update)
+    
+    for reference_id, update_id in update.items():
+
+        # If the identifier referred to by the Update message is in the index
+        # then remove the corresponding Alert message before it is sent and
+        # convert the Update message into an Alert, removing any references to
+        # the original message. Remove the Update message from the update
+        # dictionary.
+        if reference_id in messages:
+            sys.stdout.write("Updating message '%s' before it can be sent.\n" % reference_id)
+            update_message(messages, reference_id, update_id)
+            
+            # Remove the original message from the message dictionary.
+            del messages[reference_id]
+            
+            # Remove the Update message from the update dictionary.
+            # The message itself is now an Alert message.
+            del update[reference_id]
     
     for reference_id, cancel_id in cancel.items():
 
         # If the identifier referred to by the Cancel message is in the index
-        # then remove it before it is sent. Also remove the Cancel message.
-        if reference_id in items:
+        # then remove the corresponding Alert message before it is sent.
+        # Also remove the Cancel message from both the message and cancellation
+        # dictionaries.
+        if reference_id in messages:
             sys.stdout.write("Cancelling message '%s' before it can be sent.\n" % reference_id)
-            del items[reference_id]
-            del items[cancel_id]
+
+            # Remove the original message from the message dictionary.
+            del messages[reference_id]
+
+            # Remove the Cancel message from the message and cancellation dictionaries.
+            del messages[cancel_id]
+            del cancel[reference_id]
     
-    return items, cancel, order
+    return messages, cancel, update
 
 
 def parse_rss_file(cap_schema, rss_file):
-    """Parses the given rss_file, returning a message dictionary, a cancellation
-    dictionary and a list of identifiers and file names in the order in which
+    """Parses the given rss_file, returning message, cancellation and update
+    dictionaries. The message dictionary contains messages in the order in which
     they appeared in the RSS file.
     
     Uses the cap_schema to validate CAP files that are read to obtain additional
@@ -217,12 +261,12 @@ def parse_rss_file(cap_schema, rss_file):
     
     # Create a dictionary mapping identifiers to tuples containing message types,
     # file names and CAP documents.
-    items = {}
-    # Create a list mapping cancelled message identifiers to the identifiers
-    # of the Cancel messages that refer to them.
+    messages = OrderedDict()
+    # Create a dictionary mapping cancelled message identifiers to the identifiers
+    # of the Cancel messages that refer to them, and a dictionary mapping updated
+    # messages to the Update messages that refer to them.
     cancel = {}
-    # Record the identifiers in a list to maintain the order of the messages.
-    order = []
+    update = {}
     
     for element in rss.iterfind('.//item'):
     
@@ -242,9 +286,9 @@ def parse_rss_file(cap_schema, rss_file):
             sys.stderr.write("Warning: CAP file from URL '%s' is not valid.\n" % url)
             continue
         
-        process_message(url, cap, items, cancel, order)
+        process_message(url, cap, messages, cancel, update)
     
-    return items, cancel, order
+    return messages, cancel, update
 
 
 def main(args):
@@ -271,52 +315,45 @@ def main(args):
     cap_schema = etree.XMLSchema(cap_schema_doc)
 
     # Parse and validate the index file.
-    items, cancel, order = parse_index_file(index_schema, cap_schema, index_file)
+    messages, cancel, update = parse_index_file(index_schema, cap_schema, index_file)
     
     # Parse the RSS file, if found.
     if os.path.exists(rss_file):
 
-        old_items, old_cancel, old_order = parse_rss_file(cap_schema, rss_file)
+        old_messages, old_cancel, old_update = parse_rss_file(cap_schema, rss_file)
         
-        # Append the new identifiers to the old ones, removing any duplicates.
-        s = set(old_order)
-        for i in order:
-            if i not in s:
-                old_order.append(i)
-            else:
-                # Warn about the duplicate but leave the entry in the message
-                # dictionary. The merging below will keep the existing messages
-                # from the RSS feed.
-                msgType, file_name, cap = items[i]
-                sys.stderr.write("Warning: CAP file '%s' with identifier '%s' was already present in the published feed. Skipping.\n" % (file_name, i))
-
-        order = old_order
-
         # Merge the item dictionaries from the RSS and index files, keeping
         # any messages that have already been published.
-        items.update(old_items)
+        messages.update(old_messages)
 
         # Merge the cancellation dictionaries from the RSS and index files.
         # If there were duplicate cancellations then those messages will have
         # been discarded but the relationship between messages should still be
         # valid since it describes a single pair of existing messages.
         cancel.update(old_cancel)
+        
+        # Merge the update dictionaries from the RSS and index files.
+        update.update(old_update)
     
-    # At this point, we should only have new alerts and new cancellations
-    # from the index and old alerts and cancellations from the RSS file.
+    # At this point, we should only have new alerts, cancellations and updates
+    # from the index and old alerts, cancellations and updates from the RSS file.
     
     # Check for expired messages and remove them, removing any cancellations
     # that refer to them. We cannot remove messages with cancellations that
     # are still valid since users may have only read the original messages.
     
-    # Maintain a set of expired cancellations.
+    # Maintain a set of expired messages so that cancellations can also be expired.
     expired = set()
-    new_items = []
+    new_messages = []
 
-    for identifier in order:
+    for identifier in messages:
     
-        msgType, file_name, cap = items[identifier]
-        if msgType == "Alert":
+        try:
+            msgType, file_name, cap = messages[identifier]
+        except KeyError:
+            continue
+
+        if msgType == "Alert" or msgType == "Update":
 
             if expire_message(now, cap):
 
@@ -325,21 +362,24 @@ def main(args):
                     # Also expire the cancellation.
                     expired.add(cancel[identifier])
             else:
-                new_items.append((file_name, cap))
+                new_messages.append((file_name, cap))
 
         elif msgType == "Cancel":
 
             if identifier not in expired:
-                new_items.append((file_name, cap))
+                new_messages.append((file_name, cap))
     
-    # Copy the local CAP files to the output directory.
+    # Write the unpublished CAP files to the output directory.
+    # Note that we cannot just copy the files because some Update messages may
+    # have been converted to Alert messages.
     index_dir = os.path.split(index_file)[0]
 
-    for file_name, cap in new_items:
+    for file_name, cap in new_messages:
 
         if "/" not in file_name:
-            shutil.copy2(os.path.join(index_dir, file_name),
-                         os.path.join(output_dir, file_name))
+            f = open(os.path.join(output_dir, file_name), 'wb')
+            ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+            f.close()
     
     # Create a RSS feed.
     rss = Element('rss')
@@ -351,7 +391,7 @@ def main(args):
     SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
     SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
     
-    for file_name, cap in new_items:
+    for file_name, cap in new_messages:
     
         # Check if the file name is actually a URL.
         if "/" in file_name:
