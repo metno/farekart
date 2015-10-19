@@ -358,8 +358,11 @@ def main(args):
             if expire_message(now, cap):
 
                 # Expire the message (do not include it in the new list).
+                sys.stdout.write("Expiring unpublished message '%s'.\n" % identifier)
+
                 if identifier in cancel:
                     # Also expire the cancellation.
+                    sys.stdout.write("Also expiring unpublished cancellation message '%s'.\n" % cancel[identifier])
                     expired.add(cancel[identifier])
             else:
                 new_messages.append((file_name, cap))
@@ -373,10 +376,11 @@ def main(args):
     # Note that we cannot just copy the files because some Update messages may
     # have been converted to Alert messages.
     index_dir = os.path.split(index_file)[0]
-
+    
     for file_name, cap in new_messages:
-
-        if "/" not in file_name:
+    
+        # Only published local files.
+        if urlparse.urlparse(file_name).scheme == "":
             f = open(os.path.join(output_dir, file_name), 'wb')
             ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True, pretty_print=True)
             f.close()
@@ -394,7 +398,7 @@ def main(args):
     for file_name, cap in new_messages:
     
         # Check if the file name is actually a URL.
-        if "/" in file_name:
+        if urlparse.urlparse(file_name).scheme != "":
             # Use the URL supplied.
             url = file_name
         else:
