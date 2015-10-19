@@ -228,7 +228,7 @@ def parse_index_file(index_schema, cap_schema, index_file):
         # Also remove the Cancel message from both the message and cancellation
         # dictionaries.
         if reference_id in messages:
-            sys.stdout.write("Cancelling message '%s' before it can be sent.\n" % reference_id)
+            sys.stdout.write("Cancelling unpublished message '%s'.\n" % reference_id)
 
             # Remove the original message from the message dictionary.
             del messages[reference_id]
