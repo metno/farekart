@@ -118,6 +118,7 @@ def retrieve_from_xml_fare(xmldoc):
 
         name = None
         varsel = None
+        heading = None
         nam = None
         severity = None
         certainty = None
@@ -126,7 +127,7 @@ def retrieve_from_xml_fare(xmldoc):
         kommentar = None
         pictlink = None
         retperiode = None
-        consequence = None
+        instruction = None
         infolink = None
 
         loc = {}
@@ -140,6 +141,8 @@ def retrieve_from_xml_fare(xmldoc):
 
             if nam == "varsel":
                 varsel = param.find('in').text
+            elif nam == "heading":
+                heading = param.find('in').text
             elif nam == "severity":
                 severity = param.find('in').text
             elif nam == "certainty":
@@ -148,8 +151,8 @@ def retrieve_from_xml_fare(xmldoc):
                 pictlink = param.find('in').text
             elif nam == "returnperiod":
                 retperiode = param.find('in').text
-            elif nam == "consequence":
-                consequence = param.find('in').text
+            elif nam == "instruction":
+                instruction = param.find('in').text
             elif nam == "infolink":
                 infolink = param.find('in').text
             elif nam == "triggerlevel":
@@ -163,12 +166,13 @@ def retrieve_from_xml_fare(xmldoc):
         loc['id'] = l_id
         loc['type'] = ty
         loc['varsel'] = varsel
+        loc['heading'] = heading
         loc['severity'] = severity
         loc['certainty'] = certainty
         loc['pictlink'] = pictlink
         loc['infolink'] = infolink
         loc['retperiode'] = retperiode
-        loc['consequence'] = consequence
+        loc['instruction'] = instruction
         loc['kommentar'] = kommentar
         loc['triggerlevel'] = trigglevel
         loc['english'] = english
@@ -259,7 +263,7 @@ def retrieve_from_xml(value):
             kommentar = None
             pictlink = None
             retperiode = None
-            consequence = None
+            instruction = None
             infolink = None
 
             loc = {}
@@ -269,6 +273,9 @@ def retrieve_from_xml(value):
 
             for param in location.findall('parameter'):
 
+				# These parameters are defined in the TED template for the forecast
+				# 
+				
                 nam = param.get('name')
 
                 if nam == "varsel":
@@ -281,8 +288,8 @@ def retrieve_from_xml(value):
                     pictlink = param.find('in').text
                 elif nam == "returnperiod":
                     retperiode = param.find('in').text
-                elif nam == "consequence":
-                    consequence = param.find('in').text
+                elif nam == "instruction":
+                    instruction = param.find('in').text
                 elif nam == "infolink":
                     infolink = param.find('in').text
                 elif nam == "triggerlevel":
@@ -301,7 +308,7 @@ def retrieve_from_xml(value):
             loc['pictlink'] = pictlink
             loc['infolink'] = infolink
             loc['retperiode'] = retperiode
-            loc['consequence'] = consequence
+            loc['instruction'] = instruction
             loc['kommentar'] = kommentar
             loc['triggerlevel'] = trigglevel
             loc['english'] = english
