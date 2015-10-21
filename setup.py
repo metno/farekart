@@ -10,6 +10,6 @@ setup(
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
     version="0.2.0",
-    py_modules=["generatecap", "fare_utilities", "fare_common", "generatecap_fare"],
-    scripts=["faremeldinger.py"]
+    py_modules=["generatecap", "fare_common", "generatecap_fare"],
+    scripts=["faremeldinger.py", "metno-publish-cap.py", "cap2kml.py"]
     )

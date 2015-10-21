@@ -2,7 +2,7 @@ Source: python-farekart
 Section: python
 Priority: extra
 Maintainer: Helen Korsmo <helenk@met.no>
-Build-Depends: devscripts
+Build-Depends: devscripts, debhelper (>= 7)
 Standards-Version: 3.9.3
 
 Package: python-farekart
