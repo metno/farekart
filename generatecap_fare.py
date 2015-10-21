@@ -15,7 +15,6 @@ weather warning) reports obtained from a TED database."""
 
 import glob, os, sys, uuid
 from datetime import datetime
-import string
 
 from lxml.etree import Element, SubElement, tostring
 from lxml import etree
@@ -102,55 +101,53 @@ def get_urgency(date_from, date_to, now):
         return "Future"
 
 def make_awareness_level( sev ):
-	""" Returns MeteoAlarm awareness-level based on severity """
-	
-	levels = { 'min': "1; green; Minor",
-			 'mod': "2; yellow; Moderate",
-			 'sev': "3; orange; Severe",
-			 'ext': "4; red; Extreme"
-			 }
-	
-	lev = string.lower( sev[:3] )
-	
-	try:
-		ret = levels[lev]
-	except:
-		print "WRONG SEVERITY TO make_awarness_level. RETURNING DEFAULT VALUE"
-		ret = "2; yellow; Moderate"
-		
-	return ret
-	
+    """ Returns MeteoAlarm awareness-level based on severity """
+    
+    levels = {'min': "1; green; Minor",
+              'mod': "2; yellow; Moderate",
+              'sev': "3; orange; Severe",
+              'ext': "4; red; Extreme"}
+    
+    lev = sev[:3].lower()
+    
+    try:
+        ret = levels[lev]
+    except:
+        print "WRONG SEVERITY TO make_awarness_level. RETURNING DEFAULT VALUE"
+        ret = "2; yellow; Moderate"
+        
+    return ret
+    
 def make_awareness_type( typ ):
-	""" Returns MeteoAlarm awareness-type based on warning type
-	 """
-	
-	# The types are defined in the TED template and are therefore used unchanged
-	
-	types = { 'Wind': "1; Wind", 
-			 'snow-ice': "2; snow-ice",
-			 'Thunderstorm': "3; Thunderstorm",
-			 'Fog': "4; Fog",
-			 'high-temperature':"5; high-temperature",
-			 'low-temperature':"6; low-temperature",
-			 'coastalevent':"7; coastalevent",
-			 'forest-fire':"8; forest-fire",
-			 'avalanches':"9; avalanches",
-			 'Rain':"10; Rain",
-			 'flooding':"12; flooding",
-			 'rain-flood':"13; rain-flood",
-			 'Polar-low':"14; Polar-low"
-			 }
-	
-	try:
-		ret = types[typ]
-	except:
-		print "WRONG TYPE ( %s ) TO make_awarness_TYPE. RETURNING DEFAULT VALUE, WIND" % typ
-		ret = "1; Wind"
-		
-	return ret
-	
-	
-	
+    """ Returns MeteoAlarm awareness-type based on warning type
+     """
+    
+    # The types are defined in the TED template and are therefore used unchanged
+    
+    types = {'Wind': "1; Wind",
+             'snow-ice': "2; snow-ice",
+             'Thunderstorm': "3; Thunderstorm",
+             'Fog': "4; Fog",
+             'high-temperature':"5; high-temperature",
+             'low-temperature':"6; low-temperature",
+             'coastalevent':"7; coastalevent",
+             'forest-fire':"8; forest-fire",
+             'avalanches':"9; avalanches",
+             'Rain':"10; Rain",
+             'flooding':"12; flooding",
+             'rain-flood':"13; rain-flood",
+             'Polar-low':"14; Polar-low"}
+    
+    try:
+        ret = types[typ]
+    except:
+        print "WRONG TYPE ( %s ) TO make_awarness_TYPE. RETURNING DEFAULT VALUE, WIND" % typ
+        ret = "1; Wind"
+        
+    return ret
+    
+    
+    
 def generate_file_cap_fare(filename, xmldoc, db):
     """Obtains the locations from the XML document given by xmldoc and the
     database, db, and writes a CAP file with the given filename.
@@ -176,7 +173,6 @@ def generate_file_cap_fare(filename, xmldoc, db):
                "nn": "Meteorologisk Institutt",
                "en": "Norwegian Meteorological Institute"}
 
-    # eventname = res['eventname']
     l_type = res['type']
 
     now = datetime.now()
@@ -229,12 +225,12 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info, 'instruction').text = locs['instruction']
         SubElement(info, 'web').text = 'http://www.yr.no'
 
-		# MeteoAlarm mandatory elements
-		
+        # MeteoAlarm mandatory elements
+
         aw_level = SubElement( info, 'parameter')
         SubElement( aw_level, 'valueName' ).text = "awareness_level"
         SubElement( aw_level, 'value' ).text = make_awareness_level( locs['severity'] )
-		
+
         aw_type = SubElement( info , 'parameter')
         SubElement( aw_type , 'valueName' ).text = "awareness_type"
         SubElement( aw_type , 'value' ).text = make_awareness_type( l_type )

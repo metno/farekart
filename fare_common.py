@@ -273,9 +273,8 @@ def retrieve_from_xml(value):
 
             for param in location.findall('parameter'):
 
-				# These parameters are defined in the TED template for the forecast
-				# 
-				
+                # These parameters are defined in the TED template for the forecast
+                
                 nam = param.get('name')
 
                 if nam == "varsel":
