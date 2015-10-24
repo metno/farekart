@@ -168,12 +168,23 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     res = retrieve_from_xml_fare(xmldoc)
     numAreas = 0
+    
     senders = {"no": "Meteorologisk Institutt",
                "nb": "Meteorologisk Institutt",
                "nn": "Meteorologisk Institutt",
                "en": "Norwegian Meteorological Institute"}
+	
+    notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "nn":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "en":u'%s alert for Norway issued by the Norwegian Meteorological Institute. Message number %s.'}
 
+    language = "no"   #Suitable default.
+	
     l_type = res['type']
+    l_alert = res['alert']
+    if l_alert == None : 
+       l_alert = "Alert"
 
     now = datetime.now()
 
@@ -182,16 +193,23 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
 
-    SubElement(alert, 'identifier').text = now.strftime("2.49.0.0.578.0.NO.%y%m%d%H%M%S.") + identifier
+    SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
     SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00-00:00")
     SubElement(alert, 'status').text = 'Actual'
-    SubElement(alert, 'msgType').text = 'Alert'
+    SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
+    
+    # Optional elementt, although 'references' is mandatory for UPDATE and CANCEL.
+    
+    if l_alert != 'Alert':
+        SubElement(alert, 'references').text = res['references']
+    
+    SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
 
-    # Optional element
-    SubElement(alert, 'note').text = u'%s alert for %s issued by the Norwegian Meteorological Institute' % (l_type, 'Norway')
-
+    if res['eventname'] != None:
+        SubElement(alert, 'incidents').text = res['eventname']
+    
     dt = datetime.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
     df = datetime.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
 
@@ -204,7 +222,6 @@ def generate_file_cap_fare(filename, xmldoc, db):
         eng = locs['english']
         pict = locs['pictlink']
         infolink = locs['infolink']
-        language = "no"
 
         info = SubElement(alert, 'info')
         SubElement(info, 'language').text = language
@@ -293,6 +310,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
     f = open(filename, 'w')
     f.write(tostring(alert, encoding="UTF-8", xml_declaration=True, pretty_print=True, standalone=True))
     f.close()
+    
+    return
 
 
 def generate_files_cap_fare(selectString, dateto, db, filebase):

@@ -84,12 +84,33 @@ def retrieve_from_xml_fare(xmldoc):
     ty = None
     sender = None
     type = None
-    id = None
+    id = "BLANK"
     mnr = None
     eventname = None
+    alert = None
+
+    t = root.find('dangerwarning')
+	# new types of warnings using metfare template and <dangerwarning> tag.
+		
+    if t:
+      alert = t.find('msgtype').text
+      mnr   = t.find('msgnumber').text
+      references = t.find('msgreferences').text
+      sender = t.find('msgauthor').text
+      id = t.find('msgidentifier').text
+    else:
+      print "NO DANGERWARNING ELEMENT FOUND. SETTING DEFAULTS."
+      alert = "Alert"
+      mnr = 1
+      references = None
+      sender = None
+      id = 'BLANK'
 
     for t in root.iter('time'):
         # print "Tag: ",t.tag, " Attrib: ", t.attrib
+        #THIS CODE ASUMES ONLY ONE TIME TAG IN EACH MESSAGE !!!!!
+        # TODO: CHANGE FOR MULTIPLE TIMES IN ONE MESSAGE.
+        #
 
         vto = t.get('vto')
         vfrom = t.get('vfrom')
@@ -107,9 +128,6 @@ def retrieve_from_xml_fare(xmldoc):
             elif nam == "navn":
                 eventname = keyword.find('in').text
 
-        for header in root.iter('productheader'):
-            id = header.find('dockey').text
-
         for p in root.iter('productdescription'):
             termin = p.get('termin')
 
@@ -120,6 +138,7 @@ def retrieve_from_xml_fare(xmldoc):
         varsel = None
         heading = None
         nam = None
+        references = None
         severity = None
         certainty = None
         trigglevel = None
@@ -190,7 +209,9 @@ def retrieve_from_xml_fare(xmldoc):
     res['type'] = type
     res['id'] = id
     res['mnr'] = mnr
-
+    res['alert'] = alert
+    res['references']= references
+	
     return res
 
 
