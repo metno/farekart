@@ -172,12 +172,12 @@ def generate_file_cap_fare(filename, xmldoc, db):
     senders = {"no": "Meteorologisk Institutt",
                "nb": "Meteorologisk Institutt",
                "nn": "Meteorologisk Institutt",
-               "en": "Norwegian Meteorological Institute"}
+               "en": "MET Norway"}
 	
     notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "nn":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
-               "en":u'%s alert for Norway issued by the Norwegian Meteorological Institute. Message number %s.'}
+               "en":u'%s alert for Norway issued by MET Norway. Message number %s.'}
 
     language = "no"   #Suitable default.
 	
