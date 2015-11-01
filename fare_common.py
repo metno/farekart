@@ -92,7 +92,7 @@ def retrieve_from_xml_fare(xmldoc):
     t = root.find('dangerwarning')
 	# new types of warnings using metfare template and <dangerwarning> tag.
 		
-    if t:
+    if t is not None:
       alert = t.find('msgtype').text
       mnr   = t.find('msgnumber').text
       references = t.find('msgreferences').text
@@ -148,6 +148,8 @@ def retrieve_from_xml_fare(xmldoc):
         retperiode = None
         instruction = None
         infolink = None
+        englishheading = None
+        consequenses = None
 
         loc = {}
 
@@ -178,6 +180,10 @@ def retrieve_from_xml_fare(xmldoc):
                 trigglevel = param.find('in').text
             elif nam == "englishforecast":
                 english = param.find('in').text
+            elif nam == "englishheading":
+                englishheading = param.find('in').text
+            elif nam == "consequenses":
+                consequenses = param.find('in').text
             elif nam == "coment":
                 kommentar = param.find('in').text
 
@@ -195,6 +201,8 @@ def retrieve_from_xml_fare(xmldoc):
         loc['kommentar'] = kommentar
         loc['triggerlevel'] = trigglevel
         loc['english'] = english
+        loc['englishheading'] = englishheading
+        loc['consequenses'] = consequenses
 
         n = n + 1
 
