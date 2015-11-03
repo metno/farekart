@@ -276,6 +276,11 @@ def retrieve_from_xml(value):
             for header in root.iter('productheader'):
                 id = header.find('dockey').text
 
+            for header in root.iter('productheader'):
+                ph = header.find('phenomenon_type')
+                if ph is not None:
+	                type = ph.text
+
             for p in root.iter('productdescription'):
                 termin = p.get('termin')
 

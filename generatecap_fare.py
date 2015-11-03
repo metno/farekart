@@ -156,7 +156,15 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
         ALERT
             |
-            | ---- One or more --  INFO
+            | ----  Norwegian   --  INFO
+            |                        |
+            |                        | -- one or more -- RESOURCE
+            |                        |
+            |                        | -- one or more -- AREA
+            |                        |
+            |                    end INFO
+            |
+            | ----  English     --  INFO
             |                        |
             |                        | -- one or more -- RESOURCE
             |                        |
@@ -193,13 +201,28 @@ def generate_file_cap_fare(filename, xmldoc, db):
                     "rain-flooding" : "Flom fra regn",
                     "Polar-low" : "Polart lavtrykk"}
 
-    language = "no"   #Suitable default.
-	
     l_type = res['type']
     l_alert = res['alert']
-    if l_alert == None : 
+    
+    #Check for values we absolutly need and set suitable defaults
+    
+    language = "no"   #Suitable default. 
+	
+    if l_alert is None : 
        l_alert = "Alert"
 
+    if locs['severity'] is None:
+	    locs['severity'] = "Moderate"
+
+    if locs['certainty'] is None:
+	    locs['certainty'] = "Likely"
+
+    if l_type is None:
+	    l_type = "Wind"
+
+
+	# Sent time is now.
+	
     now = datetime.now()
 
     alert = Element('alert')
