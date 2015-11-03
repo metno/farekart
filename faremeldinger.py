@@ -108,6 +108,14 @@ if __name__ == "__main__":
 
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
+    # same from other product.
+    
+    select_string='select value,termin from document where name = "METfare" and vto > %s'
+
+    filename = os.path.join(dirname, "Current_METfare.kml")
+
+    generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
+
 	# Farevarsler in CAP formats
 	
     select_string='select value,termin from document where name = "METfare" and vto > %s'

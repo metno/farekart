@@ -168,12 +168,37 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     res = retrieve_from_xml_fare(xmldoc)
     numAreas = 0
+    
     senders = {"no": "Meteorologisk Institutt",
                "nb": "Meteorologisk Institutt",
                "nn": "Meteorologisk Institutt",
-               "en": "Norwegian Meteorological Institute"}
+               "en": "MET Norway"}
+	
+    notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "nn":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
+               "en":u'%s alert for Norway issued by MET Norway. Message number %s.'}
 
+    event_types = { "Wind": "Vind",
+                    "snow-ice" : "Snø-Is",
+                    "Thunderstorm" : "Todenbyger",
+                    "Fog" : "Tåke",
+                    "high-temperature" : "Høye temperaturer",
+                    "low-temperature" : "Lave temperaturer",
+                    "coastalevent" : "Hendelse på kysten",
+                    "forest-fire" : "Skogsbrann",
+                    "avalanches"  : "Skred",
+                    "Rain" : "Store nedbørsmengder",
+                    "flooding" : "Flom",
+                    "rain-flooding" : "Flom fra regn",
+                    "Polar-low" : "Polart lavtrykk"}
+
+    language = "no"   #Suitable default.
+	
     l_type = res['type']
+    l_alert = res['alert']
+    if l_alert == None : 
+       l_alert = "Alert"
 
     now = datetime.now()
 
@@ -182,16 +207,23 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
 
-    SubElement(alert, 'identifier').text = now.strftime("2.49.0.0.578.0.NO.%y%m%d%H%M%S.") + identifier
+    SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
     SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00-00:00")
     SubElement(alert, 'status').text = 'Actual'
-    SubElement(alert, 'msgType').text = 'Alert'
+    SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
+    
+    # Optional elementt, although 'references' is mandatory for UPDATE and CANCEL.
+    
+    if l_alert != 'Alert':
+        SubElement(alert, 'references').text = res['references']
+    
+    SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
 
-    # Optional element
-    SubElement(alert, 'note').text = u'%s alert for %s issued by the Norwegian Meteorological Institute' % (l_type, 'Norway')
-
+    if res['eventname'] != None:
+        SubElement(alert, 'incidents').text = res['eventname']
+    
     dt = datetime.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
     df = datetime.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
 
@@ -204,12 +236,16 @@ def generate_file_cap_fare(filename, xmldoc, db):
         eng = locs['english']
         pict = locs['pictlink']
         infolink = locs['infolink']
-        language = "no"
 
+        #################
+        # NORWEGIAN INFO 
+        #################
+
+        language = "no"   #Suitable default.
         info = SubElement(alert, 'info')
         SubElement(info, 'language').text = language
         SubElement(info, 'category').text = 'Met'
-        SubElement(info, 'event').text = l_type
+        SubElement(info, 'event').text = event_types[l_type]
         SubElement(info, 'urgency').text = urgency
         SubElement(info, 'severity').text = locs['severity']
         SubElement(info, 'certainty').text = locs['certainty']
@@ -234,6 +270,16 @@ def generate_file_cap_fare(filename, xmldoc, db):
         aw_type = SubElement( info , 'parameter')
         SubElement( aw_type , 'valueName' ).text = "awareness_type"
         SubElement( aw_type , 'value' ).text = make_awareness_type( l_type )
+
+        # MET internal elements. Possibly used by Yr and others.
+
+        met_trigger = SubElement( info, 'parameter' )
+        SubElement( met_trigger, 'valueName' ).text = "trigger_level"
+        SubElement( met_trigger, 'value' ).text = locs['triggerlevel']
+
+        met_ret = SubElement( info, 'parameter' )
+        SubElement( met_ret, 'valueName' ).text = "return_period"
+        SubElement( met_ret, 'value' ).text = locs['retperiode']
 
         # Link to graphical representation
         
@@ -284,6 +330,100 @@ def generate_file_cap_fare(filename, xmldoc, db):
                 SubElement(geocode, 'valueName').text = 'TED_ident'
                 SubElement(geocode, 'value').text = locs['id']
 
+        #################
+        # ENGLISH INFO 
+        #################
+
+        language = "en"
+        info_en = SubElement(alert, 'info')
+        SubElement(info_en, 'language').text = language
+        SubElement(info_en, 'category').text = 'Met'
+        SubElement(info_en, 'event').text = l_type
+        SubElement(info_en, 'urgency').text = urgency
+        SubElement(info_en, 'severity').text = locs['severity']
+        SubElement(info_en, 'certainty').text = locs['certainty']
+
+        # Write UTC times to the CAP file.
+        SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info_en, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
+
+        SubElement(info_en, 'senderName').text = senders[language.split("-")[0]]
+        SubElement(info_en, 'headline').text = locs['englishheading']
+        SubElement(info_en, 'description').text = locs['english']
+        SubElement(info_en, 'instruction').text = locs['consequenses']
+        SubElement(info_en, 'web').text = 'http://www.yr.no'
+
+        # MeteoAlarm mandatory elements
+
+        aw_level = SubElement( info_en, 'parameter')
+        SubElement( aw_level, 'valueName' ).text = "awareness_level"
+        SubElement( aw_level, 'value' ).text = make_awareness_level( locs['severity'] )
+
+        aw_type = SubElement( info_en , 'parameter')
+        SubElement( aw_type , 'valueName' ).text = "awareness_type"
+        SubElement( aw_type , 'value' ).text = make_awareness_type( l_type )
+
+        # MET internal elements. Possibly used by Yr and others.
+
+        met_trigger = SubElement( info_en, 'parameter' )
+        SubElement( met_trigger, 'valueName' ).text = "trigger_level"
+        SubElement( met_trigger, 'value' ).text = locs['triggerlevel']
+
+        met_ret = SubElement( info_en, 'parameter' )
+        SubElement( met_ret, 'valueName' ).text = "return_period"
+        SubElement( met_ret, 'value' ).text = locs['retperiode']
+
+        # Link to graphical representation
+        
+        if pict:
+            resource = SubElement(info_en, 'resource')
+            SubElement(resource, 'resourceDesc').text = "Graphical description of event"
+            SubElement(resource, 'mimeType').text = "image/png"
+            SubElement(resource, 'uri').text = pict
+
+        # Link to further information
+        
+        if infolink:
+            resource = SubElement(info_en, 'resource')
+            SubElement(resource, 'resourceDesc').text = "Additional information available from others"
+            SubElement(resource, 'mimeType').text = "text/html"
+            SubElement(resource, 'uri').text = infolink
+
+        # Write multiple areas per info element,
+
+        for n in locs['id'].split(":"):
+
+            area = SubElement(info_en, 'area')
+            SubElement(area, 'areaDesc').text = locs['name']
+
+            latlon = get_latlon(n, db)
+            if len(latlon) >= 3:
+
+                # Optional polygon element with three unique points and the last
+                # point identical to the first to close the polygon (at least
+                # four points in total). Each point is specified by coordinates
+                # of the form, latitude,longitude.
+                polygon = SubElement(area, 'polygon')
+
+                text = u''
+
+                for name, lon, lat in latlon:
+                    line = u"%f,%f\n" % (lat, lon)
+                    text += line
+
+                # Include the first point again to close the polygon.
+                if latlon:
+                    name, lon, lat = latlon[0]
+                    text += u"%f,%f\n" % (lat, lon)
+
+                polygon.text = text
+
+                geocode = SubElement(area, 'geocode')
+                SubElement(geocode, 'valueName').text = 'TED_ident'
+                SubElement(geocode, 'value').text = locs['id']
+
+
         numAreas += 1
 
     # If no areas found, return without writing the file.
@@ -293,6 +433,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
     f = open(filename, 'w')
     f.write(tostring(alert, encoding="UTF-8", xml_declaration=True, pretty_print=True, standalone=True))
     f.close()
+    
+    return
 
 
 def generate_files_cap_fare(selectString, dateto, db, filebase):
