@@ -189,8 +189,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     event_types = { "Wind": "Vind",
                     "snow-ice" : "Snø-Is",
-                    "Thunderstorm" : "Todenbyger",
-                    "Fog" : "Tåke",
+                    "Thunderstorm" : "Tordenbyger",
+                    "Fog" : "Taake",
                     "high-temperature" : "Høye temperaturer",
                     "low-temperature" : "Lave temperaturer",
                     "coastalevent" : "Hendelse på kysten",
@@ -211,11 +211,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
     if l_alert is None : 
        l_alert = "Alert"
 
-    if locs['severity'] is None:
-	    locs['severity'] = "Moderate"
-
-    if locs['certainty'] is None:
-	    locs['certainty'] = "Likely"
+    locs ={'severity': 'Moderate','certainty' : 'Likely'}
 
     if l_type is None:
 	    l_type = "Wind"
@@ -239,11 +235,11 @@ def generate_file_cap_fare(filename, xmldoc, db):
     
     # Optional elementt, although 'references' is mandatory for UPDATE and CANCEL.
     
+    SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
+
     if l_alert != 'Alert':
         SubElement(alert, 'references').text = res['references']
     
-    SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
-
     if res['eventname'] != None:
         SubElement(alert, 'incidents').text = res['eventname']
     
@@ -471,10 +467,11 @@ def generate_files_cap_fare(selectString, dateto, db, filebase):
         tt=doc[1]
         tt = tt.strftime("%Y%m%dT%H%M00")
         filename = filebase + "-" + tt + ".cap"
-        if (os.path.isfile(filename)):
-            print "File already exists!"
+        if (os.path.isfile(filename)): 
+            sys.stderr.write("File '%s' already exists!\n" % filename)
         else:
             xmldoc=doc[0]
+            sys.stderr.write("File '%s' will be generated\n" % filename)
             generate_file_cap_fare(filename, xmldoc, db)
 
     make_list_of_valid_files(filebase)

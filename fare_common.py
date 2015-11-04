@@ -106,6 +106,12 @@ def retrieve_from_xml_fare(xmldoc):
       sender = None
       id = 'BLANK'
 
+
+    for header in root.iter('productheader'):
+        ph = header.find('phenomenon_type')
+        if ph is not None:
+            type = ph.text
+
     for t in root.iter('time'):
         # print "Tag: ",t.tag, " Attrib: ", t.attrib
         #THIS CODE ASUMES ONLY ONE TIME TAG IN EACH MESSAGE !!!!!
@@ -138,7 +144,6 @@ def retrieve_from_xml_fare(xmldoc):
         varsel = None
         heading = None
         nam = None
-        references = None
         severity = None
         certainty = None
         trigglevel = None
@@ -219,7 +224,6 @@ def retrieve_from_xml_fare(xmldoc):
     res['mnr'] = mnr
     res['alert'] = alert
     res['references']= references
-	
     return res
 
 
