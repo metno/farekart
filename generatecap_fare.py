@@ -182,24 +182,26 @@ def generate_file_cap_fare(filename, xmldoc, db):
                "nn": "Meteorologisk Institutt",
                "en": "MET Norway"}
 	
+    reference_url = "http://www.met.no/CAP"
+
     notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "nn":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "en":u'%s alert for Norway issued by MET Norway. Message number %s.'}
 
-    event_types = { "Wind": "Vind",
-                    "snow-ice" : "Snø-Is",
-                    "Thunderstorm" : "Tordenbyger",
-                    "Fog" : "Taake",
-                    "high-temperature" : "Høye temperaturer",
-                    "low-temperature" : "Lave temperaturer",
-                    "coastalevent" : "Hendelse på kysten",
-                    "forest-fire" : "Skogsbrann",
-                    "avalanches"  : "Skred",
-                    "Rain" : "Store nedbørsmengder",
-                    "flooding" : "Flom",
-                    "rain-flooding" : "Flom fra regn",
-                    "Polar-low" : "Polart lavtrykk"}
+    event_types = { "Wind": u"Vind",
+                    "snow-ice" : u"Snø-Is",
+                    "Thunderstorm" : u"Tordenbyger",
+                    "Fog" : u"Tåke",
+                    "high-temperature" : u"Høye temperaturer",
+                    "low-temperature" : u"Lave temperaturer",
+                    "coastalevent" : u"Hendelse på kysten",
+                    "forest-fire" : u"Skogsbrann",
+                    "avalanches"  : u"Skred",
+                    "Rain" : u"Store nedbørsmengder",
+                    "flooding" : u"Flom",
+                    "rain-flooding" : u"Flom fra regn",
+                    "Polar-low" : u"Polart lavtrykk"}
 
     l_type = res['type']
     l_alert = res['alert']
@@ -211,7 +213,7 @@ def generate_file_cap_fare(filename, xmldoc, db):
     if l_alert is None : 
        l_alert = "Alert"
 
-    locs ={'severity': 'Moderate','certainty' : 'Likely'}
+    locs ={'severity': 'Moderate', 'certainty' : 'Likely'}
 
     if l_type is None:
 	    l_type = "Wind"
@@ -225,20 +227,24 @@ def generate_file_cap_fare(filename, xmldoc, db):
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
+    sent_time = now.strftime("%Y-%m-%dT%H:00:00-00:00")
 
     SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
-    SubElement(alert, 'sent').text = now.strftime("%Y-%m-%dT%H:00:00-00:00")
+    SubElement(alert, 'sent').text = sent_time
     SubElement(alert, 'status').text = 'Actual'
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
     
-    # Optional elementt, although 'references' is mandatory for UPDATE and CANCEL.
+    # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
     
     SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
 
     if l_alert != 'Alert':
-        SubElement(alert, 'references').text = res['references']
+        references = []
+        for ref in filter(lambda ref: ref, res['references'].split()):
+            references.append(reference_url + "," + "2.49.0.0.578.0.NO." + ref + "," + sent_time)
+        SubElement(alert, 'references').text = " ".join(references)
     
     if res['eventname'] != None:
         SubElement(alert, 'incidents').text = res['eventname']
@@ -266,8 +272,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info, 'category').text = 'Met'
         SubElement(info, 'event').text = event_types[l_type]
         SubElement(info, 'urgency').text = urgency
-        SubElement(info, 'severity').text = locs['severity']
-        SubElement(info, 'certainty').text = locs['certainty']
+        SubElement(info, 'severity').text = locs['severity'].strip()
+        SubElement(info, 'certainty').text = locs['certainty'].strip()
 
         # Write UTC times to the CAP file.
         SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
@@ -359,8 +365,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info_en, 'category').text = 'Met'
         SubElement(info_en, 'event').text = l_type
         SubElement(info_en, 'urgency').text = urgency
-        SubElement(info_en, 'severity').text = locs['severity']
-        SubElement(info_en, 'certainty').text = locs['certainty']
+        SubElement(info_en, 'severity').text = locs['severity'].strip()
+        SubElement(info_en, 'certainty').text = locs['certainty'].strip()
 
         # Write UTC times to the CAP file.
         SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
