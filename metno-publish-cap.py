@@ -75,7 +75,7 @@ def find_latest_time(cap):
     return max(expires_list)
 
 
-def find_references(cap):
+def find_references(cap, file_name):
     """Finds the references in a CAP document, cap, and yields each identifier
     in turn."""
 
@@ -108,13 +108,13 @@ def process_message(file_name, cap, messages, cancel, update):
     if msgType == "Cancel":
     
         # Record the relationship between messages in the cancellation dictionary.
-        for original_id in find_references(cap):
+        for original_id in find_references(cap, file_name):
             cancel[original_id] = identifier
     
     elif msgType == "Update":
 
         # Record the relationship between messages in the update dictionary.
-        for original_id in find_references(cap):
+        for original_id in find_references(cap, file_name):
             update[original_id] = identifier
 
     messages[identifier] = (msgType, file_name, cap)
