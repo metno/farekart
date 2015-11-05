@@ -226,149 +226,24 @@ def retrieve_from_xml_fare(xmldoc):
     res['references']= references
     return res
 
-
 def retrieve_from_xml(value):
-    """Retrieves some parameters from the XML text held by the given value and
-    returns them as a list of values."""
+    """Retrieves parameters from MULTIPLE files returned"""
 
     results = {}
     i = 0
 
     for doc in value:
 
-        vto = None
-        vfrom = None
-        locations = {}
-        res = {}
-
-        n = 0
-
         xmldoc = doc[0]
 
-        # print xmldoc
-
-        root = fromstring(xmldoc)
-
-        vto = None
-        vfrom = None
-        ty = None
-        sender = None
-        type = None
-        id = None
-        mnr = None
-        eventname = None
-
-        for t in root.iter('time'):
-            # print "Tag: ",t.tag, " Attrib: ", t.attrib
-
-            vto = t.get('vto')
-            vfrom = t.get('vfrom')
-
-            for keyword in t.iter('keyword'):
-
-                nam = keyword.get('name')
-
-                if nam == "type":
-                    type = keyword.find('in').text
-                elif nam == "mnr":
-                    mnr = keyword.find('in').text
-                elif nam == "sender":
-                    sender = keyword.find('in').text
-                elif nam == "navn":
-                    eventname = keyword.find('in').text
-
-            for header in root.iter('productheader'):
-                id = header.find('dockey').text
-
-            for header in root.iter('productheader'):
-                ph = header.find('phenomenon_type')
-                if ph is not None:
-	                type = ph.text
-
-            for p in root.iter('productdescription'):
-                termin = p.get('termin')
-
-        # Foreach time, Ony one in each time.
-        for location in root.iter('location'):
-
-            name = None
-            varsel = None
-            nam = None
-            severity = None
-            certainty = None
-            trigglevel = None
-            english = None
-            kommentar = None
-            pictlink = None
-            retperiode = None
-            instruction = None
-            infolink = None
-
-            loc = {}
-
-            l_id = location.get('id')
-            l_name = location.find('header').text
-
-            for param in location.findall('parameter'):
-
-                # These parameters are defined in the TED template for the forecast
-                
-                nam = param.get('name')
-
-                if nam == "varsel":
-                    varsel = param.find('in').text
-                elif nam == "severity":
-                    severity = param.find('in').text
-                elif nam == "certainty":
-                    certainty = param.find('in').text
-                elif nam == "picturelink":
-                    pictlink = param.find('in').text
-                elif nam == "returnperiod":
-                    retperiode = param.find('in').text
-                elif nam == "instruction":
-                    instruction = param.find('in').text
-                elif nam == "infolink":
-                    infolink = param.find('in').text
-                elif nam == "triggerlevel":
-                    trigglevel = param.find('in').text
-                elif nam == "englishforecast":
-                    english = param.find('in').text
-                elif nam == "coment":
-                    kommentar = param.find('in').text
-
-            loc['name'] = l_name
-            loc['id'] = l_id
-            loc['type'] = ty
-            loc['varsel'] = varsel
-            loc['severity'] = severity
-            loc['certainty'] = certainty
-            loc['pictlink'] = pictlink
-            loc['infolink'] = infolink
-            loc['retperiode'] = retperiode
-            loc['instruction'] = instruction
-            loc['kommentar'] = kommentar
-            loc['triggerlevel'] = trigglevel
-            loc['english'] = english
-
-            n = n + 1
-
-            locations[n] = loc
-
-        res['locations'] = locations
-        res['vfrom'] = vfrom
-        res['vto'] = vto
-        res['termin'] = termin
-        res['eventname'] = eventname
-        res['sender'] = sender
-        res['type'] = type
-        res['id'] = id
-        res['mnr'] = mnr
+        res = retrieve_from_xml_fare(xmldoc)
 
         results[i] = res
         i = i + 1
+            
+        print "Found # ", i
 
     return results
-
 
 def get_locations(db, select_string, time):
     """Retrieves all currently valid GALE forecasts from the TED database, db,
