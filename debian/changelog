@@ -1,3 +1,9 @@
+python-farekart (0.2.1-1) unstable; urgency=low
+
+  * Updated to the latest sources.
+
+ -- David Boddie <david.boddie@met.no>  Fri, 06 Nov 2015 18:33:31 +0100
+
 python-farekart (0.2.0-2) precise; urgency=low
 
   * Updated the packaging to work on trusty.
