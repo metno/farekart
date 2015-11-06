@@ -121,8 +121,10 @@ if __name__ == "__main__":
     select_string='select value,termin from document where name = "METfare" and vto > %s'
 
     filebase = os.path.join(dirname, "METfare")
-    
-    generate_files_cap_fare(select_string, now, db, filebase)
+
+    url_base = "http://api.met.no/farevarsler/"
+
+    generate_files_cap_fare(select_string, now, db, filebase, url_base)
 
     # Farevarsler TEST
 

@@ -241,8 +241,6 @@ def retrieve_from_xml(value):
         results[i] = res
         i = i + 1
             
-        print "Found # ", i
-
     return results
 
 def get_locations(db, select_string, time):

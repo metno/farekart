@@ -24,48 +24,48 @@ from fare_common import *
 
 def make_list_of_valid_files(filebase):
     """Compiles an index file containing information about each of the CAP
-    files that start with the given filebase, writing the index file to the
-    directory containing the files."""
+        files that start with the given filebase, writing the index file to the
+        directory containing the files."""
 
     files = []
     filesearch = "{0}*.cap".format(filebase)
     filenames = glob.glob(filesearch)
-
+    
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
     schema = etree.XMLSchema(schema_doc)
-
+    
     for fname in filenames:
-
+        
         # Parse and validate each CAP file found.
         root = etree.parse(fname)
         nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
-
+        
         if schema.validate(root):
-
+            
             attributes = {}
-
+            
             for info in root.findall('cap:info', nsmap):
-
+                
                 vf = info.find('cap:effective', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
                 valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S-00:00")
                 valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S-00:00")
                 attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
                 attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
-
+            
             # Append the file name and validity of each validated CAP file to the list
             # that will be used to compile the index.
             files.append((fname, attributes))
-
+        
         else:
             sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
 
-    # Produce the XML index file.
+# Produce the XML index file.
 
     root = Element('files', nsmap = {'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
     root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
-
+    
     for filename, valid in files:
         child = SubElement(root, 'file', valid)
         child.text = os.path.split(filename)[1]
@@ -73,6 +73,127 @@ def make_list_of_valid_files(filebase):
     listfilename="{0}-index.xml".format(filebase)
     listfile = open(listfilename, "w")
     listfile.write(tostring(root, xml_declaration=True, encoding="UTF-8", pretty_print=True))
+    listfile.close()
+
+
+def make_rss_feed_of_valid_files( filebase, url_base):
+    """Compiles an RSS feed XML with valid CAP files. The index is written to t
+        he directory containing the CAP files"""
+
+    #TODO: Split RSS feeds into language specific and/or event type specific.
+    
+    # Pub time is now.
+
+    now = datetime.now()
+
+    # get file listing
+
+    files = []
+    filesearch = "{0}*.cap".format(filebase)
+    filenames = glob.glob(filesearch)
+    
+    # Load the CAP schema.
+    schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
+    schema = etree.XMLSchema(schema_doc)
+    
+    for fname in filenames:
+        
+        # Parse and validate each CAP file found.
+        root = etree.parse(fname)
+        nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+        
+        if schema.validate(root):
+            
+            attributes = {}
+            
+            attributes["identifier"]  = root.find('cap:identifier',nsmap).text
+            attributes["pubDate"]     = root.find('cap:sent',nsmap).text
+        
+            for info in root.findall('cap:info', nsmap):
+                
+                language = info.find('cap:language', nsmap).text.strip()
+                
+                #restrict INFO to Norwegian version at this time.
+                
+                if language == 'no':
+                    
+                    vf = info.find('cap:effective', nsmap).text
+                    vt = info.find('cap:expires', nsmap).text
+                    valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S-00:00")
+                    valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S-00:00")
+                    attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
+                    attributes["valid_to"]   = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
+                    attributes["title"]       = info.find('cap:headline',nsmap).text
+                    attributes["description"] = info.find('cap:description',nsmap).text
+                    attributes["author"]      = info.find('cap:senderName',nsmap).text
+                    attributes["category"]    = info.find('cap:category',nsmap).text
+        
+        
+            # Append the file name and validity of each validated CAP file to the list
+            # that will be used to compile the index.
+            files.append((fname, attributes))
+        
+        else:
+            sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
+
+
+    # Produce the RSS XML file.
+    #
+    # Structure is  :  rss -> channel -> many items
+    #
+
+    rss = Element('rss', version="2.0")
+
+    # Channel is top element of RSS feed
+    
+    channel = SubElement( rss, "channel")
+    
+    title = SubElement( channel, "title")
+    title.text = "Weather Alerts from MET Norway"
+    
+    link  = SubElement( channel, "link")
+    link.text = "http://www.met.no"
+    
+    desc = SubElement( channel, "description")
+    desc.text = "Weather Alerts posted by the Norwegian Meteorological Institute"
+    
+    copy = SubElement( channel, "copyright")
+    copy.text = "public domain"
+    
+    pubdate = SubElement( channel, "pubDate")
+    pubdate.text = now.strftime("%a, %d %b %y %H:%M:%S %z")
+    
+    #One ITEM for each cap file.
+    
+    for filename, attrib in files:
+        
+        item = SubElement(channel, 'item')
+
+        item_title = SubElement( item, "title")
+        item_title.text = attrib["title"]
+    
+        item_link = SubElement( item, "link")
+        item_link.text = url_base + os.path.basename(filename)
+    
+        item_desc = SubElement(item, "description")
+        item_desc.text = attrib["description"]
+    
+        item_author = SubElement(item, "author")
+        item_author.text = attrib["author"]
+    
+        item_cat = SubElement( item, "category")
+        item_cat.text = attrib["category"]
+    
+        item_guid = SubElement( item, "guid")
+        item_guid.text = attrib["identifier"]
+    
+        item_pubDate = SubElement( item, "pubDate")
+        item_pubDate.text = attrib["pubDate"]
+    
+    
+    listfilename="{0}-rss.xml".format(filebase)
+    listfile = open(listfilename, "w")
+    listfile.write(tostring(rss, xml_declaration=True, encoding="UTF-8", pretty_print=True))
     listfile.close()
 
 
@@ -213,8 +334,6 @@ def generate_file_cap_fare(filename, xmldoc, db):
     if l_alert is None : 
        l_alert = "Alert"
 
-    locs ={'severity': 'Moderate', 'certainty' : 'Likely'}
-
     if l_type is None:
 	    l_type = "Wind"
 
@@ -258,6 +377,12 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
         locs = res['locations'][p]
 
+        if locs["severity"] is None:
+            locs["severity"] = "Moderate"
+    
+        if locs["certainty"] is None:
+            locs["certainty"] = "Likely"
+        
         eng = locs['english']
         pict = locs['pictlink']
         infolink = locs['infolink']
@@ -462,12 +587,13 @@ def generate_file_cap_fare(filename, xmldoc, db):
     return
 
 
-def generate_files_cap_fare(selectString, dateto, db, filebase):
+def generate_files_cap_fare(selectString, dateto, db, filebase, url_base):
     """Generates CAP files for the warnings obtained from the database, db,
     using the given selectString and dateto string. Writes an index file
     for the CAP files with names that begin with the given filebase string."""
 
     docs = get_xml_docs(db, dateto, selectString)
+    
     for doc in docs:
 
         tt=doc[1]
@@ -481,3 +607,4 @@ def generate_files_cap_fare(selectString, dateto, db, filebase):
             generate_file_cap_fare(filename, xmldoc, db)
 
     make_list_of_valid_files(filebase)
+    make_rss_feed_of_valid_files( filebase, url_base)
