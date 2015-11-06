@@ -122,9 +122,7 @@ if __name__ == "__main__":
 
     filebase = os.path.join(dirname, "METfare")
 
-    url_base = "http://api.met.no/farevarsler/"
-
-    generate_files_cap_fare(select_string, now, db, filebase, url_base)
+    generate_files_cap_fare(select_string, now, db, filebase )
 
     # Farevarsler TEST
 
