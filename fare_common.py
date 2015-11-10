@@ -147,6 +147,8 @@ def retrieve_from_xml_fare(xmldoc):
         severity = None
         certainty = None
         trigglevel = None
+        altitude = None
+        ceiling = None
         english = None
         kommentar = None
         pictlink = None
@@ -183,6 +185,10 @@ def retrieve_from_xml_fare(xmldoc):
                 infolink = param.find('in').text
             elif nam == "triggerlevel":
                 trigglevel = param.find('in').text
+            elif nam == "ceiling":
+                ceiling = param.find('in').text
+            elif nam == "altitude":
+                altitude = param.find('in').text
             elif nam == "englishforecast":
                 english = param.find('in').text
             elif nam == "englishheading":
@@ -205,6 +211,8 @@ def retrieve_from_xml_fare(xmldoc):
         loc['instruction'] = instruction
         loc['kommentar'] = kommentar
         loc['triggerlevel'] = trigglevel
+        loc['ceiling'] = ceiling
+        loc['altitude'] = altitude
         loc['english'] = english
         loc['englishheading'] = englishheading
         loc['consequenses'] = consequenses

@@ -332,6 +332,9 @@ def generate_file_cap_fare(filename, xmldoc, db):
             area = SubElement(info, 'area')
             SubElement(area, 'areaDesc').text = locs['name']
 
+            altitude = locs['altitude']
+            ceiling = locs['ceiling']
+
             latlon = get_latlon(n, db)
             if len(latlon) >= 3:
 
@@ -358,6 +361,12 @@ def generate_file_cap_fare(filename, xmldoc, db):
                 SubElement(geocode, 'valueName').text = 'TED_ident'
                 SubElement(geocode, 'value').text = locs['id']
 
+                if altitude:
+                	SubElement(area,'altitude').text = altitude
+                	
+                if ceiling:
+                	SubElement(area,'ceiling').text = ceiling
+                	           	
         #################
         # ENGLISH INFO 
         #################
@@ -424,6 +433,9 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
             area = SubElement(info_en, 'area')
             SubElement(area, 'areaDesc').text = locs['name']
+            
+            altitude = locs['altitude']
+            ceiling = locs['ceiling']
 
             latlon = get_latlon(n, db)
             if len(latlon) >= 3:
@@ -450,7 +462,13 @@ def generate_file_cap_fare(filename, xmldoc, db):
                 geocode = SubElement(area, 'geocode')
                 SubElement(geocode, 'valueName').text = 'TED_ident'
                 SubElement(geocode, 'value').text = locs['id']
-
+                
+                if altitude:
+                	SubElement(area,'altitude').text = altitude
+                	
+                if ceiling:
+                	SubElement(area,'ceiling').text = ceiling
+                	           	
 
         numAreas += 1
 
