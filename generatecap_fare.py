@@ -49,8 +49,8 @@ def make_list_of_valid_files(filebase):
                 
                 vf = info.find('cap:effective', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
-                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S-00:00")
-                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S-00:00")
+                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S+00:00")
+                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S+00:00")
                 attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
                 attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
             
@@ -147,7 +147,7 @@ def make_awareness_type( typ ):
     
     
     
-def generate_file_cap_fare(filename, xmldoc, db):
+def generate_file_cap_fare(filename, xmldoc, now, db):
     """Obtains the locations from the XML document given by xmldoc and the
     database, db, and writes a CAP file with the given filename.
 
@@ -216,15 +216,11 @@ def generate_file_cap_fare(filename, xmldoc, db):
 	    l_type = "Wind"
 
 
-	# Sent time is now.
-	
-    now = datetime.now()
-
     alert = Element('alert')
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
-    sent_time = now.strftime("%Y-%m-%dT%H:00:00-00:00")
+    sent_time = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
     SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
@@ -239,8 +235,8 @@ def generate_file_cap_fare(filename, xmldoc, db):
 
     if l_alert != 'Alert':
         references = []
-        for ref in filter(lambda ref: ref, res['references'].split()):
-            references.append(reference_url + "," + "2.49.0.0.578.0.NO." + ref + "," + sent_time)
+        for ref in filter(lambda ref: ref, res['references'].split(" ")):
+            references.append(reference_url + "," + "2.49.0.0.578.0.NO." + ref)
         SubElement(alert, 'references').text = " ".join(references)
     
     if res['eventname'] != None:
@@ -279,9 +275,9 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info, 'certainty').text = locs['certainty'].strip()
 
         # Write UTC times to the CAP file.
-        SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
-        SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
-        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
         SubElement(info, 'senderName').text = senders[language.split("-")[0]]
         SubElement(info, 'headline').text = locs['heading']
@@ -381,9 +377,9 @@ def generate_file_cap_fare(filename, xmldoc, db):
         SubElement(info_en, 'certainty').text = locs['certainty'].strip()
 
         # Write UTC times to the CAP file.
-        SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00-00:00")
-        SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00-00:00")
-        SubElement(info_en, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00-00:00")
+        SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
+        SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
+        SubElement(info_en, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
 
         SubElement(info_en, 'senderName').text = senders[language.split("-")[0]]
         SubElement(info_en, 'headline').text = locs['englishheading']
@@ -493,13 +489,13 @@ def generate_files_cap_fare(selectString, dateto, db, filebase ):
     for doc in docs:
 
         tt=doc[1]
-        tt = tt.strftime("%Y%m%dT%H%M00")
-        filename = filebase + "-" + tt + ".cap"
+        ts = tt.strftime("%Y%m%dT%H%M%S")
+        filename = filebase + "-" + ts + ".cap"
         if (os.path.isfile(filename)): 
             sys.stderr.write("File '%s' already exists!\n" % filename)
         else:
             xmldoc=doc[0]
             sys.stderr.write("File '%s' will be generated\n" % filename)
-            generate_file_cap_fare(filename, xmldoc, db)
+            generate_file_cap_fare(filename, xmldoc, tt, db)
 
     make_list_of_valid_files(filebase)
