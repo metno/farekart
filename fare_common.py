@@ -91,20 +91,20 @@ def retrieve_from_xml_fare(xmldoc):
 
     t = root.find('dangerwarning')
 	# new types of warnings using metfare template and <dangerwarning> tag.
-		
-    if t is not None:
-      alert = t.find('msgtype').text
-      mnr   = t.find('msgnumber').text
-      references = t.find('msgreferences').text
-      sender = t.find('msgauthor').text
-      id = t.find('msgidentifier').text
-    else:
+
+    if t is None or len(t) < 1:  #If t does not exisit or has no subelements 
       print "NO DANGERWARNING ELEMENT FOUND. SETTING DEFAULTS."
       alert = "Alert"
       mnr = 1
       references = None
       sender = None
       id = 'BLANK'
+    else:
+      alert = t.find('msgtype').text
+      mnr   = t.find('msgnumber').text
+      references = t.find('msgreferences').text
+      sender = t.find('msgauthor').text
+      id = t.find('msgidentifier').text
 
 
     for header in root.iter('productheader'):
