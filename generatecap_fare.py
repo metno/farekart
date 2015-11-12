@@ -22,7 +22,7 @@ from lxml import etree
 from fare_common import *
 
 
-def make_list_of_valid_files(filebase):
+def make_list_of_valid_files(filebase,schemas):
     """Compiles an index file containing information about each of the CAP
         files that start with the given filebase, writing the index file to the
         directory containing the files."""
@@ -32,7 +32,8 @@ def make_list_of_valid_files(filebase):
     filenames = glob.glob(filesearch)
     
     # Load the CAP schema.
-    schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
+    schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))
+    print schemas
     schema = etree.XMLSchema(schema_doc)
     
     for fname in filenames:
@@ -479,7 +480,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     return
 
 
-def generate_files_cap_fare(selectString, dateto, db, filebase ):
+def generate_files_cap_fare(selectString, dateto, db, filebase,schemas):
     """Generates CAP files for the warnings obtained from the database, db,
     using the given selectString and dateto string. Writes an index file
     for the CAP files with names that begin with the given filebase string."""
@@ -498,4 +499,4 @@ def generate_files_cap_fare(selectString, dateto, db, filebase ):
             sys.stderr.write("File '%s' will be generated\n" % filename)
             generate_file_cap_fare(filename, xmldoc, tt, db)
 
-    make_list_of_valid_files(filebase)
+    make_list_of_valid_files(filebase,schemas)

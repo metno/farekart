@@ -7,6 +7,6 @@ Standards-Version: 3.9.3
 
 Package: python-farekart
 Architecture: any
-Depends: python2.7, python-mysqldb
+Depends: python2.7, python-mysqldb, python-lxml
 Description: Farekart
 	     Farekart creates kml and cap files from text warnings stored in the Ted database 

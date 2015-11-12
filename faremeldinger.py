@@ -32,8 +32,8 @@ from generatecap_fare import generate_files_cap_fare
 
 if __name__ == "__main__":
 
-    if not 6 <= len(sys.argv) <= 7:
-        sys.stderr.write("Usage: %s <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> <Optional: OpenLayerDir>\n" % sys.argv[0])
+    if not 6 <= len(sys.argv) <= 8:
+        sys.stderr.write("Usage: %s <TED db username> <passwd> <TEDDBhost> <TEDDB port> <directory for files> <Optional: Directory for schemas> <Optional: OpenLayerDir>\n" % sys.argv[0])
         sys.exit(1)
 
     db = MySQLdb.connect(user=sys.argv[1],
@@ -47,10 +47,19 @@ if __name__ == "__main__":
     if not os.path.exists(dirname):
         os.mkdir(dirname)
 
+    if len(sys.argv) > 6:
+        schema_dirname = sys.argv[6]
+    else:
+        if (os.path.exists("schemas")):
+            schema_dirname = "schemas"
+        else:
+            schema_dirname = "/usr/share/xml/farekart"
+
+        
     OpenLayer = False
 
-    if len(sys.argv) == 7:
-        ol_dirname = sys.argv[6]
+    if len(sys.argv) > 7:
+        ol_dirname = sys.argv[7]
         OpenLayer = True
         if not os.path.exists(ol_dirname):
             os.mkdir(ol_dirname)
@@ -122,7 +131,7 @@ if __name__ == "__main__":
 
     filebase = os.path.join(dirname, "METfare")
 
-    generate_files_cap_fare(select_string, now, db, filebase )
+    generate_files_cap_fare(select_string, now, db, filebase, schema_dirname)
 
     # Farevarsler TEST
 

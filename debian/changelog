@@ -1,3 +1,16 @@
+python-farekart (0.2.2-2) precise; urgency=low
+
+  * added python-lxml to dependencies
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Thu, 12 Nov 2015 09:55:45 +0100
+
+python-farekart (0.2.2-1) precise; urgency=low
+
+  *  Updated to the latest sources.
+  *  Added xml-schemas to setup.py	
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Thu, 12 Nov 2015 08:30:53 +0100
+
 python-farekart (0.2.1-1) unstable; urgency=low
 
   * Updated to the latest sources.
