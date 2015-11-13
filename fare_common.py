@@ -49,11 +49,18 @@ def get_latlon(n, db):
     retval = []
 
     # Names are ISO 8859-1 encoded in the TED database.
+
     name = result[0].decode("iso8859-1")
+
+    print("name",name)
+
+    if not (":" in result[1]):
+        return retval
 
     for n in result[1].split(":"):
 
         o,p = n.split(" ")
+
 
         lo = int(o) / 10000.0
         la = int(p) / 10000.0
