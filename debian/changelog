@@ -1,3 +1,9 @@
+python-farekart (0.2.3-1) precise; urgency=low
+
+  * Fixed crash when location has no coordinates
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Fri, 13 Nov 2015 09:04:47 +0100
+
 python-farekart (0.2.2-2) precise; urgency=low
 
   * added python-lxml to dependencies
