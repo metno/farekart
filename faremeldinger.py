@@ -28,6 +28,7 @@ import MySQLdb
 
 from fare_common import *
 from generatecap_fare import generate_files_cap_fare
+import publishcap
 
 
 if __name__ == "__main__":
@@ -145,3 +146,12 @@ if __name__ == "__main__":
 
     if db:
         db.close()
+
+    # Generate an RSS file to describe the CAP files created.
+    index_file = "{0}-index.xml".format(filebase)
+    rss_file = os.path.join(dirname, "CAP.rss")
+    output_dir = "rssfiles"
+    base_url = "http://api.met.no/CAP"
+    publishcap.main(index_file, rss_file, output_dir, base_url)
+
+    sys.exit()

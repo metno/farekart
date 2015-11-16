@@ -15,6 +15,7 @@ weather warning) reports obtained from a TED database."""
 
 import glob, os, sys, uuid
 from datetime import datetime
+import dateutil.parser
 
 from lxml.etree import Element, SubElement, tostring
 from lxml import etree
@@ -50,10 +51,10 @@ def make_list_of_valid_files(filebase,schemas):
                 
                 vf = info.find('cap:effective', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
-                valid_from = time.strptime(vf, "%Y-%m-%dT%H:%M:%S+00:00")
-                valid_to = time.strptime(vt, "%Y-%m-%dT%H:%M:%S+00:00")
-                attributes["valid_from"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_from)
-                attributes["valid_to"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", valid_to)
+                valid_from = dateutil.parser.parse(vf)
+                valid_to = dateutil.parser.parse(vt)
+                attributes["valid_from"] = valid_from.strftime("%Y-%m-%dT%H:%M:%SZ")
+                attributes["valid_to"] = valid_to.strftime("%Y-%m-%dT%H:%M:%SZ")
             
             # Append the file name and validity of each validated CAP file to the list
             # that will be used to compile the index.
@@ -62,8 +63,7 @@ def make_list_of_valid_files(filebase,schemas):
         else:
             sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
 
-# Produce the XML index file.
-
+    # Produce the XML index file.
     root = Element('files', nsmap = {'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
     root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
     
@@ -243,8 +243,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     if res['eventname'] != None:
         SubElement(alert, 'incidents').text = res['eventname']
     
-    dt = datetime.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
-    df = datetime.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
+    dt = dateutil.parser.parse(res['vto'])
+    df = dateutil.parser.parse(res['vfrom'])
 
     urgency = get_urgency(df, dt, now)
 
