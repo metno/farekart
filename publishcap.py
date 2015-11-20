@@ -239,7 +239,7 @@ def parse_index_file(index_schema, cap_schema, index_file):
     return messages, cancel, update
 
 
-def parse_rss_file(cap_schema, rss_file):
+def parse_rss_file(cap_schema, rss_file, output_dir):
     """Parses the given rss_file, returning message, cancellation and update
     dictionaries. The message dictionary contains messages in the order in which
     they appeared in the RSS file.
@@ -271,12 +271,16 @@ def parse_rss_file(cap_schema, rss_file):
     
         # Fetch the CAP file referred to by the RSS feed.
         url = element.find('.//link').text
+        
+        # If the file is mentioned in the RSS feed then it should still be
+        # present locally.
+        file_name = urlparse.urlparse(url).path.split('/')[-1]
         try:
-            u = urllib2.urlopen(url)
-            cap_text = u.read()
-            u.close()
-        except urllib2.HTTPError:
-            sys.stderr.write("Error: failed to fetch CAP file '%s' specified in RSS file '%s'.\n" % (url, rss_file))
+            f = open(os.path.join(output_dir, file_name))
+            cap_text = f.read()
+            f.close()
+        except IOError:
+            sys.stderr.write("Error: failed to read CAP file '%s' previously published in RSS file '%s'.\n" % (file_name, rss_file))
             sys.exit(1)
         
         try:
@@ -314,7 +318,7 @@ def main(index_file, rss_file, output_dir, base_url):
     # Parse the RSS file, if found.
     if os.path.exists(rss_file):
 
-        old_messages, old_cancel, old_update = parse_rss_file(cap_schema, rss_file)
+        old_messages, old_cancel, old_update = parse_rss_file(cap_schema, rss_file, output_dir)
         
         # Merge the item dictionaries from the RSS and index files, keeping
         # any messages that have already been published.

@@ -52,7 +52,7 @@ def get_latlon(n, db):
 
     name = result[0].decode("iso8859-1")
 
-    print("name",name)
+    #print("name",name)
 
     if not (":" in result[1]):
         return retval

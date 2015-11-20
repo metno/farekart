@@ -34,7 +34,6 @@ def make_list_of_valid_files(filebase,schemas):
     
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))
-    print schemas
     schema = etree.XMLSchema(schema_doc)
     
     for fname in filenames:
