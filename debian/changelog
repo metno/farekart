@@ -1,3 +1,9 @@
+python-farekart (0.2.5-1) unstable; urgency=low
+
+  * Read local copies of CAP files instead of fetching them from the server.
+
+ -- David Boddie <david.boddie@met.no>  Fri, 20 Nov 2015 15:13:07 +0100
+
 python-farekart (0.2.4-1) unstable; urgency=low
 
   * Generate an RSS file automatically for each run.
