@@ -1,3 +1,9 @@
+python-farekart (0.2.6-1) unstable; urgency=low
+
+  * Added the publishcap module to the installation script.
+
+ -- David Boddie <david.boddie@met.no>  Mon, 23 Nov 2015 11:59:43 +0100
+
 python-farekart (0.2.5-1) unstable; urgency=low
 
   * Read local copies of CAP files instead of fetching them from the server.

@@ -9,8 +9,8 @@ setup(
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.2.5",
-    py_modules=["generatecap", "fare_common", "generatecap_fare"],
+    version="0.2.6",
+    py_modules=["generatecap", "fare_common", "generatecap_fare", "publishcap"],
     scripts=["faremeldinger.py", "metno-publish-cap.py", "cap2kml.py","generatecap_fare.py"],
     data_files=[("share/xml/farekart",["schemas/XMLSchema.xsd","schemas/CAP-v1.2.xsd","schemas/mifare-index.xsd"])]
     )
