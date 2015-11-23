@@ -304,12 +304,17 @@ def main(index_file, rss_file, output_dir, base_url):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
+    if (os.path.exists("schemas")):
+        schema_dirname = "schemas"
+    else:
+        schema_dirname = "/usr/share/xml/farekart"
+
     # Load the index schema.
-    index_schema_doc = etree.parse(os.path.join("schemas", "mifare-index.xsd"))
+    index_schema_doc = etree.parse(os.path.join(schema_dirname, "mifare-index.xsd"))
     index_schema = etree.XMLSchema(index_schema_doc)
 
     # Load the CAP schema.
-    cap_schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
+    cap_schema_doc = etree.parse(os.path.join(schema_dirname, "CAP-v1.2.xsd"))
     cap_schema = etree.XMLSchema(cap_schema_doc)
 
     # Parse and validate the index file.
