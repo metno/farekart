@@ -1,3 +1,9 @@
+python-farekart (0.2.6-2) unstable; urgency=low
+
+  * Rebuilt to replace an incorrectly published package.
+
+ -- David Boddie <david.boddie@met.no>  Mon, 23 Nov 2015 12:21:25 +0100
+
 python-farekart (0.2.6-1) unstable; urgency=low
 
   * Added the publishcap module to the installation script.
