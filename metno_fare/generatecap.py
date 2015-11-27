@@ -16,7 +16,7 @@ weather warning) reports obtained from a TED database.
 
 import codecs, os, sys, time, uuid
 from lxml.etree import Element, SubElement, tostring
-from fare_common import get_latlon
+from metno_fare.fare_common import get_latlon
 
 
 def generate_file_cap(locations, db, filename, type):

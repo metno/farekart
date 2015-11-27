@@ -20,7 +20,7 @@ import dateutil.parser
 from lxml.etree import Element, SubElement, tostring
 from lxml import etree
 
-from fare_common import *
+from metno_fare.fare_common import *
 
 
 def make_list_of_valid_files(filebase,schemas):

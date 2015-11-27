@@ -26,9 +26,9 @@ handled by the generatecap_fare module.
 import os, sys, time
 import MySQLdb
 
-from fare_common import *
-from generatecap_fare import generate_files_cap_fare
-import publishcap
+from metno_fare.fare_common import *
+from metno_fare.generatecap_fare import generate_files_cap_fare
+from metno_fare import publishcap
 
 
 if __name__ == "__main__":

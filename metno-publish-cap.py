@@ -29,7 +29,7 @@ files supplied and expired items will be removed from the list it contains.
 """
 
 import sys
-import publishcap
+from metno_fare import publishcap
 
 if __name__ == "__main__":
 

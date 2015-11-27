@@ -1,3 +1,9 @@
+python-farekart (0.2.8-1) unstable; urgency=low
+
+  * Refactored the modules into a common Python package.
+
+ -- David Boddie <david.boddie@met.no>  Fri, 27 Nov 2015 13:16:08 +0100
+
 python-farekart (0.2.7-1) unstable; urgency=low
 
   * Fixed schema directory when installed.

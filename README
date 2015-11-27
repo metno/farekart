@@ -1,6 +1,7 @@
 Prototypes for FAREKART
 
-Simple prototypes for use in producing Farekart for web and DIANA.
-Produces CAP-files and kml-files.
+Tools for generating severe weather warnings and maps for the Web and use in
+the Diana meteorological workstation.
 
-
+Produces Common Alerting Protocol (CAP) files and Keyhole Markup Language
+(KML) files.
