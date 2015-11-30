@@ -1,3 +1,9 @@
+python-farekart (0.2.9-1) precise; urgency=low
+
+  * Added a missing package __init__.py file.
+
+ -- David Boddie <david.boddie@met.no>  Mon, 30 Nov 2015 15:11:27 +0100
+
 python-farekart (0.2.8-1) unstable; urgency=low
 
   * Refactored the modules into a common Python package.
