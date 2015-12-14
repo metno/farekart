@@ -22,6 +22,8 @@ from lxml import etree
 
 from metno_fare.fare_common import *
 
+invalid_extra_chars = " ,."
+
 
 def make_list_of_valid_files(filebase,schemas):
     """Compiles an index file containing information about each of the CAP
@@ -271,8 +273,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info, 'category').text = 'Met'
         SubElement(info, 'event').text = event_types[l_type]
         SubElement(info, 'urgency').text = urgency
-        SubElement(info, 'severity').text = locs['severity'].strip()
-        SubElement(info, 'certainty').text = locs['certainty'].strip()
+        SubElement(info, 'severity').text = locs['severity'].strip(invalid_extra_chars)
+        SubElement(info, 'certainty').text = locs['certainty'].strip(invalid_extra_chars)
 
         # Write UTC times to the CAP file.
         SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
@@ -373,8 +375,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'category').text = 'Met'
         SubElement(info_en, 'event').text = l_type
         SubElement(info_en, 'urgency').text = urgency
-        SubElement(info_en, 'severity').text = locs['severity'].strip()
-        SubElement(info_en, 'certainty').text = locs['certainty'].strip()
+        SubElement(info_en, 'severity').text = locs['severity'].strip(invalid_extra_chars)
+        SubElement(info_en, 'certainty').text = locs['certainty'].strip(invalid_extra_chars)
 
         # Write UTC times to the CAP file.
         SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
