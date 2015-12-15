@@ -1,3 +1,9 @@
+python-farekart (0.3.1-2) precise; urgency=low
+
+  * Added python-dateutil to the dependencies.
+
+ -- David Boddie <david.boddie@met.no>  Tue, 15 Dec 2015 14:29:45 +0100
+
 python-farekart (0.3.1-1) precise; urgency=low
 
   * Added a function to try to fix invalid severity and certainty values.
