@@ -1,3 +1,9 @@
+python-farekart (0.3.1-1) precise; urgency=low
+
+  * Added a function to try to fix invalid severity and certainty values.
+
+ -- David Boddie <david.boddie@met.no>  Tue, 15 Dec 2015 12:51:57 +0100
+
 python-farekart (0.3.0-1) precise; urgency=low
 
   * Ensured that punctuation is removed from severity and certainty fields.

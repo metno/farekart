@@ -253,11 +253,13 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         locs = res['locations'][p]
 
-        if locs["severity"] is None:
-            locs["severity"] = "Moderate"
-    
-        if locs["certainty"] is None:
-            locs["certainty"] = "Likely"
+        severity = locs.get("severity", "Moderate")
+        severity = severity.strip(invalid_extra_chars)
+        severity = closest_match(severity, ("Extreme", "Severe", "Moderate", "Minor", "Unknown"))
+
+        certainty = locs.get("certainty", "Likely")
+        certainty = certainty.strip(invalid_extra_chars)
+        certainty = closest_match(certainty, ("Observed", "Likely", "Possible", "Unlikely", "Unknown"))
         
         eng = locs['english']
         pict = locs['pictlink']
@@ -273,8 +275,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info, 'category').text = 'Met'
         SubElement(info, 'event').text = event_types[l_type]
         SubElement(info, 'urgency').text = urgency
-        SubElement(info, 'severity').text = locs['severity'].strip(invalid_extra_chars)
-        SubElement(info, 'certainty').text = locs['certainty'].strip(invalid_extra_chars)
+        SubElement(info, 'severity').text = severity
+        SubElement(info, 'certainty').text = certainty
 
         # Write UTC times to the CAP file.
         SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
@@ -291,7 +293,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         aw_level = SubElement( info, 'parameter')
         SubElement( aw_level, 'valueName' ).text = "awareness_level"
-        SubElement( aw_level, 'value' ).text = make_awareness_level( locs['severity'] )
+        SubElement( aw_level, 'value' ).text = make_awareness_level(severity)
 
         aw_type = SubElement( info , 'parameter')
         SubElement( aw_type , 'valueName' ).text = "awareness_type"
@@ -375,8 +377,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'category').text = 'Met'
         SubElement(info_en, 'event').text = l_type
         SubElement(info_en, 'urgency').text = urgency
-        SubElement(info_en, 'severity').text = locs['severity'].strip(invalid_extra_chars)
-        SubElement(info_en, 'certainty').text = locs['certainty'].strip(invalid_extra_chars)
+        SubElement(info_en, 'severity').text = severity
+        SubElement(info_en, 'certainty').text = certainty
 
         # Write UTC times to the CAP file.
         SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
@@ -393,7 +395,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         aw_level = SubElement( info_en, 'parameter')
         SubElement( aw_level, 'valueName' ).text = "awareness_level"
-        SubElement( aw_level, 'value' ).text = make_awareness_level( locs['severity'] )
+        SubElement( aw_level, 'value' ).text = make_awareness_level(severity)
 
         aw_type = SubElement( info_en , 'parameter')
         SubElement( aw_type , 'valueName' ).text = "awareness_type"

@@ -10,7 +10,7 @@
 from a TED database.
 """
 
-import codecs, os, sys, time
+import codecs, difflib, os, sys, time
 from lxml.etree import Element, SubElement, fromstring, tostring
 import MySQLdb
 
@@ -546,3 +546,23 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
     f = open(filename, 'w')
     f.write(tostring(kml, encoding="UTF-8", xml_declaration=True, pretty_print=True))
     f.close()
+
+
+def closest_match(text, allowed):
+
+    """Returns the string closest to the given text from the sequence of
+    allowed strings."""
+    
+    # See http://stackoverflow.com/a/1471603 for inspiration.
+    results = {}
+
+    # Give each allowed string a score based on its similarity to the input text
+    # and map that score back to the string, noting that strings with an identical
+    # score will overwrite previous ones with that score.
+    for s in allowed:
+        score = difflib.SequenceMatcher(a = text.lower(), b = s.lower()).ratio()
+        results[score] = s
+    
+    # Find the string with the highest score.
+    highest = max(results.keys())
+    return results[highest]
