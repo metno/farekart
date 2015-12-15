@@ -309,6 +309,10 @@ def main(index_file, rss_file, output_dir, base_url):
     else:
         schema_dirname = "/usr/share/xml/farekart"
 
+    # Ensure that the base URL ends with a trailing slash.
+    if not base_url.endswith("/"):
+        base_url += "/"
+
     # Load the index schema.
     index_schema_doc = etree.parse(os.path.join(schema_dirname, "mifare-index.xsd"))
     index_schema = etree.XMLSchema(index_schema_doc)

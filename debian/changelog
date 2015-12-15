@@ -1,3 +1,11 @@
+python-farekart (0.3.2-1) precise; urgency=low
+
+  * Fixed URL joining when generating an RSS file.
+  * Fixed invalid schema reading in the cap2kml.py tool.
+  * Made the base URL in the RSS file configurable.
+
+ -- David Boddie <david.boddie@met.no>  Tue, 15 Dec 2015 16:18:59 +0100
+
 python-farekart (0.3.1-2) precise; urgency=low
 
   * Added python-dateutil to the dependencies.

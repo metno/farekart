@@ -101,11 +101,16 @@ if __name__ == "__main__":
     else:
         input_file = None
 
+    if (os.path.exists("schemas")):
+        schema_dirname = "schemas"
+    else:
+        schema_dirname = "/usr/share/xml/farekart"
+
     # Collect the starting times used in the CAP file.
     times = set()
 
     # Load the CAP schema.
-    schema_doc = etree.parse(os.path.join("schemas", "CAP-v1.2.xsd"))
+    schema_doc = etree.parse(os.path.join(schema_dirname, "CAP-v1.2.xsd"))
     schema = etree.XMLSchema(schema_doc)
 
     # Parse and validate the CAP file.

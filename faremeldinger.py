@@ -21,6 +21,9 @@ CAP files are created for official severe weather warnings.
 
 KML file creation is handled by the fare_common module. CAP file creation is
 handled by the generatecap_fare module.
+
+The base URL used for the CAP.rss generated file can be overridden by setting
+the CAP_BASE_URL environment variable.
 """
 
 import os, sys, time
@@ -151,7 +154,7 @@ if __name__ == "__main__":
     index_file = "{0}-index.xml".format(filebase)
     rss_file = os.path.join(dirname, "CAP.rss")
     output_dir = "rssfiles"
-    base_url = "http://api.met.no/CAP"
+    base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
     publishcap.main(index_file, rss_file, output_dir, base_url)
 
     sys.exit()
