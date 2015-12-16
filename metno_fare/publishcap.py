@@ -409,6 +409,11 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
     SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
     
+    # Sort the messages by their file names (the first elements in the tuples
+    # will be compared first).
+    new_messages.sort()
+    new_messages.reverse()
+
     for file_name, cap in new_messages:
     
         # Check if the file name is actually a URL.

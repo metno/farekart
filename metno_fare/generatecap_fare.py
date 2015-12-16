@@ -33,6 +33,7 @@ def make_list_of_valid_files(filebase,schemas):
     files = []
     filesearch = "{0}*.cap.xml".format(filebase)
     filenames = glob.glob(filesearch)
+    filenames.sort()
     
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))

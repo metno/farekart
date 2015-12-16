@@ -5,8 +5,9 @@ python-farekart (0.3.3-1) precise; urgency=low
   * Added an XSLT stylesheet to CAP files.
   * Made it possible to override the publishing directory.
   * Changed the file extensions to .cap.xml for easier browser handling.
+  * Ensured that alerts are written in reverse time order in the RSS file.
 
- -- David Boddie <david.boddie@met.no>  Wed, 16 Dec 2015 13:58:32 +0100
+ -- David Boddie <david.boddie@met.no>  Wed, 16 Dec 2015 14:16:13 +0100
 
 python-farekart (0.3.2-1) precise; urgency=low
 
