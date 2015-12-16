@@ -1,3 +1,9 @@
+python-farekart (0.3.4-1ubuntu1) precise; urgency=low
+
+  * Move expired messages into an archive subdirectory.
+
+ -- David Boddie <david.boddie@met.no>  Wed, 16 Dec 2015 15:37:18 +0100
+
 python-farekart (0.3.3-1) precise; urgency=low
 
   * Improved separation between the directory used to collect CAP files

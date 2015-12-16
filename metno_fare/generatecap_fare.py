@@ -482,8 +482,6 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     f.write(tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True))
     f.close()
-    
-    return
 
 
 def generate_files_cap_fare(selectString, dateto, db, filebase,schemas):

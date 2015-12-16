@@ -359,6 +359,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     # Maintain a set of expired messages so that cancellations can also be expired.
     expired = set()
     new_messages = []
+    archive_messages = []
 
     for identifier in messages:
     
@@ -373,6 +374,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
 
                 # Expire the message (do not include it in the new list).
                 sys.stdout.write("Expiring unpublished message '%s'.\n" % identifier)
+                archive_messages.append(file_name)
 
                 if identifier in cancel:
                     # Also expire the cancellation.
@@ -385,7 +387,23 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
 
             if identifier not in expired:
                 new_messages.append((file_name, cap))
+            else:
+                archive_messages.append(file_name)
     
+    # Move the expired messages to an archive directory.
+    archive_dir = os.path.join(output_dir, "archive")
+    if not os.path.exists(archive_dir):
+        os.mkdir(archive_dir)
+
+    for file_name in archive_messages:
+        if os.path.exists(os.path.join(archive_dir, file_name)):
+            # The file already exists in the archive - this means it was
+            # written again and should just be deleted.
+            os.remove(os.path.join(output_dir, file_name))
+        else:
+            # Move the file to the archive directory.
+            shutil.move(os.path.join(output_dir, file_name), archive_dir)
+
     # Write the unpublished CAP files to the publishing directory.
     # Note that we cannot just copy the files because some Update messages may
     # have been converted to Alert messages.
