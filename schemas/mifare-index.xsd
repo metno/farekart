@@ -18,7 +18,7 @@
   </xs:element>
   <xs:simpleType name="filename"> 
     <xs:restriction base="xs:token">
-      <xs:pattern value="[a-zA-Z0-9_-]+\.cap"/>
+      <xs:pattern value="[a-zA-Z0-9_-]+\.cap\.xml"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="utcDateTime"> 

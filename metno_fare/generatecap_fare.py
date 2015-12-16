@@ -31,7 +31,7 @@ def make_list_of_valid_files(filebase,schemas):
         directory containing the files."""
 
     files = []
-    filesearch = "{0}*.cap".format(filebase)
+    filesearch = "{0}*.cap.xml".format(filebase)
     filenames = glob.glob(filesearch)
     
     # Load the CAP schema.
@@ -496,7 +496,7 @@ def generate_files_cap_fare(selectString, dateto, db, filebase,schemas):
 
         tt=doc[1]
         ts = tt.strftime("%Y%m%dT%H%M%S")
-        filename = filebase + "-" + ts + ".cap"
+        filename = filebase + "-" + ts + ".cap.xml"
         if (os.path.isfile(filename)): 
             sys.stderr.write("File '%s' already exists!\n" % filename)
         else:
