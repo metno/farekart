@@ -1,3 +1,12 @@
+python-farekart (0.3.3-1) precise; urgency=low
+
+  * Improved separation between the directory used to collect CAP files
+    and the one used to publish them.
+  * Added an XSLT stylesheet to CAP files.
+  * Made it possible to override the publishing directory.
+
+ -- David Boddie <david.boddie@met.no>  Wed, 16 Dec 2015 13:38:40 +0100
+
 python-farekart (0.3.2-1) precise; urgency=low
 
   * Fixed URL joining when generating an RSS file.

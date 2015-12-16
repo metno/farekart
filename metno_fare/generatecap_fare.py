@@ -207,7 +207,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     l_type = res['type']
     l_alert = res['alert']
     
-    #Check for values we absolutly need and set suitable defaults
+    # Check for values we absolutely need and set suitable defaults.
     
     language = "no"   #Suitable default. 
 	
@@ -220,6 +220,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
     alert = Element('alert')
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
+    alert.addprevious(etree.ProcessingInstruction("xml-stylesheet", "href='capatomproduct.xsl' type='text/xsl'"))
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
     sent_time = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
@@ -477,7 +478,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         return
 
     f = open(filename, 'w')
-    f.write(tostring(alert, encoding="UTF-8", xml_declaration=True, pretty_print=True, standalone=True))
+    f.write(tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
+                     pretty_print=True, standalone=True))
     f.close()
     
     return

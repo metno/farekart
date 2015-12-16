@@ -24,6 +24,10 @@ handled by the generatecap_fare module.
 
 The base URL used for the CAP.rss generated file can be overridden by setting
 the CAP_BASE_URL environment variable.
+
+The directory used to publish the CAP files, RSS file and XSLT stylesheets is,
+by default, a subdirectory in the output directory called "publish". This can
+be overridden by setting the CAP_PUBLISH_DIR environment variable.
 """
 
 import os, sys, time
@@ -54,7 +58,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 6:
         schema_dirname = sys.argv[6]
     else:
-        if (os.path.exists("schemas")):
+        if os.path.exists("schemas"):
             schema_dirname = "schemas"
         else:
             schema_dirname = "/usr/share/xml/farekart"
@@ -152,9 +156,9 @@ if __name__ == "__main__":
 
     # Generate an RSS file to describe the CAP files created.
     index_file = "{0}-index.xml".format(filebase)
-    rss_file = os.path.join(dirname, "CAP.rss")
-    output_dir = "rssfiles"
+    rss_file = "CAP.rss"
+    output_dir = os.getenv("CAP_PUBLISH_DIR", os.path.join(dirname, "publish"))
     base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-    publishcap.main(index_file, rss_file, output_dir, base_url)
+    publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
 
     sys.exit()

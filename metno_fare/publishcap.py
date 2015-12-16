@@ -294,20 +294,27 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
     return messages, cancel, update
 
 
-def main(index_file, rss_file, output_dir, base_url):
+def main(index_file, rss_file, output_dir, publish_dir, base_url):
     """Controls the overall processing of CAP and index files to create an RSS feed.
     The given args are the arguments supplied by the user on the command line."""
 
     # Get the current time.
     now = datetime.datetime.now(dateutil.tz.tzutc())
 
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+    if os.path.exists(publish_dir):
+        shutil.rmtree(publish_dir, ignore_errors=True)
 
-    if (os.path.exists("schemas")):
+    os.mkdir(publish_dir)
+    
+    if os.path.exists("schemas"):
         schema_dirname = "schemas"
     else:
         schema_dirname = "/usr/share/xml/farekart"
+    
+    if os.path.exists("xsl"):
+        xsl_dirname = "xsl"
+    else:
+        xsl_dirname = "/usr/share/xml/farekart"
 
     # Ensure that the base URL ends with a trailing slash.
     if not base_url.endswith("/"):
@@ -379,17 +386,17 @@ def main(index_file, rss_file, output_dir, base_url):
             if identifier not in expired:
                 new_messages.append((file_name, cap))
     
-    # Write the unpublished CAP files to the output directory.
+    # Write the unpublished CAP files to the publishing directory.
     # Note that we cannot just copy the files because some Update messages may
     # have been converted to Alert messages.
     index_dir = os.path.split(index_file)[0]
     
     for file_name, cap in new_messages:
     
-        # Only published local files.
         if urlparse.urlparse(file_name).scheme == "":
-            f = open(os.path.join(output_dir, file_name), 'wb')
-            ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+            f = open(os.path.join(publish_dir, file_name), 'wb')
+            ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True,
+                                      standalone=True, pretty_print=True)
             f.close()
     
     # Create a RSS feed.
@@ -421,7 +428,15 @@ def main(index_file, rss_file, output_dir, base_url):
         SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
         SubElement(item, 'category').text = cap.find('.//cap:category', CAP_nsmap).text
     
-    # Write the new RSS feed file.
-    f = open(rss_file, 'wb')
+    # Write the new RSS feed file to the local output directory so that it can be read
+    # next time and copy it to the publishing directory.
+    f = open(os.path.join(output_dir, rss_file), 'wb')
     ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
     f.close()
+    
+    shutil.copy2(os.path.join(output_dir, rss_file), os.path.join(publish_dir, rss_file))
+
+    # Copy the XSLT stylesheets into the publishing directory.
+    for name in "capatomproduct.xsl", "dst_check.xsl":
+        shutil.copy2(os.path.join(xsl_dirname, name), os.path.join(publish_dir, name))
+

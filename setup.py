@@ -9,8 +9,11 @@ setup(
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.3.2",
+    version="0.3.3",
     packages=["metno_fare"],
     scripts=["faremeldinger.py", "metno-publish-cap.py", "cap2kml.py"],
-    data_files=[("share/xml/farekart",["schemas/XMLSchema.xsd","schemas/CAP-v1.2.xsd","schemas/mifare-index.xsd"])]
+    data_files=[("share/xml/farekart", [
+        "schemas/XMLSchema.xsd", "schemas/CAP-v1.2.xsd", "schemas/mifare-index.xsd",
+        "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"
+        ])]
     )
