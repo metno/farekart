@@ -1,4 +1,4 @@
-python-farekart (0.3.4-1ubuntu1) precise; urgency=low
+python-farekart (0.3.4-1) precise; urgency=low
 
   * Move expired messages into an archive subdirectory.
 
