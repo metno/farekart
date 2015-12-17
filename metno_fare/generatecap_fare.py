@@ -22,7 +22,19 @@ from lxml import etree
 
 from metno_fare.fare_common import *
 
+# Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
+
+# Define values to compare certainty and severity text against. We will
+# compare both fields against a common set so that a correct subsitution will
+# be made if the original text was close enough, but when a value from the
+# wrong field is used (a severity of "Possible", for example), the substituted
+# value will be invalid and will cause the later CAP validation to correctly
+# fail. This ensures that we don't happily accept certainty values in the
+# severity field and vice versa.
+predefined_severity = set(["Extreme", "Severe", "Moderate", "Minor", "Unknown"])
+predefined_certainty = set(["Observed", "Likely", "Possible", "Unlikely", "Unknown"])
+predefined_certainty_severity = predefined_severity | predefined_certainty
 
 
 def make_list_of_valid_files(filebase,schemas):
@@ -257,11 +269,11 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         severity = locs.get("severity", "Moderate")
         severity = severity.strip(invalid_extra_chars)
-        severity = closest_match(severity, ("Extreme", "Severe", "Moderate", "Minor", "Unknown"))
+        severity = closest_match(severity, predefined_certainty_severity)
 
         certainty = locs.get("certainty", "Likely")
         certainty = certainty.strip(invalid_extra_chars)
-        certainty = closest_match(certainty, ("Observed", "Likely", "Possible", "Unlikely", "Unknown"))
+        certainty = closest_match(certainty, predefined_certainty_severity)
         
         eng = locs['english']
         pict = locs['pictlink']
