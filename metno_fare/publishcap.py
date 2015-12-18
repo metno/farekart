@@ -267,14 +267,21 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
     cancel = {}
     update = {}
     
+    # Since the RSS file may refer to the same CAP file more than once for multiple
+    # languages, we keep track of the files read to avoid parsing them more than once.
+    read_files = set()
+
     for element in rss.iterfind('.//item'):
     
         # Fetch the CAP file referred to by the RSS feed.
         url = element.find('.//link').text
         
+        file_name = urlparse.urlparse(url).path.split('/')[-1]
+        if file_name in read_files:
+            continue
+
         # If the file is mentioned in the RSS feed then it should still be
         # present locally.
-        file_name = urlparse.urlparse(url).path.split('/')[-1]
         try:
             f = open(os.path.join(output_dir, file_name))
             cap_text = f.read()
@@ -283,6 +290,8 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
             sys.stderr.write("Error: failed to read CAP file '%s' previously published in RSS file '%s'.\n" % (file_name, rss_file))
             sys.exit(1)
         
+        read_files.add(file_name)
+
         try:
             cap = parse_cap_file(cap_schema, cap_text = cap_text)
         except (ValueError, etree.XMLSyntaxError):
@@ -332,9 +341,10 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     messages, cancel, update = parse_index_file(index_schema, cap_schema, index_file)
     
     # Parse the RSS file, if found.
-    if os.path.exists(rss_file):
+    if os.path.exists(os.path.join(output_dir, rss_file)):
 
-        old_messages, old_cancel, old_update = parse_rss_file(cap_schema, rss_file, output_dir)
+        old_messages, old_cancel, old_update = parse_rss_file(cap_schema,
+            os.path.join(output_dir, rss_file), output_dir)
         
         # Merge the item dictionaries from the RSS and index files, keeping
         # any messages that have already been published.
