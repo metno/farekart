@@ -2,8 +2,9 @@ python-farekart (0.3.6-1) precise; urgency=low
 
   * Split the items in the RSS feed into separate channels for different
     languages.
+  * Identify duplicate messages but keep the originals.
 
- -- David Boddie <david.boddie@met.no>  Fri, 18 Dec 2015 11:59:29 +0100
+ -- David Boddie <david.boddie@met.no>  Fri, 18 Dec 2015 14:01:39 +0100
 
 python-farekart (0.3.5-1) precise; urgency=low
 

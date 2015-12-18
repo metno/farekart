@@ -100,12 +100,11 @@ def process_message(file_name, cap, messages, cancel, update):
 
     identifier, msgType = find_id_and_type(cap)
     
-    # Check for duplicate messages.
     if identifier in messages:
+        # Check for duplicate messages.
         sys.stderr.write("Warning: CAP file '%s' has identifier '%s' that has already been registered. Skipping.\n" % (file_name, identifier))
-        return
     
-    if msgType == "Cancel":
+    elif msgType == "Cancel":
     
         # Record the relationship between messages in the cancellation dictionary.
         for original_id in find_references(cap, file_name):
