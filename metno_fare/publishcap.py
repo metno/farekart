@@ -406,18 +406,20 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
             # Move the file to the archive directory.
             shutil.move(os.path.join(output_dir, file_name), archive_dir)
 
-    # Write the unpublished CAP files to the publishing directory.
+    # Republish the CAP files to the publishing directory.
     # Note that we cannot just copy the files because some Update messages may
     # have been converted to Alert messages.
     index_dir = os.path.split(index_file)[0]
-    
+
     for file_name, cap in new_messages:
-    
-        if urlparse.urlparse(file_name).scheme == "":
-            f = open(os.path.join(publish_dir, file_name), 'wb')
-            ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True,
-                                      standalone=True, pretty_print=True)
-            f.close()
+
+        if urlparse.urlparse(file_name).scheme != "":
+            file_name = urlparse.urlparse(file_name).path.split('/')[-1]
+
+        f = open(os.path.join(publish_dir, file_name), 'wb')
+        ElementTree(cap).write(f, encoding="UTF-8", xml_declaration=True,
+                                  standalone=True, pretty_print=True)
+        f.close()
     
     # Find the languages used in the CAP files.
     languages = set()
