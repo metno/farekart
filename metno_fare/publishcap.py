@@ -35,6 +35,7 @@ from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
 
 CAP_nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+default_language = "no"
 
 def parse_cap_file(cap_schema, cap_file = None, cap_text = None):
     """Parses the CAP document supplied by the file, cap_file, or passed as a
@@ -267,18 +268,12 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
     cancel = {}
     update = {}
     
-    # Since the RSS file may refer to the same CAP file more than once for multiple
-    # languages, we keep track of the files read to avoid parsing them more than once.
-    read_files = set()
-
     for element in rss.iterfind('.//item'):
     
         # Fetch the CAP file referred to by the RSS feed.
         url = element.find('.//link').text
         
         file_name = urlparse.urlparse(url).path.split('/')[-1]
-        if file_name in read_files:
-            continue
 
         # If the file is mentioned in the RSS feed then it should still be
         # present locally.
@@ -290,8 +285,6 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
             sys.stderr.write("Error: failed to read CAP file '%s' previously published in RSS file '%s'.\n" % (file_name, rss_file))
             sys.exit(1)
         
-        read_files.add(file_name)
-
         try:
             cap = parse_cap_file(cap_schema, cap_text = cap_text)
         except (ValueError, etree.XMLSyntaxError):
@@ -433,22 +426,22 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         for lang in cap.findall('.//cap:language', CAP_nsmap):
             languages.add(lang.text.strip())
 
-    # Create a RSS feed.
-    rss = Element('rss')
-    rss.set('version', '2.0')
-
-    # Create channels for the languages used.
-    channels = {}
+    # Create feeds and channels for the languages used.
+    feeds = {}
 
     for lang in languages:
     
+        rss = Element('rss')
+        rss.set('version', '2.0')
+
         channel = SubElement(rss, 'channel')
         SubElement(channel, 'title').text = "Weather alerts (%s)" % lang
         SubElement(channel, 'link').text = base_url
         SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
         SubElement(channel, 'language').text = lang
         SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
-        channels[lang] = channel
+
+        feeds[lang] = (rss, channel)
     
     # Sort the messages by their file names (the first elements in the tuples
     # will be compared first).
@@ -470,7 +463,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         for info in cap.findall('.//cap:info', CAP_nsmap):
 
             lang = info.find('.//cap:language', CAP_nsmap).text.strip()
-            channel = channels[lang]
+            rss, channel = feeds[lang]
 
             item = SubElement(channel, 'item')
             SubElement(item, 'title').text = info.find('.//cap:headline', CAP_nsmap).text
@@ -481,13 +474,24 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
             SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
             SubElement(item, 'category').text = info.find('.//cap:category', CAP_nsmap).text
     
-    # Write the new RSS feed file to the local output directory so that it can be read
-    # next time and copy it to the publishing directory.
-    f = open(os.path.join(output_dir, rss_file), 'wb')
-    ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
-    f.close()
-    
-    shutil.copy2(os.path.join(output_dir, rss_file), os.path.join(publish_dir, rss_file))
+    # Write the new RSS feed files to the local output directory so that they can be read
+    # next time, and copy them to the publishing directory.
+
+    for lang in languages:
+
+        if lang == default_language:
+            rss_lang_file = rss_file
+        else:
+            stem, suffix = os.path.splitext(rss_file)
+            rss_lang_file = stem + '-' + lang + suffix
+
+        rss, channel = feeds[lang]
+
+        f = open(os.path.join(output_dir, rss_lang_file), 'wb')
+        ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
+        f.close()
+
+        shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
 
     # Copy the XSLT stylesheets into the publishing directory.
     for name in "capatomproduct.xsl", "dst_check.xsl":
