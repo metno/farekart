@@ -417,15 +417,28 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
                                       standalone=True, pretty_print=True)
             f.close()
     
+    # Find the languages used in the CAP files.
+    languages = set()
+    for file_name, cap in new_messages:
+        for lang in cap.findall('.//cap:language', CAP_nsmap):
+            languages.add(lang.text.strip())
+
     # Create a RSS feed.
     rss = Element('rss')
     rss.set('version', '2.0')
+
+    # Create channels for the languages used.
+    channels = {}
+
+    for lang in languages:
     
-    channel = SubElement(rss, 'channel')
-    SubElement(channel, 'title').text = "Weather alerts"
-    SubElement(channel, 'link').text = base_url
-    SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
-    SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
+        channel = SubElement(rss, 'channel')
+        SubElement(channel, 'title').text = "Weather alerts (%s)" % lang
+        SubElement(channel, 'link').text = base_url
+        SubElement(channel, 'description').text = "Weather alerts from the Norwegian Meteorological Institute"
+        SubElement(channel, 'language').text = lang
+        SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
+        channels[lang] = channel
     
     # Sort the messages by their file names (the first elements in the tuples
     # will be compared first).
@@ -433,7 +446,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     new_messages.reverse()
 
     for file_name, cap in new_messages:
-    
+
         # Check if the file name is actually a URL.
         if urlparse.urlparse(file_name).scheme != "":
             # Use the URL supplied.
@@ -441,15 +454,22 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         else:
             # Create the intended URL from the base URL and the file name.
             url = urlparse.urljoin(base_url, file_name)
-        
-        item = SubElement(channel, 'item')
-        SubElement(item, 'title').text = cap.find('.//cap:headline', CAP_nsmap).text
-        SubElement(item, 'link').text = url
-        SubElement(item, 'description').text = cap.find('.//cap:description', CAP_nsmap).text
-        SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
-        SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
-        SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
-        SubElement(item, 'category').text = cap.find('.//cap:category', CAP_nsmap).text
+
+        # Find all the info elements in the message and add details for each of them
+        # to the appropriate channel for the language used.
+        for info in cap.findall('.//cap:info', CAP_nsmap):
+
+            lang = info.find('.//cap:language', CAP_nsmap).text.strip()
+            channel = channels[lang]
+
+            item = SubElement(channel, 'item')
+            SubElement(item, 'title').text = cap.find('.//cap:headline', CAP_nsmap).text
+            SubElement(item, 'link').text = url
+            SubElement(item, 'description').text = cap.find('.//cap:description', CAP_nsmap).text
+            SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
+            SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
+            SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
+            SubElement(item, 'category').text = cap.find('.//cap:category', CAP_nsmap).text
     
     # Write the new RSS feed file to the local output directory so that it can be read
     # next time and copy it to the publishing directory.
