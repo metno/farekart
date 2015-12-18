@@ -473,13 +473,13 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
             channel = channels[lang]
 
             item = SubElement(channel, 'item')
-            SubElement(item, 'title').text = cap.find('.//cap:headline', CAP_nsmap).text
+            SubElement(item, 'title').text = info.find('.//cap:headline', CAP_nsmap).text
             SubElement(item, 'link').text = url
-            SubElement(item, 'description').text = cap.find('.//cap:description', CAP_nsmap).text
+            SubElement(item, 'description').text = info.find('.//cap:description', CAP_nsmap).text
             SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
             SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
             SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
-            SubElement(item, 'category').text = cap.find('.//cap:category', CAP_nsmap).text
+            SubElement(item, 'category').text = info.find('.//cap:category', CAP_nsmap).text
     
     # Write the new RSS feed file to the local output directory so that it can be read
     # next time and copy it to the publishing directory.
