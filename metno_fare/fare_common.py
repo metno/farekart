@@ -22,7 +22,7 @@ def get_xml_docs(db, dateto, select_string):
 
     try:
         cur = db.cursor()
-        cur.execute(select_string, dateto)
+        cur.execute(select_string, (dateto,))
         result = cur.fetchall()
 
     except MySQLdb.Error, e:
@@ -40,7 +40,7 @@ def get_latlon(n, db):
 
     try:
         cur = db.cursor()
-        cur.execute(select_string, n)
+        cur.execute(select_string, (n,))
         result = cur.fetchone()
 
     except MySQLdb.Error, e:
@@ -264,7 +264,7 @@ def get_locations(db, select_string, time):
 
     try:
         cur = db.cursor()
-        cur.execute(select_string, time)
+        cur.execute(select_string, (time,))
         result = cur.fetchall()
 
     except MySQLdb.Error, e:
