@@ -1,3 +1,9 @@
+python-farekart (0.3.6-2) precise; urgency=low
+
+  * Fixed bug
+
+ -- Jo Asplin <jo.asplin@met.no>  Wed, 20 Apr 2016 10:56:00 +0100
+
 python-farekart (0.3.6-1) precise; urgency=low
 
   * Split the items in the RSS feed into separate channels for different
