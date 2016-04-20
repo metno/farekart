@@ -290,7 +290,7 @@ def parse_rss_file(cap_schema, rss_file, output_dir):
             sys.stderr.write("Warning: CAP file from URL '%s' is not valid.\n" % url)
             continue
         
-        process_message(url, cap, messages, cancel, update)
+        process_message(file_name, cap, messages, cancel, update)
     
     return messages, cancel, update
 
