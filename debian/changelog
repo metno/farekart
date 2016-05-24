@@ -1,3 +1,9 @@
+python-farekart (0.3.7-1) precise; urgency=low
+
+  * Changed status from 'Actual' to 'Test'
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Thu, 19 May 2016 08:30:37 +0200
+
 python-farekart (0.3.6-2) precise; urgency=low
 
   * Fixed bug

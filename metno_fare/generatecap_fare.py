@@ -241,7 +241,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
     SubElement(alert, 'sender').text = "helpdesk@met.no"
     SubElement(alert, 'sent').text = sent_time
-    SubElement(alert, 'status').text = 'Actual'
+    SubElement(alert, 'status').text = 'Test'
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
     
