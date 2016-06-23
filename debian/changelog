@@ -1,3 +1,9 @@
+python-farekart (0.3.8-1) precise; urgency=low
+
+  * Changes in identifier, sender and references element
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Thu, 23 Jun 2016 14:34:39 +0200
+
 python-farekart (0.3.7-1) precise; urgency=low
 
   * Changed status from 'Actual' to 'Test'

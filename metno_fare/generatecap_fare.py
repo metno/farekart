@@ -196,7 +196,9 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
                "nn": "Meteorologisk Institutt",
                "en": "MET Norway"}
 	
-    reference_url = "http://www.met.no/CAP"
+    sender = "noreply@met.no"
+    identifier_prefix= "2.49.0.1.578.0.NO."
+ 
 
     notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
                "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
@@ -235,11 +237,12 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
     alert.addprevious(etree.ProcessingInstruction("xml-stylesheet", "href='capatomproduct.xsl' type='text/xsl'"))
 
-    identifier = filter(lambda c: c.isalpha() or c.isdigit() or c == "_", res['id'])
+    identifier = filter(lambda c: c.isalpha() or c.isdigit() or c in ["_","."], res['id'])
+
     sent_time = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
-    SubElement(alert, 'identifier').text = "2.49.0.0.578.0.NO." + identifier
-    SubElement(alert, 'sender').text = "helpdesk@met.no"
+    SubElement(alert, 'identifier').text = identifier_prefix + identifier
+    SubElement(alert, 'sender').text =  sender
     SubElement(alert, 'sent').text = sent_time
     SubElement(alert, 'status').text = 'Test'
     SubElement(alert, 'msgType').text = l_alert
@@ -252,7 +255,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     if l_alert != 'Alert':
         references = []
         for ref in filter(lambda ref: ref, res['references'].split(" ")):
-            references.append(reference_url + "," + "2.49.0.0.578.0.NO." + ref)
+            references.append(sender + "," + identifier_prefix + ref)
         SubElement(alert, 'references').text = " ".join(references)
     
     if res['eventname'] != None:
