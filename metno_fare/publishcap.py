@@ -119,7 +119,7 @@ def process_message(file_name, cap, messages, cancel, update):
     messages[identifier] = (msgType, file_name, cap)
 
 
-def update_message(messages, update, reference_id, update_id):
+def update_message(messages, reference_id, update_id):
 
     msgType, file_name, cap = messages[update_id]
     
