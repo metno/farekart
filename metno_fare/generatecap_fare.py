@@ -155,7 +155,6 @@ def make_cap_list(language, capalerts):
                 cap_entry['t_expires'] = info['expires']
                 cap_entry['description'] += make_description(info)
 
-        print(cap_entry['description'])
         caplist.append(cap_entry)
     return caplist
 

@@ -161,5 +161,7 @@ if __name__ == "__main__":
     output_dir = os.getenv("CAP_PUBLISH_DIR", os.path.join(dirname, "publish"))
     base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
     publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
+    os.renames("CAP_en.json", output_dir+ "/CAP_en.json")
+    os.renames("CAP_no.json", output_dir+ "/CAP_no.json")
 
     sys.exit()
