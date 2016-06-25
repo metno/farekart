@@ -134,7 +134,8 @@ if __name__ == "__main__":
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
 	# Farevarsler in CAP formats
-	
+
+	#TODO! we do not need to check vto>now. Just read all METfare...
     select_string='select value,termin from document where name = "METfare" and vto > %s'
 
     filebase = os.path.join(dirname, "METfare")

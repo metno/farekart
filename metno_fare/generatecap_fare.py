@@ -19,8 +19,10 @@ import dateutil.parser
 
 from lxml.etree import Element, SubElement, tostring
 from lxml import etree
+import json
 
 from metno_fare.fare_common import *
+from metno_fare import publishcap
 
 # Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
@@ -50,7 +52,11 @@ def make_list_of_valid_files(filebase,schemas):
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))
     schema = etree.XMLSchema(schema_doc)
-    
+
+
+    capalerts={}
+    references = {}
+
     for fname in filenames:
         
         # Parse and validate each CAP file found.
@@ -60,35 +66,137 @@ def make_list_of_valid_files(filebase,schemas):
         if schema.validate(root):
             
             attributes = {}
-            
+
+            # capalert is a dictionary with all the info needed to publish one cap
+            capalert = {}
+            capalert['identifier'] = root.find('.//cap:identifier', nsmap).text
+            capalert['filename'] = fname
+            capalert['msgType'] = root.find('.//cap:msgType', nsmap).text
+            if capalert['msgType'] != 'Alert':
+                capalert['references']=[]
+                for original_id in publishcap.find_references(root, ""):
+                    capalert['references'].append(original_id)
+                references[capalert['identifier']]= capalert['references']
+            capalert['sent'] =   root.find('.//cap:sent', nsmap).text
+            capalert['capinfos'] = []
+
+
             for info in root.findall('cap:info', nsmap):
-                
-                vf = info.find('cap:effective', nsmap).text
+                capinfo={}
+                capinfo['language'] =  info.find('cap:language', nsmap).text
+                vf = info.find('cap:onset', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
+                capinfo['onset'] = vf
+                capinfo['expires'] = vt
+                area = info.find('cap:area', nsmap)
+                capinfo['areaDesc']= area.find('cap:areaDesc', nsmap).text
+                capinfo['description'] = info.find('cap:description', nsmap).text
+                # TODO do not use headline here, but special title tag
+                capinfo['title'] = info.find('cap:headline', nsmap).text
+                # This headline should be common for all info elements
+                capinfo['headline'] = info.find('cap:headline', nsmap).text
                 valid_from = dateutil.parser.parse(vf)
                 valid_to = dateutil.parser.parse(vt)
                 attributes["valid_from"] = valid_from.strftime("%Y-%m-%dT%H:%M:%SZ")
                 attributes["valid_to"] = valid_to.strftime("%Y-%m-%dT%H:%M:%SZ")
-            
+                capalert['capinfos'].append(capinfo)
             # Append the file name and validity of each validated CAP file to the list
             # that will be used to compile the index.
             files.append((fname, attributes))
-        
+
+            capalerts[capalert['identifier']]= capalert
+
+
         else:
             sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
 
+    make_index_file(filebase, files)
+    update_references(capalerts,references)
+
+    cap_no_list = make_cap_list("no",capalerts)
+    cap_en_list = make_cap_list("en",capalerts)
+
+    write_json(capalerts, "CAP.json")
+    write_json(cap_no_list, "CAP_no.json")
+    write_json(cap_en_list, "CAP_en.json")
+
+
+def make_cap_list(language, capalerts):
+    caplist = []
+    for identifier, capalert in capalerts.iteritems():
+        cap_entry = {}
+        cap_entry['guid'] = capalert['identifier']
+        cap_entry['file'] = capalert['filename']
+        if 'ref_by' in capalert:
+            cap_entry['ref_by'] = capalert['ref_by']
+        else:
+            cap_entry['ref_by'] = None
+        cap_entry['type'] = capalert['msgType']
+        if 'references' in capalert:
+            cap_entry['ref_to'] = capalert['references']
+        else:
+            cap_entry['ref_to'] = None
+        cap_entry['t_published'] = capalert['sent']
+        cap_entry['title'] = u""
+        cap_entry['area'] = u""
+        cap_entry['t_onset'] = u""
+        cap_entry['t_expires'] = u""
+        cap_entry['description'] = u""
+
+        for info in capalert['capinfos']:
+            print(info['language'], info['areaDesc'], info['title'])
+            if info['language'] == language:
+                cap_entry['title'] = info['headline']
+                if cap_entry['area']:
+                    cap_entry['area']+= ", "
+                cap_entry['area'] += info['areaDesc']
+                #TODO use earliest/latest time for all infos to calculate onset/expires
+                cap_entry['t_onset']= info['onset']
+                cap_entry['t_expires'] = info['expires']
+                cap_entry['description'] += make_description(info)
+
+        print(cap_entry['description'])
+        caplist.append(cap_entry)
+    return caplist
+
+def make_description(info):
+    return info['areaDesc']+": " +  info['description'] + "\n"
+
+
+def write_json(capalerts,filename):
+    jason_cap = json.dumps(capalerts, sort_keys=True, ensure_ascii=False, indent=4, separators=(',', ': '))
+    jsonfile = open(filename, "w")
+    jsonfile.write(jason_cap.encode('utf-8'))
+    jsonfile.close()
+
+
+def update_references(capalerts,references):
+
+    for key,value in references.iteritems():
+        for id in value:
+            
+            if (id in capalerts):
+                capalert=capalerts[id]
+                capalert['ref_by']=key
+            else:
+                print("Could not find",id)
+
+
+
+def make_index_file(filebase, files):
     # Produce the XML index file.
-    root = Element('files', nsmap = {'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
+    root = Element('files', nsmap={'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
     root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
-    
     for filename, valid in files:
         child = SubElement(root, 'file', valid)
         child.text = os.path.split(filename)[1]
-
-    listfilename="{0}-index.xml".format(filebase)
+    listfilename = "{0}-index.xml".format(filebase)
     listfile = open(listfilename, "w")
     listfile.write(tostring(root, xml_declaration=True, encoding="UTF-8", pretty_print=True))
     listfile.close()
+
+
+
 
 def get_urgency(date_from, date_to, now):
     """Finds the urgency based on the period, beginning at date_from and
@@ -504,6 +612,9 @@ def generate_files_cap_fare(selectString, dateto, db, filebase,schemas):
     using the given selectString and dateto string. Writes an index file
     for the CAP files with names that begin with the given filebase string."""
 
+
+    # TODO the function get_xml_docs should put all files on disk and then read them
+    # termin can be found from the xml-tag productdescription (filename)
     docs = get_xml_docs(db, dateto, selectString)
     
     for doc in docs:
