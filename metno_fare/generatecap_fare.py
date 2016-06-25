@@ -91,8 +91,10 @@ def make_list_of_valid_files(filebase,schemas):
                 area = info.find('cap:area', nsmap)
                 capinfo['areaDesc']= area.find('cap:areaDesc', nsmap).text
                 capinfo['description'] = info.find('cap:description', nsmap).text
-                # TODO do not use headline here, but special title tag
-                capinfo['title'] = info.find('cap:headline', nsmap).text
+                for eventCode in info.findall('cap:eventCode', nsmap):
+                    valueName= eventCode.find('cap:valueName',nsmap).text
+                    value = eventCode.find('cap:value',nsmap).text
+                    capinfo[valueName]=value
                 # This headline should be common for all info elements
                 capinfo['headline'] = info.find('cap:headline', nsmap).text
                 valid_from = dateutil.parser.parse(vf)
@@ -144,7 +146,6 @@ def make_cap_list(language, capalerts):
         cap_entry['description'] = u""
 
         for info in capalert['capinfos']:
-            print(info['language'], info['areaDesc'], info['title'])
             if info['language'] == language:
                 cap_entry['title'] = info['headline']
                 if cap_entry['area']:
@@ -402,6 +403,11 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info, 'severity').text = severity
         SubElement(info, 'certainty').text = certainty
 
+        # make eventCode with forecasters heading
+
+        eventCode = SubElement(info,'eventCode')
+        SubElement(eventCode,'valueName').text='event_level_name'
+        SubElement(eventCode,'value').text =locs['heading']
         # Write UTC times to the CAP file.
         SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
         SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
@@ -409,6 +415,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         SubElement(info, 'senderName').text = senders[language.split("-")[0]]
         SubElement(info, 'headline').text = locs['heading']
+
         SubElement(info, 'description').text = locs['varsel']
         SubElement(info, 'instruction').text = locs['instruction']
         SubElement(info, 'web').text = 'http://www.yr.no'
@@ -504,6 +511,9 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'severity').text = severity
         SubElement(info_en, 'certainty').text = certainty
 
+        eventCode_en = SubElement(info_en,'eventCode')
+        SubElement(eventCode_en,'valueName').text='event_level_name'
+        SubElement(eventCode_en,'value').text =locs['englishheading']
         # Write UTC times to the CAP file.
         SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
         SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
@@ -511,6 +521,8 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         SubElement(info_en, 'senderName').text = senders[language.split("-")[0]]
         SubElement(info_en, 'headline').text = locs['englishheading']
+
+
         SubElement(info_en, 'description').text = locs['english']
         SubElement(info_en, 'instruction').text = locs['consequenses']
         SubElement(info_en, 'web').text = 'http://www.yr.no'
