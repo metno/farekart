@@ -358,6 +358,10 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     
     # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
     
+
+    headline_no = get_headline(l_type,"no",sent_time, res['locations'])
+    headline_en = get_headline(l_type,"en",sent_time,res['locations'])
+
     SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
 
     if l_alert != 'Alert':
@@ -414,7 +418,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
         SubElement(info, 'senderName').text = senders[language.split("-")[0]]
-        SubElement(info, 'headline').text = locs['heading']
+        SubElement(info, 'headline').text = headline_no
 
         SubElement(info, 'description').text = locs['varsel']
         SubElement(info, 'instruction').text = locs['instruction']
@@ -520,7 +524,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
 
         SubElement(info_en, 'senderName').text = senders[language.split("-")[0]]
-        SubElement(info_en, 'headline').text = locs['englishheading']
+        SubElement(info_en, 'headline').text = headline_en
 
 
         SubElement(info_en, 'description').text = locs['english']
@@ -616,6 +620,44 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     f.write(tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True))
     f.close()
+
+
+def get_headline(l_type,lang, sent, locations):
+
+    notes = { "no":u'Varsel for %s for %s utstedt av Meteorologisk Institutt %s.',
+               "en":u'%s alert for %s issued by MET Norway %s.'}
+
+    event_types = { "Wind": u"Vind",
+                    "snow-ice" : u"Snø-Is",
+                    "Thunderstorm" : u"Tordenbyger",
+                    "Fog" : u"Tåke",
+                    "high-temperature" : u"Høye temperaturer",
+                    "low-temperature" : u"Lave temperaturer",
+                    "coastalevent" : u"Hendelse på kysten",
+                    "forest-fire" : u"Skogsbrann",
+                    "avalanches"  : u"Skred",
+                    "Rain" : u"Store nedbørsmengder",
+                    "flooding" : u"Flom",
+                    "rain-flooding" : u"Flom fra regn",
+                    "Polar-low" : u"Polart lavtrykk"}
+
+    location_name = ""
+
+    for locs in locations.values():
+        #locs = locations[p]
+        if location_name:
+            location_name += ", "
+        location_name += locs['name']
+
+
+
+    if lang == "no":
+        type = event_types[l_type].lower()
+    else:
+        type = l_type
+
+    headline = notes[lang] % (type,location_name, sent)
+    return headline
 
 
 def generate_files_cap_fare(selectString, dateto, db, filebase,schemas):
