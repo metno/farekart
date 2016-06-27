@@ -120,7 +120,7 @@ def process_message(file_name, cap, messages, cancel, update):
 
 
 def update_message(messages, reference_id, update_id):
-
+    return
     msgType, file_name, cap = messages[update_id]
     
     # Convert the Update message into an Alert message.
@@ -302,10 +302,9 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     # Get the current time.
     now = datetime.datetime.now(dateutil.tz.tzutc())
 
-    if os.path.exists(publish_dir):
-        shutil.rmtree(publish_dir, ignore_errors=True)
-
-    os.mkdir(publish_dir)
+    if not os.path.exists(publish_dir):
+    #   shutil.rmtree(publish_dir, ignore_errors=True)
+        os.mkdir(publish_dir)
     
     if os.path.exists("schemas"):
         schema_dirname = "schemas"
@@ -393,18 +392,18 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
                 archive_messages.append(file_name)
     
     # Move the expired messages to an archive directory.
-    archive_dir = os.path.join(output_dir, "archive")
-    if not os.path.exists(archive_dir):
-        os.mkdir(archive_dir)
+    #archive_dir = os.path.join(output_dir, "archive")
+    #if not os.path.exists(archive_dir):
+    #    os.mkdir(archive_dir)
 
-    for file_name in archive_messages:
-        if os.path.exists(os.path.join(archive_dir, file_name)):
-            # The file already exists in the archive - this means it was
-            # written again and should just be deleted.
+    #for file_name in archive_messages:
+    #    if os.path.exists(os.path.join(archive_dir, file_name)):
+            ## The file already exists in the archive - this means it was
+            ## written again and should just be deleted.
             os.remove(os.path.join(output_dir, file_name))
-        else:
-            # Move the file to the archive directory.
-            shutil.move(os.path.join(output_dir, file_name), archive_dir)
+    #    else:
+            ## Move the file to the archive directory.
+    #        shutil.move(os.path.join(output_dir, file_name), archive_dir)
 
     # Republish the CAP files to the publishing directory.
     # Note that we cannot just copy the files because some Update messages may
@@ -492,6 +491,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
         f.close()
 
+    if output_dir != publish_dir:
         shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
 
     # Copy the XSLT stylesheets into the publishing directory.
