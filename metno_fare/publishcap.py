@@ -491,8 +491,8 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
         f.close()
 
-    if output_dir != publish_dir:
-        shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
+        if output_dir != publish_dir:
+            shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
 
     # Copy the XSLT stylesheets into the publishing directory.
     for name in "capatomproduct.xsl", "dst_check.xsl":
