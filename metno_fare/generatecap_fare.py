@@ -70,7 +70,7 @@ def make_list_of_valid_files(filebase,schemas):
             # capalert is a dictionary with all the info needed to publish one cap
             capalert = {}
             capalert['identifier'] = root.find('.//cap:identifier', nsmap).text
-            capalert['filename'] = fname
+            capalert['filename'] = os.path.basename(fname)
             capalert['msgType'] = root.find('.//cap:msgType', nsmap).text
             if capalert['msgType'] != 'Alert':
                 capalert['references']=[]
@@ -118,16 +118,16 @@ def make_list_of_valid_files(filebase,schemas):
     cap_no_list = make_cap_list("no",capalerts)
     cap_en_list = make_cap_list("en",capalerts)
 
-    write_json(capalerts, "CAP.json")
-    write_json(cap_no_list, "CAP_no.json")
-    write_json(cap_en_list, "CAP_en.json")
+    dirname = os.path.dirname(filebase)
+    write_json(cap_no_list, dirname, "CAP_no.json")
+    write_json(cap_en_list, dirname, "CAP_en.json")
 
 
 def make_cap_list(language, capalerts):
     caplist = []
     for identifier, capalert in capalerts.iteritems():
         cap_entry = {}
-        cap_entry['guid'] = capalert['identifier']
+        cap_entry['id'] = capalert['identifier']
         cap_entry['file'] = capalert['filename']
         if 'ref_by' in capalert:
             cap_entry['ref_by'] = capalert['ref_by']
@@ -163,7 +163,8 @@ def make_description(info):
     return info['areaDesc']+": " +  info['description'] + "\n"
 
 
-def write_json(capalerts,filename):
+def write_json(capalerts, dirname,filename):
+    filename = os.path.join(dirname,filename)
     jason_cap = json.dumps(capalerts, sort_keys=True, ensure_ascii=False, indent=4, separators=(',', ': '))
     jsonfile = open(filename, "w")
     jsonfile.write(jason_cap.encode('utf-8'))
