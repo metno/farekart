@@ -31,7 +31,7 @@ be overridden by setting the CAP_PUBLISH_DIR environment variable.
 """
 
 import os, sys, time
-import MySQLdb
+import MySQLdb, shutil
 
 from metno_fare.fare_common import *
 from metno_fare.generatecap_fare import generate_files_cap_fare
@@ -161,4 +161,7 @@ if __name__ == "__main__":
     output_dir = os.getenv("CAP_PUBLISH_DIR", dirname)
     base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
     publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
+    if dirname != output_dir:
+        shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(output_dir, 'CAP_en.json'))
+        shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(output_dir, 'CAP_no.json'))
     sys.exit()
