@@ -33,6 +33,7 @@ import datetime
 import dateutil.parser, dateutil.tz
 from lxml.etree import Element, ElementTree, SubElement
 from lxml import etree
+import json
 
 CAP_nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 default_language = "no"
@@ -428,6 +429,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
 
     # Create feeds and channels for the languages used.
     feeds = {}
+    caplist = {}
 
     for lang in languages:
     
@@ -442,6 +444,12 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         SubElement(channel, 'lastBuildDate').text = now.strftime('%Y-%m-%d %H:%M:%S UTC')
 
         feeds[lang] = (rss, channel)
+        jsonfile = os.path.join(output_dir, "CAP_%s.json" % lang)
+
+
+        with open(jsonfile) as data_file:
+            caplist[lang] = json.load(data_file)
+
     
     # Sort the messages by their file names (the first elements in the tuples
     # will be compared first).
@@ -465,10 +473,14 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
             lang = info.find('.//cap:language', CAP_nsmap).text.strip()
             rss, channel = feeds[lang]
 
+
+
             item = SubElement(channel, 'item')
             SubElement(item, 'title').text = info.find('.//cap:headline', CAP_nsmap).text
             SubElement(item, 'link').text = url
-            SubElement(item, 'description').text = info.find('.//cap:description', CAP_nsmap).text
+            identifier = cap.find('.//cap:identifier', CAP_nsmap).text
+            #SubElement(item, 'description').text = info.find('.//cap:description', CAP_nsmap).text
+            SubElement(item, 'description').text = etree.CDATA(getDescription(identifier,caplist[lang]))
             SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
             SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
             SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
@@ -498,3 +510,9 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     for name in "capatomproduct.xsl", "dst_check.xsl":
         shutil.copy2(os.path.join(xsl_dirname, name), os.path.join(publish_dir, name))
 
+def getDescription(identifier,caplist):
+    for cap in caplist:
+        if cap['id']==identifier:
+            return cap['description']
+
+    return " "
