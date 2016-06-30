@@ -333,7 +333,8 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     messages, cancel, update = parse_index_file(index_schema, cap_schema, index_file)
     
     # Parse the RSS file, if found.
-    if os.path.exists(os.path.join(output_dir, rss_file)):
+    # if os.path.exists(os.path.join(output_dir, rss_file)):
+    if (False):
 
         old_messages, old_cancel, old_update = parse_rss_file(cap_schema,
             os.path.join(output_dir, rss_file), output_dir)

@@ -331,12 +331,9 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 	
     sender = "noreply@met.no"
     identifier_prefix= "2.49.0.1.578.0.NO."
- 
 
-    notes = { "no":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
-               "nb":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
-               "nn":u'Varsel for "%s" for Norge utstedt av Meteorologisk Institutt. Melding nummer %s.',
-               "en":u'%s alert for Norway issued by MET Norway. Message number %s.'}
+    note =  "Message number %s"
+
 
     event_types = { "Wind": u"Vind",
                     "snow-ice" : u"Snø-Is",
@@ -356,9 +353,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     l_alert = res['alert']
     
     # Check for values we absolutely need and set suitable defaults.
-    
-    language = "no"   #Suitable default. 
-	
+
     if l_alert is None : 
        l_alert = "Alert"
 
@@ -368,7 +363,6 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
     alert = Element('alert')
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
-    alert.addprevious(etree.ProcessingInstruction("xml-stylesheet", "href='capatomproduct.xsl' type='text/xsl'"))
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c in ["_","."], res['id'])
 
@@ -382,12 +376,12 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     SubElement(alert, 'scope').text = 'Public'
     
     # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
-    
 
-    headline_no = get_headline(l_type,"no",sent_time, res['locations'])
+
+    headline_no = get_headline( event_types[l_type].lower(),"no",sent_time, res['locations'])
     headline_en = get_headline(l_type,"en",sent_time,res['locations'])
 
-    SubElement(alert, 'note').text = notes[language.split("-")[0]] % (l_type, res['mnr'])
+    SubElement(alert, 'note').text = note % res['mnr']
 
     if l_alert != 'Alert':
         references = []
@@ -401,7 +395,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     dt = dateutil.parser.parse(res['vto'])
     df = dateutil.parser.parse(res['vfrom'])
 
-    urgency = get_urgency(df, dt, now)
+    urgency = "Future"
 
     for p in res['locations']:
 
@@ -434,9 +428,14 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         # make eventCode with forecasters heading
 
-        eventCode = SubElement(info,'eventCode')
-        SubElement(eventCode,'valueName').text='event_level_name'
-        SubElement(eventCode,'value').text =locs['heading']
+
+        eventCodes = getEventCode(locs,"no",event_types[l_type])
+        for valueName,value in eventCodes.items():
+            eventCode = SubElement(info,'eventCode')
+            SubElement(eventCode,'valueName').text=valueName
+            SubElement(eventCode,'value').text = value
+
+
         # Write UTC times to the CAP file.
         SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00")
         SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
@@ -447,7 +446,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         SubElement(info, 'description').text = locs['varsel']
         SubElement(info, 'instruction').text = locs['instruction']
-        SubElement(info, 'web').text = 'http://www.yr.no'
+        SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
 
         # MeteoAlarm mandatory elements
 
@@ -540,9 +539,11 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'severity').text = severity
         SubElement(info_en, 'certainty').text = certainty
 
-        eventCode_en = SubElement(info_en,'eventCode')
-        SubElement(eventCode_en,'valueName').text='event_level_name'
-        SubElement(eventCode_en,'value').text =locs['englishheading']
+        eventCodes = getEventCode(locs,"en",l_type)
+        for valueName,value in eventCodes.items():
+            eventCode = SubElement(info_en,'eventCode')
+            SubElement(eventCode,'valueName').text=valueName
+            SubElement(eventCode,'value').text = value
         # Write UTC times to the CAP file.
         SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
         SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
@@ -554,7 +555,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
 
         SubElement(info_en, 'description').text = locs['english']
         SubElement(info_en, 'instruction').text = locs['consequenses']
-        SubElement(info_en, 'web').text = 'http://www.yr.no'
+        SubElement(info_en, 'web').text = 'http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/'
 
         # MeteoAlarm mandatory elements
 
@@ -647,7 +648,19 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     f.close()
 
 
-def get_headline(l_type,lang, sent, locations):
+def getEventCode(locs,lang,type):
+    if lang == "no":
+        eventCodes = {'event_level_name': locs['heading'],
+                  'event_level_concept': u'Vær oppmerksom',
+                   'event_level_type': type}
+    else:
+         eventCodes = {'event_level_name': locs['englishheading'],
+                  'event_level_concept': u'Be aware',
+                  'event_level_type': type}
+    return eventCodes
+
+
+def get_headline(type,lang, sent, locations):
 
     notes = { "no":u'Varsel for %s for %s utstedt av Meteorologisk Institutt %s.',
                "en":u'%s alert for %s issued by MET Norway %s.'}
@@ -676,10 +689,6 @@ def get_headline(l_type,lang, sent, locations):
 
 
 
-    if lang == "no":
-        type = event_types[l_type].lower()
-    else:
-        type = l_type
 
     headline = notes[lang] % (type,location_name, sent)
     return headline
