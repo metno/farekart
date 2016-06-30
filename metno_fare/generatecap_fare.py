@@ -143,7 +143,7 @@ def make_cap_list(language, capalerts):
         cap_entry['area'] = u""
         cap_entry['t_onset'] = u""
         cap_entry['t_expires'] = u""
-        cap_entry['description'] = u""
+        cap_entry['description'] = u"<b>MSGTYPE:</b> %s <br /></br>" %(capalert['msgType'])
 
         for info in capalert['capinfos']:
             if info['language'] == language:
@@ -160,7 +160,31 @@ def make_cap_list(language, capalerts):
     return caplist
 
 def make_description(info):
-    return info['areaDesc']+": " +  info['description'] + "\n"
+
+    if info['language'] == 'no':
+        desc = u"""<b>%s</b><br /><table>
+        <tr><th align='left'>Område:</th><td>%s</td></tr>
+        <tr><th align='left' valign='top'>Varsel:</th><td> %s </td>
+        <tr><th align='left'>Gyldighetstid:</th><td>Fra %s  til %s</td></tr></tr>
+        </table><br />"""
+    else:
+        desc = u"""<b>%s</b><br /><table>
+        <tr><th align='left'>Area:</th><td>%s</td></tr>
+        <tr><th align='left' valign='top'>Forecast:</th><td> %s </td>
+        <tr><th align='left'>Valid time:</th><td>From %s to %s</td></tr></tr>
+        </table><br />"""
+
+
+    if "event_level_name" in info:
+        subtitle = info['event_level_name']
+    else:
+        subtitle = u""
+
+    vfrom = dateutil.parser.parse(info['onset'])
+    vto = dateutil.parser.parse(info['expires'])
+    vfrom = vfrom.strftime("%Y-%m-%d %H:%M UTC")
+    vto = vto.strftime("%Y-%m-%d %H:%M UTC")
+    return desc % (subtitle, info['areaDesc'],info['description'],vfrom,vto)
 
 
 def write_json(capalerts, dirname,filename):
