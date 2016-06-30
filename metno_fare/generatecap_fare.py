@@ -381,6 +381,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     headline_no = get_headline( event_types[l_type].lower(),"no",sent_time, res['locations'])
     headline_en = get_headline(l_type,"en",sent_time,res['locations'])
 
+    SubElement(alert, 'code').text = "system_version 0.1"
     SubElement(alert, 'note').text = note % res['mnr']
 
     if l_alert != 'Alert':
@@ -429,7 +430,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         # make eventCode with forecasters heading
 
 
-        eventCodes = getEventCode(locs,"no",event_types[l_type])
+        eventCodes = getEventCode(locs,"no",event_types[l_type],res['mnr'])
         for valueName,value in eventCodes.items():
             eventCode = SubElement(info,'eventCode')
             SubElement(eventCode,'valueName').text=valueName
@@ -539,7 +540,7 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
         SubElement(info_en, 'severity').text = severity
         SubElement(info_en, 'certainty').text = certainty
 
-        eventCodes = getEventCode(locs,"en",l_type)
+        eventCodes = getEventCode(locs,"en",l_type,res['mnr'])
         for valueName,value in eventCodes.items():
             eventCode = SubElement(info_en,'eventCode')
             SubElement(eventCode,'valueName').text=valueName
@@ -648,15 +649,42 @@ def generate_file_cap_fare(filename, xmldoc, now, db):
     f.close()
 
 
-def getEventCode(locs,lang,type):
+def getEventCode(locs,lang,type,mnr):
+
+
+
+    level_id = {'min': "1",
+              'mod': "2",
+              'sev': "3",
+              'ext': "4"}
+
+
     if lang == "no":
-        eventCodes = {'event_level_name': locs['heading'],
-                  'event_level_concept': u'Vær oppmerksom',
-                   'event_level_type': type}
+        level_name = locs['heading']
+        level_concept = {'min': "",
+                'mod': u"Vær oppmerksom",
+                'sev': u"Vær forberedt",
+                'ext': u"Ta affære"}
     else:
-         eventCodes = {'event_level_name': locs['englishheading'],
-                  'event_level_concept': u'Be aware',
-                  'event_level_type': type}
+        level_name = locs['englishheading']
+        level_concept = {'min': "",
+                'mod': u"Be aware",
+                'sev': "Be prepared",
+                'ext': "Take action"}
+
+    lev = locs['severity'][:3].lower()
+
+    if lev not in ['min','mod','sev','ext']:
+        lev = 'mod'
+
+    eventCodes = {'event_level_name': level_name,
+            'event_level_concept': level_concept[lev],
+            'event_level_id': level_id[lev],
+            'event_level_type': type,
+            'event_background_description': "",
+            'event_message_number': mnr}
+
+
     return eventCodes
 
 
