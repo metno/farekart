@@ -23,8 +23,6 @@ location on a server.
 
 Copies the CAP files and the RSS file to the output directory given.
 
-Uses an existing RSS file, if present, which will be updated with new items
-for new CAP files and cleared of expired items.
 """
 
 from collections import OrderedDict
@@ -188,9 +186,6 @@ def parse_index_file(index_schema, cap_schema, index_file):
 
     for element in tree.iterfind('.//file'):
 
-        valid_from = dateutil.parser.parse(element.get('valid_from'))
-        valid_to = dateutil.parser.parse(element.get('valid_to'))
-
         # The file name is relative to the index file, so obtain an absolute path.
         file_name = element.text
         file_path = os.path.join(index_dir, file_name)
@@ -202,97 +197,7 @@ def parse_index_file(index_schema, cap_schema, index_file):
             sys.exit(1)
         
         process_message(file_name, cap, messages, cancel, update)
-    
-    for reference_id, update_id in update.items():
 
-        # If the identifier referred to by the Update message is in the index
-        # then remove the corresponding Alert message before it is sent and
-        # convert the Update message into an Alert, removing any references to
-        # the original message. Remove the Update message from the update
-        # dictionary.
-        if reference_id in messages:
-            sys.stdout.write("Updating message '%s' before it can be sent.\n" % reference_id)
-            update_message(messages, reference_id, update_id)
-            
-            # Remove the original message from the message dictionary.
-            del messages[reference_id]
-            
-            # Remove the Update message from the update dictionary.
-            # The message itself is now an Alert message.
-            del update[reference_id]
-    
-    for reference_id, cancel_id in cancel.items():
-
-        # If the identifier referred to by the Cancel message is in the index
-        # then remove the corresponding Alert message before it is sent.
-        # Also remove the Cancel message from both the message and cancellation
-        # dictionaries.
-        if reference_id in messages:
-            sys.stdout.write("Cancelling unpublished message '%s'.\n" % reference_id)
-
-            # Remove the original message from the message dictionary.
-            del messages[reference_id]
-
-            # Remove the Cancel message from the message and cancellation dictionaries.
-            del messages[cancel_id]
-            del cancel[reference_id]
-    
-    return messages, cancel, update
-
-
-def parse_rss_file(cap_schema, rss_file, output_dir):
-    """Parses the given rss_file, returning message, cancellation and update
-    dictionaries. The message dictionary contains messages in the order in which
-    they appeared in the RSS file.
-    
-    Uses the cap_schema to validate CAP files that are read to obtain additional
-    information that is not supplied in the RSS file.
-
-    The message dictionary maps the identifier of each CAP file to the CAP
-    document itself. The cancellation dictionary maps identifiers of
-    messages that should be cancelled to the corresponding cancellation
-    message identifiers."""
-
-    try:
-        rss = etree.parse(rss_file)
-    except etree.XMLSyntaxError:
-        sys.stderr.write("Error: RSS file '%s' is not valid.\n" % rss_file)
-        sys.exit(1)
-    
-    # Create a dictionary mapping identifiers to tuples containing message types,
-    # file names and CAP documents.
-    messages = OrderedDict()
-    # Create a dictionary mapping cancelled message identifiers to the identifiers
-    # of the Cancel messages that refer to them, and a dictionary mapping updated
-    # messages to the Update messages that refer to them.
-    cancel = {}
-    update = {}
-    
-    for element in rss.iterfind('.//item'):
-    
-        # Fetch the CAP file referred to by the RSS feed.
-        url = element.find('.//link').text
-        
-        file_name = urlparse.urlparse(url).path.split('/')[-1]
-
-        # If the file is mentioned in the RSS feed then it should still be
-        # present locally.
-        try:
-            f = open(os.path.join(output_dir, file_name))
-            cap_text = f.read()
-            f.close()
-        except IOError:
-            sys.stderr.write("Error: failed to read CAP file '%s' previously published in RSS file '%s'.\n" % (file_name, rss_file))
-            sys.exit(1)
-        
-        try:
-            cap = parse_cap_file(cap_schema, cap_text = cap_text)
-        except (ValueError, etree.XMLSyntaxError):
-            sys.stderr.write("Warning: CAP file from URL '%s' is not valid.\n" % url)
-            continue
-        
-        process_message(file_name, cap, messages, cancel, update)
-    
     return messages, cancel, update
 
 
@@ -304,18 +209,12 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     now = datetime.datetime.now(dateutil.tz.tzutc())
 
     if not os.path.exists(publish_dir):
-    #   shutil.rmtree(publish_dir, ignore_errors=True)
         os.mkdir(publish_dir)
-    
+
     if os.path.exists("schemas"):
         schema_dirname = "schemas"
     else:
         schema_dirname = "/usr/share/xml/farekart"
-    
-    if os.path.exists("xsl"):
-        xsl_dirname = "xsl"
-    else:
-        xsl_dirname = "/usr/share/xml/farekart"
 
     # Ensure that the base URL ends with a trailing slash.
     if not base_url.endswith("/"):
@@ -325,42 +224,13 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
     index_schema_doc = etree.parse(os.path.join(schema_dirname, "mifare-index.xsd"))
     index_schema = etree.XMLSchema(index_schema_doc)
 
-    # Load the CAP schema.
+    # Load the CAP schema. Files already validated
     cap_schema_doc = etree.parse(os.path.join(schema_dirname, "CAP-v1.2.xsd"))
     cap_schema = etree.XMLSchema(cap_schema_doc)
 
     # Parse and validate the index file.
     messages, cancel, update = parse_index_file(index_schema, cap_schema, index_file)
-    
-    # Parse the RSS file, if found.
-    # if os.path.exists(os.path.join(output_dir, rss_file)):
-    if (False):
 
-        old_messages, old_cancel, old_update = parse_rss_file(cap_schema,
-            os.path.join(output_dir, rss_file), output_dir)
-        
-        # Merge the item dictionaries from the RSS and index files, keeping
-        # any messages that have already been published.
-        messages.update(old_messages)
-
-        # Merge the cancellation dictionaries from the RSS and index files.
-        # If there were duplicate cancellations then those messages will have
-        # been discarded but the relationship between messages should still be
-        # valid since it describes a single pair of existing messages.
-        cancel.update(old_cancel)
-        
-        # Merge the update dictionaries from the RSS and index files.
-        update.update(old_update)
-    
-    # At this point, we should only have new alerts, cancellations and updates
-    # from the index and old alerts, cancellations and updates from the RSS file.
-    
-    # Check for expired messages and remove them, removing any cancellations
-    # that refer to them. We cannot remove messages with cancellations that
-    # are still valid since users may have only read the original messages.
-    
-    # Maintain a set of expired messages so that cancellations can also be expired.
-    expired = set()
     new_messages = []
     archive_messages = []
 
@@ -371,46 +241,13 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         except KeyError:
             continue
 
-        if msgType == "Alert" or msgType == "Update":
-
-            if expire_message(now, cap):
-
-                # Expire the message (do not include it in the new list).
-                sys.stdout.write("Expiring unpublished message '%s'.\n" % identifier)
-                archive_messages.append(file_name)
-
-                if identifier in cancel:
-                    # Also expire the cancellation.
-                    sys.stdout.write("Also expiring unpublished cancellation message '%s'.\n" % cancel[identifier])
-                    expired.add(cancel[identifier])
-            else:
-                new_messages.append((file_name, cap))
-
-        elif msgType == "Cancel":
-
-            if identifier not in expired:
-                new_messages.append((file_name, cap))
-            else:
-                archive_messages.append(file_name)
-    
-    # Move the expired messages to an archive directory.
-    #archive_dir = os.path.join(output_dir, "archive")
-    #if not os.path.exists(archive_dir):
-    #    os.mkdir(archive_dir)
-
-    #for file_name in archive_messages:
-    #    if os.path.exists(os.path.join(archive_dir, file_name)):
-            ## The file already exists in the archive - this means it was
-            ## written again and should just be deleted.
-            os.remove(os.path.join(output_dir, file_name))
-    #    else:
-            ## Move the file to the archive directory.
-    #        shutil.move(os.path.join(output_dir, file_name), archive_dir)
+        if not expire_message(now, cap):
+            new_messages.append((file_name, cap))
 
     # Republish the CAP files to the publishing directory.
     # Note that we cannot just copy the files because some Update messages may
     # have been converted to Alert messages.
-    index_dir = os.path.split(index_file)[0]
+    # TODO, this files can now be copied
 
     for file_name, cap in new_messages:
 
@@ -506,10 +343,6 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
 
         if output_dir != publish_dir:
             shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
-
-    # Copy the XSLT stylesheets into the publishing directory.
-    for name in "capatomproduct.xsl", "dst_check.xsl":
-        shutil.copy2(os.path.join(xsl_dirname, name), os.path.join(publish_dir, name))
 
 def getDescription(identifier,caplist):
     for cap in caplist:
