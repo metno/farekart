@@ -61,56 +61,14 @@ def make_list_of_valid_files(filebase,schemas):
         
         # Parse and validate each CAP file found.
         root = etree.parse(fname)
-        nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
-        
-        if schema.validate(root):
+        try:
+            schema.assertValid(root)
+        except etree.DocumentInvalid as e:
+            sys.stderr.write("Warning: CAP file '%s' is not valid: %s \n" % (fname,e))
+            continue
 
-            attributes = {}
+        get_cap_info(root,fname,files,capalerts,references)
 
-            # capalert is a dictionary with all the info needed to publish one cap
-            capalert = {}
-            capalert['identifier'] = root.find('.//cap:identifier', nsmap).text
-            capalert['filename'] = os.path.basename(fname)
-            capalert['msgType'] = root.find('.//cap:msgType', nsmap).text
-            if capalert['msgType'] != 'Alert':
-                capalert['references']=[]
-                for original_id in publishcap.find_references(root, ""):
-                    capalert['references'].append(original_id)
-                references[capalert['identifier']]= capalert['references']
-            capalert['sent'] =   root.find('.//cap:sent', nsmap).text
-            capalert['capinfos'] = []
-
-
-            for info in root.findall('cap:info', nsmap):
-                capinfo={}
-                capinfo['language'] =  info.find('cap:language', nsmap).text
-                vf = info.find('cap:onset', nsmap).text
-                vt = info.find('cap:expires', nsmap).text
-                capinfo['onset'] = vf
-                capinfo['expires'] = vt
-                area = info.find('cap:area', nsmap)
-                capinfo['areaDesc']= area.find('cap:areaDesc', nsmap).text
-                capinfo['description'] = info.find('cap:description', nsmap).text
-                for eventCode in info.findall('cap:eventCode', nsmap):
-                    valueName= eventCode.find('cap:valueName',nsmap).text
-                    value = eventCode.find('cap:value',nsmap).text
-                    capinfo[valueName]=value
-                # This headline should be common for all info elements
-                capinfo['headline'] = info.find('cap:headline', nsmap).text
-                valid_from = dateutil.parser.parse(vf)
-                valid_to = dateutil.parser.parse(vt)
-                attributes["valid_from"] = valid_from.strftime("%Y-%m-%dT%H:%M:%SZ")
-                attributes["valid_to"] = valid_to.strftime("%Y-%m-%dT%H:%M:%SZ")
-                capalert['capinfos'].append(capinfo)
-            # Append the file name and validity of each validated CAP file to the list
-            # that will be used to compile the index.
-            files.append((fname, attributes))
-
-            capalerts[capalert['identifier']]= capalert
-
-
-        else:
-            sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
 
     make_index_file(filebase, files)
     update_references(capalerts,references)
@@ -121,6 +79,48 @@ def make_list_of_valid_files(filebase,schemas):
     dirname = os.path.dirname(filebase)
     write_json(cap_no_list, dirname, "CAP_no.json")
     write_json(cap_en_list, dirname, "CAP_en.json")
+
+
+def get_cap_info(root,fname,files,capalerts,references):
+    nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+    attributes = {}
+    # capalert is a dictionary with all the info needed to publish one cap
+    capalert = {}
+    capalert['identifier'] = root.find('.//cap:identifier', nsmap).text
+    capalert['filename'] = os.path.basename(fname)
+    capalert['msgType'] = root.find('.//cap:msgType', nsmap).text
+    if capalert['msgType'] != 'Alert':
+        capalert['references'] = []
+        for original_id in publishcap.find_references(root, ""):
+            capalert['references'].append(original_id)
+        references[capalert['identifier']] = capalert['references']
+    capalert['sent'] = root.find('.//cap:sent', nsmap).text
+    capalert['capinfos'] = []
+    for info in root.findall('cap:info', nsmap):
+        capinfo = {}
+        capinfo['language'] = info.find('cap:language', nsmap).text
+        vf = info.find('cap:onset', nsmap).text
+        vt = info.find('cap:expires', nsmap).text
+        capinfo['onset'] = vf
+        capinfo['expires'] = vt
+        area = info.find('cap:area', nsmap)
+        capinfo['areaDesc'] = area.find('cap:areaDesc', nsmap).text
+        capinfo['description'] = info.find('cap:description', nsmap).text
+        for eventCode in info.findall('cap:eventCode', nsmap):
+            valueName = eventCode.find('cap:valueName', nsmap).text
+            value = eventCode.find('cap:value', nsmap).text
+            capinfo[valueName] = value
+        # This headline should be common for all info elements
+        capinfo['headline'] = info.find('cap:headline', nsmap).text
+        valid_from = dateutil.parser.parse(vf)
+        valid_to = dateutil.parser.parse(vt)
+        attributes["valid_from"] = valid_from.strftime("%Y-%m-%dT%H:%M:%SZ")
+        attributes["valid_to"] = valid_to.strftime("%Y-%m-%dT%H:%M:%SZ")
+        capalert['capinfos'].append(capinfo)
+    # Append the file name and validity of each validated CAP file to the list
+    # that will be used to compile the index.
+    files.append((fname, attributes))
+    capalerts[capalert['identifier']] = capalert
 
 
 def make_cap_list(language, capalerts):
