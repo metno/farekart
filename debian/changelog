@@ -1,3 +1,9 @@
+python-farekart (0.3.10-1) precise; urgency=low
+
+  * Changes in CAP-files, added eventCodes etc, according to T1823
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Thu, 30 Jun 2016 10:11:22 +0200
+
 python-farekart (0.3.9-1) precise; urgency=low
 
   * Create Json-files with list of CAP-files
