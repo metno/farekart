@@ -64,7 +64,7 @@ def make_list_of_valid_files(filebase,schemas):
         nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
         
         if schema.validate(root):
-            
+
             attributes = {}
 
             # capalert is a dictionary with all the info needed to publish one cap
@@ -143,7 +143,7 @@ def make_cap_list(language, capalerts):
         cap_entry['area'] = u""
         cap_entry['t_onset'] = u""
         cap_entry['t_expires'] = u""
-        cap_entry['description'] = u"<b>MSGTYPE:</b> %s <br /></br>" %(capalert['msgType'])
+        cap_entry['description'] = u"<b>MSGTYPE:</b> %s <br />" %(capalert['msgType'])
 
         for info in capalert['capinfos']:
             if info['language'] == language:
