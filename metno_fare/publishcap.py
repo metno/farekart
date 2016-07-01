@@ -423,7 +423,7 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         f.close()
     
     # Find the languages used in the CAP files.
-    languages = set()
+    languages = set(['en','no'])
     for file_name, cap in new_messages:
         for lang in cap.findall('.//cap:language', CAP_nsmap):
             languages.add(lang.text.strip())
@@ -473,8 +473,6 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
 
             lang = info.find('.//cap:language', CAP_nsmap).text.strip()
             rss, channel = feeds[lang]
-
-
 
             item = SubElement(channel, 'item')
             SubElement(item, 'title').text = info.find('.//cap:headline', CAP_nsmap).text

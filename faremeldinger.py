@@ -136,7 +136,7 @@ if __name__ == "__main__":
 	# Farevarsler in CAP formats
 
 	#TODO! we do not need to check vto>now. Just read all METfare...
-    select_string='select value,termin from document where name = "METfare" and vto > %s'
+    select_string='select value,termin from document where name = "METfare"'
 
     filebase = os.path.join(dirname, "METfare")
 
