@@ -1,3 +1,9 @@
+python-farekart (0.3.11-2) precise; urgency=low
+
+  * bugfix
+
+ -- Helen Korsmo <helen.korsmo@met.no>  Mon, 11 Jul 2016 12:21:39 +0200
+
 python-farekart (0.3.11-1) precise; urgency=low
 
   * Simplified CAP publishing
