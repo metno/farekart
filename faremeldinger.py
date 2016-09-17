@@ -72,6 +72,24 @@ if __name__ == "__main__":
         if not os.path.exists(ol_dirname):
             os.mkdir(ol_dirname)
 
+
+    # Farevarsler in CAP format
+    fare_documentname="METfare"
+    generate_files_cap_fare(fare_documentname,dirname, schema_dirname,db)
+
+    # Generate an RSS file to describe the CAP files created.
+    filebase = os.path.join(dirname,  fare_documentname)
+    index_file = "{0}-index.xml".format(filebase)
+    rss_file = "CAP.rss"
+    output_dir = os.getenv("CAP_PUBLISH_DIR", dirname)
+    base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
+    publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
+    if dirname != output_dir:
+        shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(output_dir, 'CAP_en.json'))
+        shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(output_dir, 'CAP_no.json'))
+
+
+    sys.stderr.write("Start creating kml-files\n")
     # Obtain a string containing the local time for the start of the current hour.
     now = time.strftime("%Y-%m-%d %H:%M:00")
 
@@ -127,17 +145,11 @@ if __name__ == "__main__":
 
     # same from other product.
     
-    select_string='select value,termin from document where name = "METfare" and vto > %s'
+    select_string='select value,termin,lang from document where name = "METfare" and vto > %s'
 
     filename = os.path.join(dirname, "Current_METfare.kml")
 
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
-
-	# Farevarsler in CAP format
-
-    filebase = os.path.join(dirname, "METfare")
-
-    generate_files_cap_fare(select_string, now, db, filebase, schema_dirname)
 
     # Farevarsler TEST
 
@@ -152,13 +164,5 @@ if __name__ == "__main__":
     if db:
         db.close()
 
-    # Generate an RSS file to describe the CAP files created.
-    index_file = "{0}-index.xml".format(filebase)
-    rss_file = "CAP.rss"
-    output_dir = os.getenv("CAP_PUBLISH_DIR", dirname)
-    base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-    publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
-    if dirname != output_dir:
-        shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(output_dir, 'CAP_en.json'))
-        shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(output_dir, 'CAP_no.json'))
+
     sys.exit()

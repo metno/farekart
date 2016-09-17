@@ -50,6 +50,7 @@ def get_latlon(n, db):
 
     # Names are ISO 8859-1 encoded in the TED database.
 
+    #TODO what to do when id not found in the database?
     name = result[0].decode("iso8859-1")
 
     #print("name",name)
@@ -69,7 +70,7 @@ def get_latlon(n, db):
 
         lat = int(la) + ( (la - int(la) )*100.0/60.0 )
 
-        retval.append((name,lon,lat))
+        retval.append((name,lon,lat)) #TODO, we do not need to append the name here!
 
     return retval
 
@@ -78,43 +79,43 @@ def retrieve_from_xml_fare(xmldoc):
     """Retrieves some parameters from the XML text for a faremelding specified
     by xmldoc and returns them as a list of values."""
 
-    vto = None
-    vfrom = None
+    vto = None # TODO remove
+    vfrom = None #TODO remove, duplicate
     locations = {}
     res={}
     n = 0
 
     root = fromstring(xmldoc)
 
-    vto = None
-    vfrom = None
-    ty = None
-    sender = None
+    vto = None #
+    vfrom = None #
+    ty = None# # TODO seems not to be used
+    sender = None #dangerwarning spesific
     type = None
-    id = "BLANK"
-    mnr = None
-    eventname = None
-    alert = None
+    id = "BLANK" #dangerwarning spes# ific
+    mnr = None #dangerwarning spesific
+    eventname = None # TODO not used
+    alert = None #dangerwarning spesific
 
-    t = root.find('dangerwarning')
+    t = root.find('dangerwarning') # TODO maybe a new funtion to find dangerwarning
 	# new types of warnings using metfare template and <dangerwarning> tag.
 
-    if t is None or len(t) < 1:  #If t does not exisit or has no subelements 
+    if t is None or len(t) < 1:  #If t does not exisit or has no subelements  TODO - we should not make a CAP
       print "NO DANGERWARNING ELEMENT FOUND. SETTING DEFAULTS."
       alert = "Alert"
       mnr = 1
       references = None
-      sender = None
+      sender = None # remove duplicate
       id = 'BLANK'
     else:
-      alert = t.find('msgtype').text
+      alert = t.find('msgtype').text # TODO all this stuff is common to the whole CAP-file
       mnr   = t.find('msgnumber').text
       references = t.find('msgreferences').text
       sender = t.find('msgauthor').text
       id = t.find('msgidentifier').text
 
 
-    for header in root.iter('productheader'):
+    for header in root.iter('productheader'): #TODO - There is only one productheader
         ph = header.find('phenomenon_type')
         if ph is not None:
             type = ph.text
@@ -128,7 +129,7 @@ def retrieve_from_xml_fare(xmldoc):
         vto = t.get('vto')
         vfrom = t.get('vfrom')
 
-        for keyword in t.iter('keyword'):
+        for keyword in t.iter('keyword'): # TODO keyword is this used?
 
             nam = keyword.get('name')
 
@@ -136,16 +137,16 @@ def retrieve_from_xml_fare(xmldoc):
                 type = keyword.find('in').text
             elif nam == "mnr":
                 mnr = keyword.find('in').text
-            elif nam == "sender":
+            elif nam == "sender": #TODO: is this used?
                 sender = keyword.find('in').text
             elif nam == "navn":
                 eventname = keyword.find('in').text
 
-        for p in root.iter('productdescription'):
+        for p in root.iter('productdescription'): #TODO this should be moved outside this loop!
             termin = p.get('termin')
 
     # Foreach time, Ony one in each time.
-    for location in root.iter('location'):
+    for location in root.iter('location'): # TODO - this should be fixed so that we find locations in the time element
 
         name = None
         varsel = None
@@ -222,24 +223,24 @@ def retrieve_from_xml_fare(xmldoc):
         loc['altitude'] = altitude
         loc['english'] = english
         loc['englishheading'] = englishheading
-        loc['consequenses'] = consequenses
+        loc['consequenses'] = consequenses # now loc is a dictionary with all spesific info for this location (or info element)
 
         n = n + 1
 
-        locations[n] = loc
+        locations[n] = loc #TODO, why is locations like this? A dictionary with a number as the key
 
     res['locations'] = locations
-    res['vfrom'] = vfrom
+    res['vfrom'] = vfrom # TODO better to keep this for each location
     res['vto'] = vto
-    res['termin'] = termin
-    res['eventname'] = eventname
+    res['termin'] = termin #TODO this can be used
+    res['eventname'] = eventname # TODO not used
     res['sender'] = sender
     res['type'] = type
     res['id'] = id
     res['mnr'] = mnr
     res['alert'] = alert
     res['references']= references
-    return res
+    return res # res is all the info just obtained from the Ted document
 
 def retrieve_from_xml(value):
     """Retrieves parameters from MULTIPLE files returned"""
@@ -549,7 +550,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
 
 
 def closest_match(text, allowed):
-
+# TODO remove this, require exact match
     """Returns the string closest to the given text from the sequence of
     allowed strings."""
     
