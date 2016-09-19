@@ -288,42 +288,27 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         with open(jsonfile) as data_file:
             caplist[lang] = json.load(data_file)
 
-    
-    # Sort the messages by their file names (the first elements in the tuples
-    # will be compared first).
-    new_messages.sort()
-    new_messages.reverse()
+        rss, channel = feeds[lang]
 
-    for file_name, cap in new_messages:
+        for cap in caplist[lang]:
 
-        # Check if the file name is actually a URL.
-        if urlparse.urlparse(file_name).scheme != "":
-            # Use the URL supplied.
-            url = file_name
-        else:
-            # Create the intended URL from the base URL and the file name.
-            url = urlparse.urljoin(base_url, file_name)
-
-        # Find all the info elements in the message and add details for each of them
-        # to the appropriate channel for the language used.
-        for info in cap.findall('.//cap:info', CAP_nsmap):
-
-            lang = info.find('.//cap:language', CAP_nsmap).text.strip()
-            rss, channel = feeds[lang]
+            identifier = cap['id']
+            msgType, file_name, capxml = messages[identifier]
+            if expire_message(now, capxml):
+                continue
 
             item = SubElement(channel, 'item')
-            SubElement(item, 'title').text = info.find('.//cap:headline', CAP_nsmap).text
+            SubElement(item, 'title').text = cap['title']
+            url = urlparse.urljoin(base_url, cap['file'])
             SubElement(item, 'link').text = url
-            identifier = cap.find('.//cap:identifier', CAP_nsmap).text
-            #SubElement(item, 'description').text = info.find('.//cap:description', CAP_nsmap).text
-            SubElement(item, 'description').text = etree.CDATA(getDescription(identifier,caplist[lang]))
-            SubElement(item, 'guid').text = cap.find('.//cap:identifier', CAP_nsmap).text
-            SubElement(item, 'pubDate').text = cap.find('.//cap:sent', CAP_nsmap).text
-            SubElement(item, 'author').text = cap.find('.//cap:sender', CAP_nsmap).text
-            SubElement(item, 'category').text = info.find('.//cap:category', CAP_nsmap).text
+            SubElement(item, 'description').text = etree.CDATA(cap['description'])
+            SubElement(item, 'guid').text =identifier
+            SubElement(item, 'pubDate').text = cap['t_published']
+            SubElement(item, 'author').text = "noreply@met.no"
+            SubElement(item, 'category').text = "Met"
     
-    # Write the new RSS feed files to the local output directory so that they can be read
-    # next time, and copy them to the publishing directory.
+        # Write the new RSS feed files to the local output directory so that they can be read
+        # next time, and copy them to the publishing directory.
 
     for lang in languages:
 
@@ -342,9 +327,4 @@ def main(index_file, rss_file, output_dir, publish_dir, base_url):
         if output_dir != publish_dir:
             shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
 
-def getDescription(identifier,caplist):
-    for cap in caplist:
-        if cap['id']==identifier:
-            return cap['description']
 
-    return " "

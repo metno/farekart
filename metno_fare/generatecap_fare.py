@@ -833,7 +833,6 @@ def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
         if (os.path.isfile(capfilename)):
             sys.stderr.write("File '%s' already exists!\n" % capfilename)
         else:
-            sys.stderr.write("File '%s' will be generated\n" % capfilename)
             generate_capfile_from_teddoc(doc[0], output_dirname, db)
 
 if __name__ == "__main__":
