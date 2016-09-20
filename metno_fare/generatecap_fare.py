@@ -22,7 +22,6 @@ from lxml import etree
 import json
 
 from metno_fare.fare_common import *
-from metno_fare import publishcap
 
 # Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
@@ -37,6 +36,25 @@ invalid_extra_chars = " ,."
 predefined_severity = set(["Extreme", "Severe", "Moderate", "Minor", "Unknown"])
 predefined_certainty = set(["Observed", "Likely", "Possible", "Unlikely", "Unknown"])
 predefined_certainty_severity = predefined_severity | predefined_certainty
+
+nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+
+def find_references(cap):
+    """Finds the references in a CAP document, cap, and yields each identifier
+    in turn."""
+
+    references = cap.find('.//cap:references', nsmap).text.strip().split()
+    references = filter(lambda word: word, references)
+    for ref in references:
+
+        pieces = ref.split(",")
+        if len(pieces) != 3:
+            sys.stderr.write("Error: CAP file '%s' contains invalid cancellation references.\n" % file_name)
+            sys.exit(1)
+
+        sender, original_id, time = pieces
+        yield original_id
+
 
 def get_ted_docs(db, select_string):
     """Retrieves a full set of documents from the database, db, using the given
@@ -78,8 +96,7 @@ def make_list_of_valid_files(filebase,schemas):
         
         # Parse and validate each CAP file found.
         root = etree.parse(fname)
-        nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
-        
+
         if schema.validate(root):
 
             attributes = {}
@@ -91,7 +108,7 @@ def make_list_of_valid_files(filebase,schemas):
             capalert['msgType'] = root.find('.//cap:msgType', nsmap).text
             if capalert['msgType'] != 'Alert':
                 capalert['references']=[]
-                for original_id in publishcap.find_references(root, ""):
+                for original_id in find_references(root):
                     capalert['references'].append(original_id)
                 references[capalert['identifier']]= capalert['references']
             capalert['sent'] =   root.find('.//cap:sent', nsmap).text
@@ -905,8 +922,5 @@ if __name__ == "__main__":
 
     filebase = os.path.join(output_dirname,ted_documentname)
     make_list_of_valid_files(filebase,schema_dirname)
-
-
-
 
 

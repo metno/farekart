@@ -25,13 +25,17 @@ Copies the CAP files and the RSS file to the output directory given.
 
 """
 
-import glob
-import os, shutil, sys, urllib2, urlparse
 import datetime
-import dateutil.parser, dateutil.tz
-from lxml.etree import Element, ElementTree, SubElement
-from lxml import etree
+import glob
 import json
+import os
+import shutil
+import urlparse
+
+import dateutil.parser
+import dateutil.tz
+from lxml import etree
+from lxml.etree import Element, ElementTree, SubElement
 
 default_language = "no"
 
@@ -66,24 +70,6 @@ def find_latest_time(cap):
         expires_list.append(dateutil.parser.parse(expires.text))
     
     return max(expires_list)
-
-
-def find_references(cap, file_name):
-    """Finds the references in a CAP document, cap, and yields each identifier
-    in turn."""
-
-    references = cap.find('.//cap:references', CAP_nsmap).text.strip().split()
-    references = filter(lambda word: word, references)
-    for ref in references:
-    
-        pieces = ref.split(",")
-        if len(pieces) != 3:
-            sys.stderr.write("Error: CAP file '%s' contains invalid cancellation references.\n" % file_name)
-            sys.exit(1)
-        
-        sender, original_id, time = pieces
-        yield original_id
-
 
 
 def main(filebase, rss_file, output_dir, publish_dir, base_url):

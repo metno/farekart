@@ -79,22 +79,19 @@ def retrieve_from_xml_fare(xmldoc):
     """Retrieves some parameters from the XML text for a faremelding specified
     by xmldoc and returns them as a list of values."""
 
-    vto = None # TODO remove
-    vfrom = None #TODO remove, duplicate
     locations = {}
     res={}
     n = 0
 
     root = fromstring(xmldoc)
 
-    vto = None #
-    vfrom = None #
-    ty = None# # TODO seems not to be used
+    vto = None
+    vfrom = None
+    ty = None
     sender = None #dangerwarning spesific
     type = None
     id = "BLANK" #dangerwarning spes# ific
     mnr = None #dangerwarning spesific
-    eventname = None # TODO not used
     alert = None #dangerwarning spesific
 
     t = root.find('dangerwarning') # TODO maybe a new funtion to find dangerwarning
@@ -233,7 +230,7 @@ def retrieve_from_xml_fare(xmldoc):
     res['vfrom'] = vfrom # TODO better to keep this for each location
     res['vto'] = vto
     res['termin'] = termin #TODO this can be used
-    res['eventname'] = eventname # TODO not used
+    res['eventname']=None
     res['sender'] = sender
     res['type'] = type
     res['id'] = id
