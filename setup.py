@@ -11,9 +11,8 @@ setup(
     url="http://www.met.no/",
     version="0.3.11",
     packages=["metno_fare"],
-    scripts=["faremeldinger.py", "metno-publish-cap.py", "cap2kml.py"],
-    data_files=[("share/xml/farekart", [
-        "schemas/XMLSchema.xsd", "schemas/CAP-v1.2.xsd", "schemas/mifare-index.xsd",
-        "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"
-        ])]
+    scripts=["faremeldinger.py", "cap2kml.py"],
+    data_files=[("share/xml/farekart", 
+                 ["schemas/XMLSchema.xsd", "schemas/CAP-v1.2.xsd",
+                  "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"])]
     )
