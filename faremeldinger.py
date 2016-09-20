@@ -79,11 +79,10 @@ if __name__ == "__main__":
 
     # Generate an RSS file to describe the CAP files created.
     filebase = os.path.join(dirname,  fare_documentname)
-    index_file = "{0}-index.xml".format(filebase)
     rss_file = "CAP.rss"
     output_dir = os.getenv("CAP_PUBLISH_DIR", dirname)
     base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-    publishcap.main(index_file, rss_file, dirname, output_dir, base_url)
+    publishcap.main(filebase,rss_file, dirname, output_dir, base_url)
     if dirname != output_dir:
         shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(output_dir, 'CAP_en.json'))
         shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(output_dir, 'CAP_no.json'))
