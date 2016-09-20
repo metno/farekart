@@ -26,7 +26,6 @@ Copies the CAP files and the RSS file to the output directory given.
 """
 
 import glob
-from collections import OrderedDict
 import os, shutil, sys, urllib2, urlparse
 import datetime
 import dateutil.parser, dateutil.tz
