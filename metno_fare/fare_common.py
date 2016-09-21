@@ -49,8 +49,9 @@ def get_latlon(n, db):
     retval = []
 
     # Names are ISO 8859-1 encoded in the TED database.
+    if not result:
+        return retval
 
-    #TODO what to do when id not found in the database?
     name = result[0].decode("iso8859-1")
 
     #print("name",name)
@@ -70,7 +71,7 @@ def get_latlon(n, db):
 
         lat = int(la) + ( (la - int(la) )*100.0/60.0 )
 
-        retval.append((name,lon,lat)) #TODO, we do not need to append the name here!
+        retval.append((lon,lat))
 
     return retval
 
@@ -87,144 +88,62 @@ def retrieve_from_xml_fare(xmldoc):
 
     vto = None
     vfrom = None
-    ty = None
     sender = None #dangerwarning spesific
     type = None
     id = "BLANK" #dangerwarning spes# ific
     mnr = None #dangerwarning spesific
     alert = None #dangerwarning spesific
 
-    t = root.find('dangerwarning') # TODO maybe a new funtion to find dangerwarning
+    t = root.find('dangerwarning')
 	# new types of warnings using metfare template and <dangerwarning> tag.
 
-    if t is None or len(t) < 1:  #If t does not exisit or has no subelements  TODO - we should not make a CAP
-      print "NO DANGERWARNING ELEMENT FOUND. SETTING DEFAULTS."
-      alert = "Alert"
-      mnr = 1
-      references = None
-      sender = None # remove duplicate
-      id = 'BLANK'
-    else:
-      alert = t.find('msgtype').text # TODO all this stuff is common to the whole CAP-file
+    if t is not None and len(t) > 1:
+      alert = t.find('msgtype').text # all this stuff is common to the whole CAP-file
       mnr   = t.find('msgnumber').text
       references = t.find('msgreferences').text
       sender = t.find('msgauthor').text
       id = t.find('msgidentifier').text
 
 
-    for header in root.iter('productheader'): #TODO - There is only one productheader
-        ph = header.find('phenomenon_type')
-        if ph is not None:
-            type = ph.text
+    header = root.find('productheader')
+    ph = header.find('phenomenon_type')
+    if ph is not None:
+        type = ph.text
 
-    for t in root.iter('time'):
+
+    p = root.find('productdescription')
+    if p is not None:
+        termin = p.get('termin')
+
+
+    for time in root.iter('time'):
         # print "Tag: ",t.tag, " Attrib: ", t.attrib
         #THIS CODE ASUMES ONLY ONE TIME TAG IN EACH MESSAGE !!!!!
         # TODO: CHANGE FOR MULTIPLE TIMES IN ONE MESSAGE.
         #
+        vto = time.get('vto')
+        vfrom = time.get('vfrom')
 
-        vto = t.get('vto')
-        vfrom = t.get('vfrom')
+        for location in time.iter('location'): # TODO - this should be fixed so that we find locations in the time element
 
-        for keyword in t.iter('keyword'): # TODO keyword is this used?
+            loc = {}
 
-            nam = keyword.get('name')
+            loc['id'] = location.get('id')
+            loc['name'] = location.find('header').text
 
-            if nam == "type":
-                type = keyword.find('in').text
-            elif nam == "mnr":
-                mnr = keyword.find('in').text
-            elif nam == "sender": #TODO: is this used?
-                sender = keyword.find('in').text
-            elif nam == "navn":
-                eventname = keyword.find('in').text
+            loc['altitude']=None
+            loc['ceiling'] = None
+            loc['coment'] = None
+            for param in location.findall('parameter'):
+                nam = param.get('name')
+                value = param.find('in').text
+                loc[nam]=value
 
-        for p in root.iter('productdescription'): #TODO this should be moved outside this loop!
-            termin = p.get('termin')
+            loc['type'] = None #TODO fix
 
-    # Foreach time, Ony one in each time.
-    for location in root.iter('location'): # TODO - this should be fixed so that we find locations in the time element
+            n = n + 1
 
-        name = None
-        varsel = None
-        heading = None
-        nam = None
-        severity = None
-        certainty = None
-        trigglevel = None
-        altitude = None
-        ceiling = None
-        english = None
-        kommentar = None
-        pictlink = None
-        retperiode = None
-        instruction = None
-        infolink = None
-        englishheading = None
-        consequenses = None
-
-        loc = {}
-
-        l_id = location.get('id')
-        l_name = location.find('header').text
-
-        for param in location.findall('parameter'):
-
-            nam = param.get('name')
-
-            if nam == "varsel":
-                varsel = param.find('in').text
-            elif nam == "heading":
-                heading = param.find('in').text
-            elif nam == "severity":
-                severity = param.find('in').text
-            elif nam == "certainty":
-                certainty = param.find('in').text
-            elif nam == "picturelink":
-                pictlink = param.find('in').text
-            elif nam == "returnperiod":
-                retperiode = param.find('in').text
-            elif nam == "instruction":
-                instruction = param.find('in').text
-            elif nam == "infolink":
-                infolink = param.find('in').text
-            elif nam == "triggerlevel":
-                trigglevel = param.find('in').text
-            elif nam == "ceiling":
-                ceiling = param.find('in').text
-            elif nam == "altitude":
-                altitude = param.find('in').text
-            elif nam == "englishforecast":
-                english = param.find('in').text
-            elif nam == "englishheading":
-                englishheading = param.find('in').text
-            elif nam == "consequenses":
-                consequenses = param.find('in').text
-            elif nam == "coment":
-                kommentar = param.find('in').text
-
-        loc['name'] = l_name
-        loc['id'] = l_id
-        loc['type'] = ty
-        loc['varsel'] = varsel
-        loc['heading'] = heading
-        loc['severity'] = severity
-        loc['certainty'] = certainty
-        loc['pictlink'] = pictlink
-        loc['infolink'] = infolink
-        loc['retperiode'] = retperiode
-        loc['instruction'] = instruction
-        loc['kommentar'] = kommentar
-        loc['triggerlevel'] = trigglevel
-        loc['ceiling'] = ceiling
-        loc['altitude'] = altitude
-        loc['english'] = english
-        loc['englishheading'] = englishheading
-        loc['consequenses'] = consequenses # now loc is a dictionary with all spesific info for this location (or info element)
-
-        n = n + 1
-
-        locations[n] = loc #TODO, why is locations like this? A dictionary with a number as the key
+            locations[n] = loc #TODO, why is locations like this? A dictionary with a number as the key
 
     res['locations'] = locations
     res['vfrom'] = vfrom # TODO better to keep this for each location
@@ -487,14 +406,6 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
             for n in locs['id'].split(":"):
 
                 latlon = get_latlon(n, db)
-                comm = locs['kommentar']
-                sev = locs['severity']
-
-                ty = locs['type']
-                cer = locs['certainty']
-                tri = locs['triggerlevel']
-                eng = locs['english']
-
                 placemark = SubElement(document, 'Placemark')
                 SubElement(placemark, 'name').text = locs['name']
                 SubElement(placemark, 'description').text = locs['varsel']
@@ -515,10 +426,10 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
                     ("met:info:type",           locs['type']),
                     ("met:style:fillcolour",    locs['severity']),
                     ("met:info:severity",       locs['severity']),
-                    ("met:info:comment",        locs['kommentar']),
+                    ("met:info:comment",        locs['coment']),
                     ("met:info:Certainty",      locs['certainty']),
                     ("met:info:Triggerlevel",   locs['triggerlevel']),
-                    ("met:info:English",        locs['english'])
+                    ("met:info:English",        locs['englishforecast'])
                     ]
 
                 for key, value in properties:
@@ -535,7 +446,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
 
                 text = u''
 
-                for name, lon, lat in latlon:
+                for lon, lat in latlon:
                     line = u"%f,%f,0\n" % (lon, lat)
                     text += line
 

@@ -21,7 +21,7 @@ from lxml.etree import Element, SubElement, tostring
 from lxml import etree
 import json
 
-from metno_fare.fare_common import *
+from fare_common import *
 
 # Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
@@ -502,8 +502,7 @@ def generate_capalert_fare(xmldoc,db):
         certainty = locs.get("certainty", "Likely")
         certainty = certainty.strip(invalid_extra_chars)
         certainty = closest_match(certainty, predefined_certainty_severity)
-        eng = locs['english'] #TODO, this is part of the english info
-        pict = locs['pictlink']
+        pict = locs['picturelink']
         infolink = locs['infolink']
 
         #################
@@ -559,7 +558,7 @@ def generate_capalert_fare(xmldoc,db):
 
         met_ret = SubElement( info, 'parameter' )
         SubElement( met_ret, 'valueName' ).text = "return_period"
-        SubElement( met_ret, 'value' ).text = locs['retperiode']
+        SubElement( met_ret, 'value' ).text = locs['returnperiod']
 
         # Link to graphical representation
         
@@ -598,13 +597,13 @@ def generate_capalert_fare(xmldoc,db):
 
                 text = u''
 
-                for name, lon, lat in latlon: #TODO we get the name back but we do not use it. Get name back once and use this?
+                for lon, lat in latlon:
                     line = u"%f,%f\n" % (lat, lon)
                     text += line
 
                 # Include the first point again to close the polygon.
                 if latlon:
-                    name, lon, lat = latlon[0]
+                    lon, lat = latlon[0]
                     text += u"%f,%f\n" % (lat, lon)
 
                 polygon.text = text
@@ -646,7 +645,7 @@ def generate_capalert_fare(xmldoc,db):
         SubElement(info_en, 'headline').text = headline_en
 
 
-        SubElement(info_en, 'description').text = locs['english']
+        SubElement(info_en, 'description').text = locs['englishforecast']
         SubElement(info_en, 'instruction').text = locs['consequenses']
         SubElement(info_en, 'web').text = 'http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/'
 
@@ -668,7 +667,7 @@ def generate_capalert_fare(xmldoc,db):
 
         met_ret = SubElement( info_en, 'parameter' )
         SubElement( met_ret, 'valueName' ).text = "return_period"
-        SubElement( met_ret, 'value' ).text = locs['retperiode']
+        SubElement( met_ret, 'value' ).text = locs['returnperiod']
 
         # Link to graphical representation
         
@@ -707,13 +706,13 @@ def generate_capalert_fare(xmldoc,db):
 
                 text = u''
 
-                for name, lon, lat in latlon:
+                for lon, lat in latlon:
                     line = u"%f,%f\n" % (lat, lon)
                     text += line
 
                 # Include the first point again to close the polygon.
                 if latlon:
-                    name, lon, lat = latlon[0]
+                    lon, lat = latlon[0]
                     text += u"%f,%f\n" % (lat, lon)
 
                 polygon.text = text
