@@ -23,6 +23,20 @@ import json
 
 from fare_common import *
 
+import linecache
+import sys
+
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    return 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
+
+
+
 # Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
 
@@ -344,9 +358,7 @@ def generate_capfile_from_tedfile(ted_filename,output_dirname,db):
             generate_capfile_from_teddoc(f.read(),output_dirname,db)
 
     except Exception as inst:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        sys.stderr.write("File %s could not be converted to CAP:. %s %s line no;%s \n" % (ted_filename, type(inst),inst,exc_tb.tb_lineno) )
-
+        sys.stderr.write("File %s could not be converted to CAP: %s \n" % (ted_filename, PrintException()))
 
 def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
     cap_filename = ""
@@ -363,10 +375,7 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
         with open(cap_filename,'w') as f:
             f.write(capalert)
     except Exception as inst:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        sys.stderr.write("CAP file %s could not be made:. %s %s line no;%s \n" % (cap_filename, type(inst),inst,exc_tb.tb_lineno) )
-
-
+        sys.stderr.write("CAP file %s could not be made: %s % \n" % (cap_filename, PrintException() ))
 
 
 def get_capfilename_from_teddoc(xmldoc):
@@ -414,7 +423,7 @@ def generate_capalert_fare(xmldoc,db):
         end ALERT"""
 
     res = retrieve_from_xml_fare(xmldoc)
-    numAreas = 0
+
     
     senders = {"no": "Meteorologisk Institutt",
                "nb": "Meteorologisk Institutt",
@@ -442,37 +451,30 @@ def generate_capalert_fare(xmldoc,db):
                     "Polar-low" : u"Polart lavtrykk"}
 
     l_type = res['type']
+    event_type = { "no": event_types[l_type], "en":l_type}
+
+
     l_alert = res['alert']
-    now = dateutil.parser.parse(res['termin'])
-
-    # Check for values we absolutely need and set suitable defaults.
-
-    if l_alert is None :
-       l_alert = "Alert"
-
-    if l_type is None:
-	    l_type = "Wind"
-
+    termin = dateutil.parser.parse(res['termin'])
 
     alert = Element('alert')
     alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
 
     identifier = filter(lambda c: c.isalpha() or c.isdigit() or c in ["_","."], res['id'])
 
-    sent_time = now.strftime("%Y-%m-%dT%H:%M:%S+00:00") #TODO - instead of now, use res['termin']
+    sent_time = termin.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
     SubElement(alert, 'identifier').text = identifier_prefix + identifier
     SubElement(alert, 'sender').text =  sender
     SubElement(alert, 'sent').text = sent_time
-    SubElement(alert, 'status').text = 'Test' #TODO should use res['status']. for example from dangerwarning status="test"
+    SubElement(alert, 'status').text = res.get('status','Test')
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
     
     # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
 
-
-    headline_no = get_headline( event_types[l_type].lower(),"no",sent_time, res['locations'])
-    headline_en = get_headline(l_type,"en",sent_time,res['locations'])
+    headline_no = get_headline( event_type["no"].lower(),"no",sent_time, res['locations'])
+    headline_en = get_headline(event_type["en"],"en",sent_time,res['locations'])
 
     SubElement(alert, 'code').text = "system_version 0.1"
     SubElement(alert, 'note').text = note % res['mnr']
@@ -489,258 +491,120 @@ def generate_capalert_fare(xmldoc,db):
     dt = dateutil.parser.parse(res['vto'])# TODO move this to inside locations loop, more logical
     df = dateutil.parser.parse(res['vfrom'])
 
-    urgency = "Future"
-
-    for p in res['locations']:
-
-        locs = res['locations'][p]
-
-        severity = locs.get("severity", "Moderate")
-        severity = severity.strip(invalid_extra_chars)
-        severity = closest_match(severity, predefined_certainty_severity)
-
-        certainty = locs.get("certainty", "Likely")
-        certainty = certainty.strip(invalid_extra_chars)
-        certainty = closest_match(certainty, predefined_certainty_severity)
-        pict = locs['picturelink']
-        infolink = locs['infolink']
-
-        #################
-        # NORWEGIAN INFO 
-        #################
-
-        language = "no"   #Suitable default.
-        info = SubElement(alert, 'info')
-        SubElement(info, 'language').text = language
-        SubElement(info, 'category').text = 'Met'
-        SubElement(info, 'event').text = event_types[l_type]
-        SubElement(info, 'urgency').text = urgency
-        SubElement(info, 'severity').text = severity
-        SubElement(info, 'certainty').text = certainty
-
-        # make eventCode with forecasters heading
 
 
-        eventCodes = getEventCode(locs,"no",event_types[l_type],res['mnr']) #TODO  "no is language"
-        for valueName,value in eventCodes.items():
-            eventCode = SubElement(info,'eventCode')
-            SubElement(eventCode,'valueName').text=valueName
-            SubElement(eventCode,'value').text = value
-
-
-        # Write UTC times to the CAP file.
-        SubElement(info, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:%S+00:00") #TODO termintime, but set the option for an effective time termin=effective?
-        SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-        SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-
-        SubElement(info, 'senderName').text = senders[language.split("-")[0]]
-        SubElement(info, 'headline').text = headline_no
-
-        SubElement(info, 'description').text = locs['varsel']
-        SubElement(info, 'instruction').text = locs['instruction']
-        SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
-
-        # MeteoAlarm mandatory elements
-
-        aw_level = SubElement( info, 'parameter')
-        SubElement( aw_level, 'valueName' ).text = "awareness_level"
-        SubElement( aw_level, 'value' ).text = make_awareness_level(severity)
-
-        aw_type = SubElement( info , 'parameter')
-        SubElement( aw_type , 'valueName' ).text = "awareness_type"
-        SubElement( aw_type , 'value' ).text = make_awareness_type( l_type )
-
-        # MET internal elements. Possibly used by Yr and others.
-
-        met_trigger = SubElement( info, 'parameter' )
-        SubElement( met_trigger, 'valueName' ).text = "trigger_level"
-        SubElement( met_trigger, 'value' ).text = locs['triggerlevel']
-
-        met_ret = SubElement( info, 'parameter' )
-        SubElement( met_ret, 'valueName' ).text = "return_period"
-        SubElement( met_ret, 'value' ).text = locs['returnperiod']
-
-        # Link to graphical representation
-        
-        if pict:
-            resource = SubElement(info, 'resource')
-            SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
-            SubElement(resource, 'mimeType').text = "image/png"
-            SubElement(resource, 'uri').text = pict
-
-        # Link to further information
-        
-        if infolink:
-            resource = SubElement(info, 'resource')
-            SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
-            SubElement(resource, 'mimeType').text = "text/html"
-            SubElement(resource, 'uri').text = infolink
-
-        # Write multiple areas per info element,
-
-        for n in locs['id'].split(":"): #TODO no need to split here!
-
-            area = SubElement(info, 'area')
-            SubElement(area, 'areaDesc').text = locs['name']
-
-            altitude = locs['altitude']
-            ceiling = locs['ceiling']
-
-            latlon = get_latlon(n, db)
-            if len(latlon) >= 3:
-
-                # Optional polygon element with three unique points and the last
-                # point identical to the first to close the polygon (at least
-                # four points in total). Each point is specified by coordinates
-                # of the form, latitude,longitude.
-                polygon = SubElement(area, 'polygon')
-
-                text = u''
-
-                for lon, lat in latlon:
-                    line = u"%f,%f\n" % (lat, lon)
-                    text += line
-
-                # Include the first point again to close the polygon.
-                if latlon:
-                    lon, lat = latlon[0]
-                    text += u"%f,%f\n" % (lat, lon)
-
-                polygon.text = text
-
-                geocode = SubElement(area, 'geocode')
-                SubElement(geocode, 'valueName').text = 'TED_ident'
-                SubElement(geocode, 'value').text = locs['id']
-
-                if altitude:
-                	SubElement(area,'altitude').text = altitude
-                	
-                if ceiling:
-                	SubElement(area,'ceiling').text = ceiling
-                	           	
-        #################
-        # ENGLISH INFO 
-        #################
-    #TODO lot of stuff is repeated here for the english info, try to make this smarter, like a function for each language
-        language = "en"
-        info_en = SubElement(alert, 'info')
-        SubElement(info_en, 'language').text = language
-        SubElement(info_en, 'category').text = 'Met'
-        SubElement(info_en, 'event').text = l_type
-        SubElement(info_en, 'urgency').text = urgency
-        SubElement(info_en, 'severity').text = severity
-        SubElement(info_en, 'certainty').text = certainty
-
-        eventCodes = getEventCode(locs,"en",l_type,res['mnr'])
-        for valueName,value in eventCodes.items():
-            eventCode = SubElement(info_en,'eventCode')
-            SubElement(eventCode,'valueName').text=valueName
-            SubElement(eventCode,'value').text = value
-        # Write UTC times to the CAP file.
-        SubElement(info_en, 'effective').text = now.strftime("%Y-%m-%dT%H:%M:00+00:00")
-        SubElement(info_en, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:00+00:00")
-        SubElement(info_en, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:00+00:00")
-
-        SubElement(info_en, 'senderName').text = senders[language.split("-")[0]]
-        SubElement(info_en, 'headline').text = headline_en
-
-
-        SubElement(info_en, 'description').text = locs['englishforecast']
-        SubElement(info_en, 'instruction').text = locs['consequenses']
-        SubElement(info_en, 'web').text = 'http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/'
-
-        # MeteoAlarm mandatory elements
-
-        aw_level = SubElement( info_en, 'parameter')
-        SubElement( aw_level, 'valueName' ).text = "awareness_level"
-        SubElement( aw_level, 'value' ).text = make_awareness_level(severity)
-
-        aw_type = SubElement( info_en , 'parameter')
-        SubElement( aw_type , 'valueName' ).text = "awareness_type"
-        SubElement( aw_type , 'value' ).text = make_awareness_type( l_type )
-
-        # MET internal elements. Possibly used by Yr and others.
-
-        met_trigger = SubElement( info_en, 'parameter' )
-        SubElement( met_trigger, 'valueName' ).text = "trigger_level"
-        SubElement( met_trigger, 'value' ).text = locs['triggerlevel']
-
-        met_ret = SubElement( info_en, 'parameter' )
-        SubElement( met_ret, 'valueName' ).text = "return_period"
-        SubElement( met_ret, 'value' ).text = locs['returnperiod']
-
-        # Link to graphical representation
-        
-        if pict:
-            resource = SubElement(info_en, 'resource')
-            SubElement(resource, 'resourceDesc').text = "Graphical description of event"
-            SubElement(resource, 'mimeType').text = "image/png"
-            SubElement(resource, 'uri').text = pict
-
-        # Link to further information
-        
-        if infolink:
-            resource = SubElement(info_en, 'resource')
-            SubElement(resource, 'resourceDesc').text = "Additional information available from others"
-            SubElement(resource, 'mimeType').text = "text/html"
-            SubElement(resource, 'uri').text = infolink
-
-        # Write multiple areas per info element,
-
-        for n in locs['id'].split(":"):
-
-            area = SubElement(info_en, 'area')
-            SubElement(area, 'areaDesc').text = locs['name']
-            altitude = locs['altitude']
-
-            ceiling = locs['ceiling']
-
-            latlon = get_latlon(n, db)
-            if len(latlon) >= 3:
-
-                # Optional polygon element with three unique points and the last
-                # point identical to the first to close the polygon (at least
-                # four points in total). Each point is specified by coordinates
-                # of the form, latitude,longitude.
-                polygon = SubElement(area, 'polygon')
-
-                text = u''
-
-                for lon, lat in latlon:
-                    line = u"%f,%f\n" % (lat, lon)
-                    text += line
-
-                # Include the first point again to close the polygon.
-                if latlon:
-                    lon, lat = latlon[0]
-                    text += u"%f,%f\n" % (lat, lon)
-
-                polygon.text = text
-
-                geocode = SubElement(area, 'geocode')
-                SubElement(geocode, 'valueName').text = 'TED_ident'
-                SubElement(geocode, 'value').text = locs['id']
-                
-                if altitude:
-                	SubElement(area,'altitude').text = altitude
-                	
-                if ceiling:
-                	SubElement(area,'ceiling').text = ceiling
-                	           	
-
-        numAreas += 1
-
-    # If no areas found, return without writing the file.
-    if numAreas == 0:
-        return ""
-
-
+    for locs in res['locations']:
+        make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, termin, res, senders,"no")
+        make_info(alert, db, df, dt, headline_en, event_type, l_type, locs, termin, res, senders,"en")
 
     return tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
 
 
+def make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, now, res, senders,language):
 
+    urgency = "Future"
+    severity = locs.get("severity")
+    severity = severity.strip(invalid_extra_chars)
+    certainty = locs.get("certainty")
+    certainty = certainty.strip(invalid_extra_chars)
+    pict = locs['picturelink']
+    infolink = locs['infolink']
+
+    info = SubElement(alert, 'info')
+    SubElement(info, 'language').text = language
+    SubElement(info, 'category').text = 'Met'
+    SubElement(info, 'event').text = event_type[language]
+    SubElement(info, 'urgency').text = urgency
+    SubElement(info, 'severity').text = severity
+    SubElement(info, 'certainty').text = certainty
+    # make eventCode with forecasters heading
+    eventCodes = getEventCode(locs, language, event_type[language], res['mnr'])
+    for valueName, value in eventCodes.items():
+        eventCode = SubElement(info, 'eventCode')
+        SubElement(eventCode, 'valueName').text = valueName
+        SubElement(eventCode, 'value').text = value
+
+    # Write UTC times to the CAP file.
+    SubElement(info, 'effective').text = now.strftime(
+        "%Y-%m-%dT%H:%M:%S+00:00")  # TODO termintime, but set the option for an effective time termin=effective?
+    SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'senderName').text = senders[language]
+    SubElement(info, 'headline').text = headline_no
+    if language=="no":
+        SubElement(info, 'description').text = locs.get('varsel')
+        SubElement(info, 'instruction').text = locs.get('instruction')
+    elif language == "en":
+        SubElement(info, 'description').text = locs['englishforecast']
+        SubElement(info, 'instruction').text = locs.get('consequenses')
+
+    SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
+    # MeteoAlarm mandatory elements
+    aw_level = SubElement(info, 'parameter')
+    SubElement(aw_level, 'valueName').text = "awareness_level"
+    SubElement(aw_level, 'value').text = make_awareness_level(severity)
+    aw_type = SubElement(info, 'parameter')
+    SubElement(aw_type, 'valueName').text = "awareness_type"
+    SubElement(aw_type, 'value').text = make_awareness_type(l_type)
+    # MET internal elements. Possibly used by Yr and others.
+    met_trigger = SubElement(info, 'parameter')
+    SubElement(met_trigger, 'valueName').text = "trigger_level"
+    SubElement(met_trigger, 'value').text = locs['triggerlevel']
+    met_ret = SubElement(info, 'parameter')
+    SubElement(met_ret, 'valueName').text = "return_period"
+    SubElement(met_ret, 'value').text = locs['returnperiod']
+    # Link to graphical representation
+    if pict:
+        resource = SubElement(info, 'resource')
+        SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
+        SubElement(resource, 'mimeType').text = "image/png"
+        SubElement(resource, 'uri').text = pict
+
+    # Link to further information
+    if infolink:
+        resource = SubElement(info, 'resource')
+        SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
+        SubElement(resource, 'mimeType').text = "text/html"
+        SubElement(resource, 'uri').text = infolink
+
+    area = SubElement(info, 'area')
+    SubElement(area, 'areaDesc').text = locs['name']
+
+    altitude = locs['altitude']
+    ceiling = locs['ceiling']
+
+    latlon = get_latlon(locs['id'], db)
+    if len(latlon) >= 3:
+
+        # Optional polygon element with three unique points and the last
+        # point identical to the first to close the polygon (at least
+        # four points in total). Each point is specified by coordinates
+        # of the form, latitude,longitude.
+        polygon = SubElement(area, 'polygon')
+
+        text = u''
+
+        for lon, lat in latlon:
+            line = u"%f,%f\n" % (lat, lon)
+            text += line
+
+        # Include the first point again to close the polygon.
+        if latlon:
+            lon, lat = latlon[0]
+            text += u"%f,%f\n" % (lat, lon)
+
+        polygon.text = text
+
+        geocode = SubElement(area, 'geocode')
+        SubElement(geocode, 'valueName').text = 'TED_ident'
+        SubElement(geocode, 'value').text = locs['id']
+
+        if altitude:
+            SubElement(area, 'altitude').text = altitude
+
+        if ceiling:
+            SubElement(area, 'ceiling').text = ceiling
 
 
 def getEventCode(locs,lang,type,mnr):
@@ -803,8 +667,7 @@ def get_headline(type,lang, sent, locations):
 
     location_name = ""
 
-    for locs in locations.values():
-        #locs = locations[p]
+    for locs in locations:
         if location_name:
             location_name += ", "
         location_name += locs['name']

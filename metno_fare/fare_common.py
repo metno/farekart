@@ -80,7 +80,7 @@ def retrieve_from_xml_fare(xmldoc):
     """Retrieves some parameters from the XML text for a faremelding specified
     by xmldoc and returns them as a list of values."""
 
-    locations = {}
+    locations = []
     res={}
     n = 0
 
@@ -124,7 +124,7 @@ def retrieve_from_xml_fare(xmldoc):
         vto = time.get('vto')
         vfrom = time.get('vfrom')
 
-        for location in time.iter('location'): # TODO - this should be fixed so that we find locations in the time element
+        for location in time.iter('location'):
 
             loc = {}
 
@@ -141,9 +141,7 @@ def retrieve_from_xml_fare(xmldoc):
 
             loc['type'] = None #TODO fix
 
-            n = n + 1
-
-            locations[n] = loc #TODO, why is locations like this? A dictionary with a number as the key
+            locations.append(loc)
 
     res['locations'] = locations
     res['vfrom'] = vfrom # TODO better to keep this for each location
@@ -401,7 +399,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
         df = time.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
         df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
 
-        for locs in res['locations'].values():
+        for locs in res['locations']:
 
             for n in locs['id'].split(":"):
 
