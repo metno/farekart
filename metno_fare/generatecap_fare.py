@@ -40,17 +40,6 @@ def PrintException():
 # Define characters to be removed from values from the database.
 invalid_extra_chars = " ,."
 
-# Define values to compare certainty and severity text against. We will
-# compare both fields against a common set so that a correct subsitution will
-# be made if the original text was close enough, but when a value from the
-# wrong field is used (a severity of "Possible", for example), the substituted
-# value will be invalid and will cause the later CAP validation to correctly
-# fail. This ensures that we don't happily accept certainty values in the
-# severity field and vice versa.
-predefined_severity = set(["Extreme", "Severe", "Moderate", "Minor", "Unknown"])
-predefined_certainty = set(["Observed", "Likely", "Possible", "Unlikely", "Unknown"])
-predefined_certainty_severity = predefined_severity | predefined_certainty
-
 nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 
 def find_references(cap):
@@ -375,7 +364,7 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
         with open(cap_filename,'w') as f:
             f.write(capalert)
     except Exception as inst:
-        sys.stderr.write("CAP file %s could not be made: %s % \n" % (cap_filename, PrintException() ))
+        sys.stderr.write("CAP file %s could not be made: %s %s \n" % (cap_filename, PrintException() ,inst.message))
 
 
 def get_capfilename_from_teddoc(xmldoc):
@@ -450,7 +439,7 @@ def generate_capalert_fare(xmldoc,db):
                     "rain-flooding" : u"Flom fra regn",
                     "Polar-low" : u"Polart lavtrykk"}
 
-    l_type = res['type']
+    l_type = res['phenomenon_type']
     event_type = { "no": event_types[l_type], "en":l_type}
 
 
@@ -484,24 +473,34 @@ def generate_capalert_fare(xmldoc,db):
         for ref in filter(lambda ref: ref, res['references'].split(" ")):
             references.append(sender + "," + identifier_prefix + ref)
         SubElement(alert, 'references').text = " ".join(references)
-    
-    if res['eventname'] != None: #TODO this should be changed to proper  incidents name (phenomenon_name, phenomenon_number)
-        SubElement(alert, 'incidents').text = res['eventname']
-    
-    dt = dateutil.parser.parse(res['vto'])# TODO move this to inside locations loop, more logical
-    df = dateutil.parser.parse(res['vfrom'])
 
+
+    if res.get('phenomenon_number') and res.get('phenomenon_name'):
+        incidents = "%s %s" % (res.get('phenomenon_number'),res.get('phenomenon_name'))
+    elif res.get('phenomenon_name'):
+        incidents = res['phenomenon_name']
+    elif res.get('phenomenon_number'):
+        incidents = res['phenomenon_number']
+    else:
+        incidents=""
+
+    if (incidents):
+        SubElement(alert, 'incidents').text = incidents
 
 
     for locs in res['locations']:
-        make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, termin, res, senders,"no")
-        make_info(alert, db, df, dt, headline_en, event_type, l_type, locs, termin, res, senders,"en")
+        make_info(alert, db, headline_no, event_type, l_type, locs, res, senders,"no")
+        make_info(alert, db, headline_en, event_type, l_type, locs, res, senders,"en")
 
     return tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
 
 
-def make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, now, res, senders,language):
+def make_info(alert, db, headline, event_type, l_type, locs, res, senders,language):
+
+    onset = dateutil.parser.parse(locs['vfrom'])
+    expires = dateutil.parser.parse(locs['vto'])
+    effective = dateutil.parser.parse(locs['effective'])
 
     urgency = "Future"
     severity = locs.get("severity")
@@ -519,19 +518,18 @@ def make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, now, res
     SubElement(info, 'severity').text = severity
     SubElement(info, 'certainty').text = certainty
     # make eventCode with forecasters heading
-    eventCodes = getEventCode(locs, language, event_type[language], res['mnr'])
+    eventCodes = getEventCode(locs, language, event_type[language],res)
     for valueName, value in eventCodes.items():
         eventCode = SubElement(info, 'eventCode')
         SubElement(eventCode, 'valueName').text = valueName
         SubElement(eventCode, 'value').text = value
 
     # Write UTC times to the CAP file.
-    SubElement(info, 'effective').text = now.strftime(
-        "%Y-%m-%dT%H:%M:%S+00:00")  # TODO termintime, but set the option for an effective time termin=effective?
-    SubElement(info, 'onset').text = df.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    SubElement(info, 'expires').text = dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'effective').text = effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'onset').text = onset.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'expires').text = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
     SubElement(info, 'senderName').text = senders[language]
-    SubElement(info, 'headline').text = headline_no
+    SubElement(info, 'headline').text = headline
     if language=="no":
         SubElement(info, 'description').text = locs.get('varsel')
         SubElement(info, 'instruction').text = locs.get('instruction')
@@ -571,8 +569,8 @@ def make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, now, res
     area = SubElement(info, 'area')
     SubElement(area, 'areaDesc').text = locs['name']
 
-    altitude = locs['altitude']
-    ceiling = locs['ceiling']
+    altitude = locs.get('altitude')
+    ceiling = locs.get('ceiling')
 
     latlon = get_latlon(locs['id'], db)
     if len(latlon) >= 3:
@@ -607,7 +605,7 @@ def make_info(alert, db, df, dt, headline_no, event_type, l_type, locs, now, res
             SubElement(area, 'ceiling').text = ceiling
 
 
-def getEventCode(locs,lang,type,mnr):
+def getEventCode(locs,lang,type,res):
 
 
 
@@ -639,8 +637,8 @@ def getEventCode(locs,lang,type,mnr):
             'event_level_concept': level_concept[lev],
             'event_level_id': level_id[lev],
             'event_level_type': type,
-            'event_background_description': "",
-            'event_message_number': mnr}
+            'event_background_description': res.get("background_description") ,
+            'event_message_number': res.get('mnr')}
 
 
     return eventCodes
@@ -663,7 +661,7 @@ def get_headline(type,lang, sent, locations):
                     "Rain" : u"Store nedbørsmengder",
                     "flooding" : u"Flom",
                     "rain-flooding" : u"Flom fra regn",
-                    "Polar-low" : u"Polart lavtrykk"} #TODO can this be removed, seems it is not used
+                    "Polar-low" : u"Polart lavtrykk"}
 
     location_name = ""
 

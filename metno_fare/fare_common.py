@@ -82,14 +82,10 @@ def retrieve_from_xml_fare(xmldoc):
 
     locations = []
     res={}
-    n = 0
 
     root = fromstring(xmldoc)
 
-    vto = None
-    vfrom = None
     sender = None #dangerwarning spesific
-    type = None
     id = "BLANK" #dangerwarning spes# ific
     mnr = None #dangerwarning spesific
     alert = None #dangerwarning spesific
@@ -106,10 +102,10 @@ def retrieve_from_xml_fare(xmldoc):
 
 
     header = root.find('productheader')
-    ph = header.find('phenomenon_type')
-    if ph is not None:
-        type = ph.text
-
+    if header is not None:
+        res['phenomenon_type'] = header.findtext('phenomenon_type')
+        res['phenomenon_name'] = header.findtext('phenomenon_name')
+        res['phenomenon_number'] = header.findtext('phenomenon_number')
 
     p = root.find('productdescription')
     if p is not None:
@@ -117,10 +113,11 @@ def retrieve_from_xml_fare(xmldoc):
 
 
     for time in root.iter('time'):
-        # print "Tag: ",t.tag, " Attrib: ", t.attrib
-        #THIS CODE ASUMES ONLY ONE TIME TAG IN EACH MESSAGE !!!!!
-        # TODO: CHANGE FOR MULTIPLE TIMES IN ONE MESSAGE.
-        #
+
+        desc = time.find('description')
+        if (desc is not None):
+            res['background_description'] = desc.findtext('in')
+
         vto = time.get('vto')
         vfrom = time.get('vfrom')
 
@@ -130,26 +127,21 @@ def retrieve_from_xml_fare(xmldoc):
 
             loc['id'] = location.get('id')
             loc['name'] = location.find('header').text
+            loc['effective'] = termin
 
-            loc['altitude']=None
-            loc['ceiling'] = None
-            loc['coment'] = None
             for param in location.findall('parameter'):
                 nam = param.get('name')
                 value = param.find('in').text
                 loc[nam]=value
 
-            loc['type'] = None #TODO fix
+            loc['vfrom']=vfrom
+            loc['vto']=vto
 
             locations.append(loc)
 
     res['locations'] = locations
-    res['vfrom'] = vfrom # TODO better to keep this for each location
-    res['vto'] = vto
-    res['termin'] = termin #TODO this can be used
-    res['eventname']=None
+    res['termin'] = termin
     res['sender'] = sender
-    res['type'] = type
     res['id'] = id
     res['mnr'] = mnr
     res['alert'] = alert
@@ -393,83 +385,61 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
 
         res = results[i]
 
-        dt = time.strptime(res['vto'], "%Y-%m-%d %H:%M:%S")
-        dt = time.strftime("%Y-%m-%dT%H:%M:00Z", dt)
-
-        df = time.strptime(res['vfrom'], "%Y-%m-%d %H:%M:%S")
-        df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
-
         for locs in res['locations']:
 
-            for n in locs['id'].split(":"):
+            dt = time.strptime(locs['vto'], "%Y-%m-%d %H:%M:%S")
+            dt = time.strftime("%Y-%m-%dT%H:%M:00Z", dt)
 
-                latlon = get_latlon(n, db)
-                placemark = SubElement(document, 'Placemark')
-                SubElement(placemark, 'name').text = locs['name']
-                SubElement(placemark, 'description').text = locs['varsel']
+            df = time.strptime(locs['vfrom'], "%Y-%m-%d %H:%M:%S")
+            df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
 
-                timespan = SubElement(placemark, 'TimeSpan')
-                begin = SubElement(timespan, 'begin')
-                begin.text = df
-                end = SubElement(timespan, 'end')
-                end.text = dt
+            latlon = get_latlon(locs['id'], db)
+            placemark = SubElement(document, 'Placemark')
+            SubElement(placemark, 'name').text = locs['name']
+            SubElement(placemark, 'description').text = locs['varsel']
 
-                extdata = SubElement(placemark, 'ExtendedData')
+            timespan = SubElement(placemark, 'TimeSpan')
+            begin = SubElement(timespan, 'begin')
+            begin.text = df
+            end = SubElement(timespan, 'end')
+            end.text = dt
 
-                # Convert the properties associated with this polygon into
-                # extended data values.
-                properties = [
-                    ("met:objectType",          "PolyLine"),
-                    ("met:style:type",          "Dangerous weather warning"),
-                    ("met:info:type",           locs['type']),
-                    ("met:style:fillcolour",    locs['severity']),
-                    ("met:info:severity",       locs['severity']),
-                    ("met:info:comment",        locs['coment']),
-                    ("met:info:Certainty",      locs['certainty']),
-                    ("met:info:Triggerlevel",   locs['triggerlevel']),
-                    ("met:info:English",        locs['englishforecast'])
-                    ]
+            extdata = SubElement(placemark, 'ExtendedData')
 
-                for key, value in properties:
-                    data = SubElement(extdata, 'Data')
-                    data.set('name', key)
-                    SubElement(data, 'value').text = value
+            # Convert the properties associated with this polygon into
+            # extended data values.
+            properties = [
+                ("met:objectType",          "PolyLine"),
+                ("met:style:type",          "Dangerous weather warning"),
+                ("met:info:type",           locs.get('phenomenon_type')),
+                ("met:style:fillcolour",    locs['severity']),
+                ("met:info:severity",       locs['severity']),
+                ("met:info:comment",        locs.get('coment')),
+                ("met:info:Certainty",      locs['certainty']),
+                ("met:info:Triggerlevel",   locs['triggerlevel']),
+                ("met:info:English",        locs['englishforecast'])
+                ]
 
-                polygon = SubElement(placemark, 'Polygon')
-                SubElement(polygon, 'tessellate').text = '1'
+            for key, value in properties:
+                data = SubElement(extdata, 'Data')
+                data.set('name', key)
+                SubElement(data, 'value').text = value
 
-                boundary = SubElement(polygon, 'outerBoundaryIs')
-                ring = SubElement(boundary, 'LinearRing')
-                coordinates = SubElement(ring, 'coordinates')
+            polygon = SubElement(placemark, 'Polygon')
+            SubElement(polygon, 'tessellate').text = '1'
 
-                text = u''
+            boundary = SubElement(polygon, 'outerBoundaryIs')
+            ring = SubElement(boundary, 'LinearRing')
+            coordinates = SubElement(ring, 'coordinates')
 
-                for lon, lat in latlon:
-                    line = u"%f,%f,0\n" % (lon, lat)
-                    text += line
+            text = u''
 
-                coordinates.text = text
+            for lon, lat in latlon:
+                line = u"%f,%f,0\n" % (lon, lat)
+                text += line
+
+            coordinates.text = text
 
     f = open(filename, 'w')
     f.write(tostring(kml, encoding="UTF-8", xml_declaration=True, pretty_print=True))
     f.close()
-
-
-def closest_match(text, allowed):
-# TODO remove this, require exact match
-    """Returns the string closest to the given text from the sequence of
-    allowed strings."""
-    
-    # See http://stackoverflow.com/a/1471603 for inspiration.
-    results = {}
-
-    # Give each allowed string a score based on its similarity to the input text
-    # and map that score back to the string, noting that strings with an identical
-    # score will overwrite previous ones with that score.
-    for s in allowed:
-        score = difflib.SequenceMatcher(a = text.lower(), b = s.lower()).ratio()
-        results[score] = s
-    
-    # Find the string with the highest score.
-    highest = max(results.keys())
-    return results[highest]
