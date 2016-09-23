@@ -109,7 +109,11 @@ def main(filebase, rss_file, output_dir, publish_dir, base_url):
 
         for cap in caplist:
 
+            # Do not show  CAP file in feed
             if dateutil.parser.parse(cap['t_expires'])<= now:
+                continue
+
+            if cap.get('ref_by') is not None:
                 continue
 
             item = SubElement(channel, 'item')
