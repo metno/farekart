@@ -82,7 +82,6 @@ def make_list_of_valid_files(filebase,schemas):
         files that start with the given filebase, writing the index file to the
         directory containing the files."""
 
-    files = []
     filesearch = "{0}*.cap.xml".format(filebase)
     filenames = glob.glob(filesearch)
     filenames.sort()
@@ -90,7 +89,6 @@ def make_list_of_valid_files(filebase,schemas):
     # Load the CAP schema.
     schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))
     schema = etree.XMLSchema(schema_doc)
-
 
     capalerts={}
     references = {}
@@ -101,8 +99,6 @@ def make_list_of_valid_files(filebase,schemas):
         root = etree.parse(fname)
 
         if schema.validate(root):
-
-            attributes = {}
 
             # capalert is a dictionary with all the info needed to publish one cap
             capalert = {}
@@ -134,14 +130,7 @@ def make_list_of_valid_files(filebase,schemas):
                     capinfo[valueName]=value
                 # This headline should be common for all info elements
                 capinfo['headline'] = info.find('cap:headline', nsmap).text
-                valid_from = dateutil.parser.parse(vf)
-                valid_to = dateutil.parser.parse(vt)
-                attributes["valid_from"] = valid_from.strftime("%Y-%m-%dT%H:%M:%SZ")
-                attributes["valid_to"] = valid_to.strftime("%Y-%m-%dT%H:%M:%SZ")
                 capalert['capinfos'].append(capinfo)
-            # Append the file name and validity of each validated CAP file to the list
-            # that will be used to compile the index.
-            files.append((fname, attributes))
 
             capalerts[capalert['identifier']]= capalert
 
@@ -149,7 +138,6 @@ def make_list_of_valid_files(filebase,schemas):
         else:
             sys.stderr.write("Warning: CAP file '%s' is not valid.\n" % fname)
 
-    make_index_file(filebase, files)
     update_references(capalerts,references)
 
     cap_no_list = make_cap_list("no",capalerts)
@@ -194,7 +182,9 @@ def make_cap_list(language, capalerts):
                 cap_entry['description'] += make_description(info)
 
         caplist.append(cap_entry)
-    return caplist
+
+
+    return sorted(caplist,key=lambda caplist: caplist['t_published'],reverse=True)
 
 def make_description(info):
 
@@ -245,44 +235,6 @@ def update_references(capalerts,references):
 
 
 
-def make_index_file(filebase, files):
-    # Produce the XML index file.
-    root = Element('files', nsmap={'xsi': "http://www.w3.org/2001/XMLSchema-instance"})
-    root.set("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "mifare-index.xsd")
-    for filename, valid in files:
-        child = SubElement(root, 'file', valid)
-        child.text = os.path.split(filename)[1]
-    listfilename = "{0}-index.xml".format(filebase)
-    listfile = open(listfilename, "w")
-    listfile.write(tostring(root, xml_declaration=True, encoding="UTF-8", pretty_print=True))
-    listfile.close()
-
-
-
-
-def get_urgency(date_from, date_to, now):
-    """Finds the urgency based on the period, beginning at date_from and
-    ending at date_to, and the current date, now."""
-
-    # Sanity check the period times.
-    if date_from > date_to:
-        return "Unknown"
-
-    # If we are already in the forecast period, the urgency is Immediate.
-    if date_from <= now <= date_to:
-        return "Immediate"
-
-    # Check for a period in the past.
-    if date_to <= now:
-        return "Past"
-
-    # The period is in the future.
-    s = (date_from - now).total_seconds()
-
-    if s < 3600:
-        return "Expected"
-    else:
-        return "Future"
 
 def make_awareness_level( sev ):
     """ Returns MeteoAlarm awareness-level based on severity """
