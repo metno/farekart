@@ -73,7 +73,7 @@ def get_latlon(n, db):
 
         retval.append((lon,lat))
 
-    return retval
+    return (name,retval)
 
 
 def retrieve_from_xml_fare(xmldoc):
@@ -248,24 +248,23 @@ def generate_file(locations, db, filename, type, labelType):
         dt = dateto.strftime("%Y-%m-%dT%H:%M:00Z")
         df = datefrom.strftime("%Y-%m-%dT%H:%M:00Z")
 
-        for n in locs.split(":"):
+        for id in locs.split(":"):
 
-            latlon = get_latlon(n,db)
+            name, latlon = get_latlon(id,db)
             if not latlon:
                 continue
 
-            name = latlon[0][0]
             placemark, coordinates = generate_placemark(document, name, value, df, dt)
 
             text = u''
 
-            for name, lon, lat in latlon:
+            for lon, lat in latlon:
                 line = u"%f,%f,0\n" % (lon, lat)
                 text += line
 
             # Include the first point again to close the polygon.
             if latlon:
-                name, lon, lat = latlon[0]
+                lon, lat = latlon[0]
                 text += u"%f,%f,0\n" % (lon, lat)
 
             coordinates.text = text
@@ -313,7 +312,7 @@ def generate_file_ol(locations, db, filename, type, labelType):
 
         for n in locs.split(":"):
 
-            latlon = get_latlon(n,db)
+            name, latlon = get_latlon(n,db)
             if not latlon:
                 continue
 
@@ -393,7 +392,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
             df = time.strptime(locs['vfrom'], "%Y-%m-%d %H:%M:%S")
             df = time.strftime("%Y-%m-%dT%H:%M:00Z", df)
 
-            latlon = get_latlon(locs['id'], db)
+            name, latlon = get_latlon(locs['id'], db)
             placemark = SubElement(document, 'Placemark')
             SubElement(placemark, 'name').text = locs['name']
             SubElement(placemark, 'description').text = locs['varsel']

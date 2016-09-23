@@ -524,7 +524,7 @@ def make_info(alert, db, headline, event_type, l_type, locs, res, senders,langua
     altitude = locs.get('altitude')
     ceiling = locs.get('ceiling')
 
-    latlon = get_latlon(locs['id'], db)
+    name, latlon = get_latlon(locs['id'], db)
     if len(latlon) >= 3:
 
         # Optional polygon element with three unique points and the last
