@@ -16,6 +16,7 @@ weather warning) reports obtained from a TED database."""
 import linecache
 import os
 import sys
+import MySQLdb
 
 import dateutil.parser
 

@@ -4,12 +4,14 @@
 
 import glob
 import json
+import datetime
 import os
 import sys
 from lxml import etree
 import dateutil.parser
 
 nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
+MAX_WEEKS_TO_KEEP = 4
 
 
 def make_list_of_valid_files(filebase,schemas):
@@ -52,6 +54,7 @@ def make_list_of_valid_files(filebase,schemas):
             for info in root.findall('cap:info', nsmap):
                 capinfo={}
                 capinfo['language'] =  info.find('cap:language', nsmap).text
+                capinfo['severity'] =  info.find('cap:severity', nsmap).text
                 vf = info.find('cap:onset', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
                 capinfo['onset'] = vf
@@ -101,8 +104,13 @@ def find_references(cap):
 
 
 def make_cap_list(language, capalerts):
+    now = datetime.datetime.now(dateutil.tz.tzutc())
     caplist = []
     for identifier, capalert in capalerts.iteritems():
+        expires_list = []
+        onset_list= []
+        is_extreme=False
+
         cap_entry = {}
         cap_entry['id'] = capalert['identifier']
         cap_entry['file'] = capalert['filename']
@@ -124,16 +132,25 @@ def make_cap_list(language, capalerts):
 
         for info in capalert['capinfos']:
             if info['language'] == language:
-                cap_entry['title'] = info['headline']
+                cap_entry['title'] = info['headline']  # all infos have the same headline
                 if cap_entry['area']:
                     cap_entry['area']+= ", "
                 cap_entry['area'] += info['areaDesc']
-                #TODO use earliest/latest time for all infos to calculate onset/expires
-                cap_entry['t_onset']= info['onset']
-                cap_entry['t_expires'] = info['expires']
+                if info['severity']=='Extreme':
+                    is_extreme = True
+                expires_list.append(dateutil.parser.parse(info['expires']))
+                onset_list.append(dateutil.parser.parse(info['onset']))
                 cap_entry['description'] += make_description(info)
 
-        caplist.append(cap_entry)
+        onset = min(onset_list)
+        expires = max(expires_list)
+        cap_entry['t_onset'] =onset.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        cap_entry['t_expires'] = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+
+        # keep entries for MAX_WEEKS_TO_KEEP
+        # keep all exteme warnings
+        if (is_extreme or now-expires < datetime.timedelta(weeks=MAX_WEEKS_TO_KEEP)):
+            caplist.append(cap_entry)
 
 
     return sorted(caplist,key=lambda caplist: caplist['t_published'],reverse=True)

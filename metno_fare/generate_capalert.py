@@ -98,7 +98,7 @@ def generate_capalert_fare(xmldoc,db):
 
 
     if res.get('phenomenon_number') and res.get('phenomenon_name'):
-        incidents = "%s %s" % (res.get('phenomenon_number'),res.get('phenomenon_name'))
+        incidents = " ".join([res.get('phenomenon_number'),res.get('phenomenon_name')])
     elif res.get('phenomenon_name'):
         incidents = res['phenomenon_name']
     elif res.get('phenomenon_number'):

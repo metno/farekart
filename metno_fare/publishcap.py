@@ -62,16 +62,6 @@ def parse_cap_file(cap_file = None, cap_text = None):
     return root
 
 
-def find_latest_time(cap):
-    """Finds the latest expiry time in a CAP document given by cap."""
-
-    expires_list = []
-    for expires in cap.iterfind('.//cap:expires', CAP_nsmap):
-        expires_list.append(dateutil.parser.parse(expires.text))
-    
-    return max(expires_list)
-
-
 def main(filebase, rss_file, output_dir, publish_dir, base_url):
     """Controls the overall processing of CAP and index files to create an RSS feed.
     The given args are the arguments supplied by the user on the command line."""
