@@ -50,14 +50,14 @@ def get_latlon(n, db):
 
     # Names are ISO 8859-1 encoded in the TED database.
     if not result:
-        return retval
+        return ("",retval)
 
     name = result[0].decode("iso8859-1")
 
     #print("name",name)
 
     if not (":" in result[1]):
-        return retval
+        return (name,retval)
 
     for n in result[1].split(":"):
 
@@ -99,7 +99,6 @@ def retrieve_from_xml_fare(xmldoc):
       references = t.find('msgreferences').text
       sender = t.find('msgauthor').text
       id = t.find('msgidentifier').text
-
 
     header = root.find('productheader')
     if header is not None:
@@ -416,7 +415,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
                 ("met:info:comment",        locs.get('coment')),
                 ("met:info:Certainty",      locs['certainty']),
                 ("met:info:Triggerlevel",   locs['triggerlevel']),
-                ("met:info:English",        locs['englishforecast'])
+                ("met:info:English",        locs.get('englishforecast'))
                 ]
 
             for key, value in properties:
