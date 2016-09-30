@@ -130,7 +130,8 @@ def retrieve_from_xml_fare(xmldoc):
 
             for param in location.findall('parameter'):
                 nam = param.get('name')
-                value = param.find('in').text
+                temp = param.find('in')
+                value = "".join(temp.itertext())
                 loc[nam]=value
 
             loc['vfrom']=vfrom
