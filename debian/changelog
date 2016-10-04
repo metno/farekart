@@ -1,3 +1,16 @@
+python-farekart (0.3.12-1) precise; urgency=low
+
+  * Sort entries in Json-file according to sent time, and only include warnings that expired less than 4 weeeks ago
+  * Refactoring, separated code in different modules for creating CAP and Json
+  * Simplified RSS publishing, make CAP.rss from Json-file only. Do not use METfare-index.xml	
+  * Do not show updated/cancelled forecasts in CAP.rss
+  * Added incidents and background descriptions tags (neeeded for extreme weather forecasts)
+  * Added options for converting files from disk and downloading from db, to make testing easuer
+  * Catch exceptions so production does not stop if an exception is raised when converting a Ted-document to CAP.
+  * Bugfixes
+	
+ -- Helen Korsmo <helen.korsmo@met.no>  Mon, 03 Oct 2016 07:52:37 +0200
+
 python-farekart (0.3.11-2) precise; urgency=low
 
   * bugfix
