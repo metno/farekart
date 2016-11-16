@@ -146,8 +146,8 @@ def make_info(alert, db, headline, event_type, l_type, locs, res, senders,langua
 
     # Write UTC times to the CAP file.
     SubElement(info, 'effective').text = effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    SubElement(info, 'onset').text = onset.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    SubElement(info, 'expires').text = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'onset').text = onset.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(info, 'expires').text = expires.strftime("%Y-%m-%dT%H:00:00+00:00")
     SubElement(info, 'senderName').text = senders[language]
     SubElement(info, 'headline').text = headline
     if language=="no":
