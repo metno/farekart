@@ -40,12 +40,10 @@ def generate_capalert_v1(xmldoc,db):
     senders = {"no": "Meteorologisk Institutt",
                "nb": "Meteorologisk Institutt",
                "nn": "Meteorologisk Institutt",
-               "en": "MET Norway"}
+               "en-GB": "MET Norway"}
 
     sender = "noreply@met.no"
     identifier_prefix= "2.49.0.1.578.0.NO."
-
-    note =  "Message number %s"
 
 
     event_types = { "Wind": u"Vind",
@@ -63,7 +61,7 @@ def generate_capalert_v1(xmldoc,db):
                     "Polar-low" : u"Polart lavtrykk"}
 
     l_type = res['phenomenon_type']
-    event_type = { "no": event_types[l_type], "en":l_type}
+    event_type = { "no": event_types[l_type], "en-GB":l_type}
 
 
     l_alert = res['alert']
@@ -79,17 +77,17 @@ def generate_capalert_v1(xmldoc,db):
     SubElement(alert, 'identifier').text = identifier_prefix + identifier
     SubElement(alert, 'sender').text =  sender
     SubElement(alert, 'sent').text = sent_time
-    SubElement(alert, 'status').text = res.get('status','Test')
+    SubElement(alert, 'status').text = res.get('status','Alert')
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
 
     # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
 
     headline_no = get_headline( event_type["no"].lower(),"no",sent_time, res['locations'])
-    headline_en = get_headline(event_type["en"],"en",sent_time,res['locations'])
+    headline_en = get_headline(event_type["en-GB"],"en-GB",sent_time,res['locations'])
 
-    SubElement(alert, 'code').text = "system_version 0.1"
-    SubElement(alert, 'note').text = note % res['mnr']
+    # Insert CAP-version number
+    SubElement(alert, 'code').text = "CAP-V12.NO.V1.0"
 
     if l_alert != 'Alert':
         references = []
@@ -98,22 +96,14 @@ def generate_capalert_v1(xmldoc,db):
         SubElement(alert, 'references').text = " ".join(references)
 
 
-    if res.get('phenomenon_number') and res.get('phenomenon_name'):
-        incidents = " ".join([res.get('phenomenon_number'),res.get('phenomenon_name')])
-    elif res.get('phenomenon_name'):
-        incidents = res['phenomenon_name']
-    elif res.get('phenomenon_number'):
-        incidents = res['phenomenon_number']
-    else:
-        incidents=""
 
-    if (incidents):
+    if res.get('phenomenon_number'):
         SubElement(alert, 'incidents').text = incidents
 
 
-    for locs in res['locations']:
-        make_info(alert, db, headline_no, event_type, l_type, locs, res, senders,"no")
-        make_info(alert, db, headline_en, event_type, l_type, locs, res, senders,"en")
+    for loc in res['locations']:
+        make_info_v1(alert, db, headline_no, event_type, l_type, loc, res, senders,"no")
+        make_info_v1(alert, db, headline_en, event_type, l_type, loc, res, senders,"en-GB")
 
     return etree.tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
@@ -230,6 +220,118 @@ def generate_capalert_fare(xmldoc,db):
                      pretty_print=True, standalone=True)
 
 
+
+
+def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, language):
+
+    onset = dateutil.parser.parse(loc['vfrom'])
+    expires = dateutil.parser.parse(loc['vto'])
+    effective = dateutil.parser.parse(loc['effective'])
+
+    urgency = "Future"
+    severity = loc.get("severity")
+    certainty = loc.get("certainty")
+    pict = loc['picturelink']
+    infolink = loc['infolink']
+
+    info = SubElement(alert, 'info')
+    SubElement(info, 'language').text = language
+    SubElement(info, 'category').text = 'Met'
+    SubElement(info, 'event').text = event_type[language]
+    SubElement(info, 'urgency').text = urgency
+    SubElement(info, 'severity').text = severity
+    SubElement(info, 'certainty').text = certainty
+    # make eventCode with forecasters heading
+    eventCodes = getEventCode(loc, language, event_type[language], res)
+    for valueName, value in eventCodes.items():
+        eventCode = SubElement(info, 'eventCode')
+        SubElement(eventCode, 'valueName').text = valueName
+        SubElement(eventCode, 'value').text = value
+
+
+
+    # Write UTC times to the CAP file.
+    SubElement(info, 'effective').text = effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'onset').text = onset.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(info, 'expires').text = expires.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(info, 'senderName').text = senders[language]
+    SubElement(info, 'headline').text = headline
+    if language=="no":
+        SubElement(info, 'description').text = loc.get('varsel')
+        SubElement(info, 'instruction').text = loc.get('instruction')
+    elif language.startswith("en"):
+        SubElement(info, 'description').text = loc['englishforecast']
+        SubElement(info, 'instruction').text = loc.get('consequenses')
+
+    SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
+    # MeteoAlarm mandatory elements
+    aw_level = SubElement(info, 'parameter')
+    SubElement(aw_level, 'valueName').text = "awareness_level"
+    SubElement(aw_level, 'value').text = make_awareness_level(severity)
+    aw_type = SubElement(info, 'parameter')
+    SubElement(aw_type, 'valueName').text = "awareness_type"
+    SubElement(aw_type, 'value').text = make_awareness_type(l_type)
+    # MET internal elements. Possibly used by Yr and others.
+    met_trigger = SubElement(info, 'parameter')
+    SubElement(met_trigger, 'valueName').text = "trigger_level"
+    SubElement(met_trigger, 'value').text = loc['triggerlevel']
+    met_ret = SubElement(info, 'parameter')
+    SubElement(met_ret, 'valueName').text = "return_period"
+    SubElement(met_ret, 'value').text = loc['returnperiod']
+    # Link to graphical representation
+    if pict:
+        resource = SubElement(info, 'resource')
+        SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
+        SubElement(resource, 'mimeType').text = "image/png"
+        SubElement(resource, 'uri').text = pict
+
+    # Link to further information
+    if infolink:
+        resource = SubElement(info, 'resource')
+        SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
+        SubElement(resource, 'mimeType').text = "text/html"
+        SubElement(resource, 'uri').text = infolink
+
+    area = SubElement(info, 'area')
+    SubElement(area, 'areaDesc').text = loc['name']
+
+    altitude = loc.get('altitude')
+    ceiling = loc.get('ceiling')
+
+    name, latlon = get_latlon(loc['id'], db)
+    if len(latlon) >= 3:
+
+        # Optional polygon element with three unique points and the last
+        # point identical to the first to close the polygon (at least
+        # four points in total). Each point is specified by coordinates
+        # of the form, latitude,longitude.
+        polygon = SubElement(area, 'polygon')
+
+        text = u''
+
+        for lon, lat in latlon:
+            line = u"%f,%f\n" % (lat, lon)
+            text += line
+
+        # Include the first point again to close the polygon.
+        if latlon:
+            lon, lat = latlon[0]
+            text += u"%f,%f\n" % (lat, lon)
+
+        polygon.text = text
+
+
+        if altitude:
+            SubElement(area, 'altitude').text = altitude
+
+        if ceiling:
+            SubElement(area, 'ceiling').text = ceiling
+
+
+
+
+
+
 def make_info(alert, db, headline, event_type, l_type, locs, res, senders,language):
 
     onset = dateutil.parser.parse(locs['vfrom'])
@@ -265,7 +367,7 @@ def make_info(alert, db, headline, event_type, l_type, locs, res, senders,langua
     if language=="no":
         SubElement(info, 'description').text = locs.get('varsel')
         SubElement(info, 'instruction').text = locs.get('instruction')
-    elif language == "en":
+    elif language.startswith("en"):
         SubElement(info, 'description').text = locs['englishforecast']
         SubElement(info, 'instruction').text = locs.get('consequenses')
 
@@ -379,7 +481,8 @@ def getEventCode(locs,lang,type,res):
 def get_headline(type,lang, sent, locations):
 
     notes = { "no":u'Varsel for %s for %s utstedt av Meteorologisk Institutt %s.',
-               "en":u'%s alert for %s issued by MET Norway %s.'}
+               "en-GB":u'%s alert for %s issued by MET Norway %s.',
+                "en":u'%s alert for %s issued by MET Norway %s.'}
 
     event_types = { "Wind": u"Vind",
                     "snow-ice" : u"Snø-Is",
