@@ -7,6 +7,118 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 import dateutil.parser
 
+
+def generate_capalert_v1(xmldoc,db):
+    """Obtains the locations from the XML document given by xmldoc and the
+    database, db, and returns a CAP alert.
+
+    Structure:
+
+        ALERT
+            |
+            | ----  Norwegian   --  INFO
+            |                        |
+            |                        | -- one or more -- RESOURCE
+            |                        |
+            |                        | -- one or more -- AREA
+            |                        |
+            |                    end INFO
+            |
+            | ----  English     --  INFO
+            |                        |
+            |                        | -- one or more -- RESOURCE
+            |                        |
+            |                        | -- one or more -- AREA
+            |                        |
+            |                    end INFO
+            |
+        end ALERT"""
+
+    res = retrieve_from_xml_fare(xmldoc)
+
+
+    senders = {"no": "Meteorologisk Institutt",
+               "nb": "Meteorologisk Institutt",
+               "nn": "Meteorologisk Institutt",
+               "en": "MET Norway"}
+
+    sender = "noreply@met.no"
+    identifier_prefix= "2.49.0.1.578.0.NO."
+
+    note =  "Message number %s"
+
+
+    event_types = { "Wind": u"Vind",
+                    "snow-ice" : u"Snø-Is",
+                    "Thunderstorm" : u"Tordenbyger",
+                    "Fog" : u"Tåke",
+                    "high-temperature" : u"Høye temperaturer",
+                    "low-temperature" : u"Lave temperaturer",
+                    "coastalevent" : u"Hendelse på kysten",
+                    "forest-fire" : u"Skogsbrann",
+                    "avalanches"  : u"Skred",
+                    "Rain" : u"Store nedbørsmengder",
+                    "flooding" : u"Flom",
+                    "rain-flooding" : u"Flom fra regn",
+                    "Polar-low" : u"Polart lavtrykk"}
+
+    l_type = res['phenomenon_type']
+    event_type = { "no": event_types[l_type], "en":l_type}
+
+
+    l_alert = res['alert']
+    termin = dateutil.parser.parse(res['termin'])
+
+    alert = Element('alert')
+    alert.set('xmlns', "urn:oasis:names:tc:emergency:cap:1.2")
+
+    identifier = filter(lambda c: c.isalpha() or c.isdigit() or c in ["_","."], res['id'])
+
+    sent_time = termin.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+
+    SubElement(alert, 'identifier').text = identifier_prefix + identifier
+    SubElement(alert, 'sender').text =  sender
+    SubElement(alert, 'sent').text = sent_time
+    SubElement(alert, 'status').text = res.get('status','Test')
+    SubElement(alert, 'msgType').text = l_alert
+    SubElement(alert, 'scope').text = 'Public'
+
+    # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
+
+    headline_no = get_headline( event_type["no"].lower(),"no",sent_time, res['locations'])
+    headline_en = get_headline(event_type["en"],"en",sent_time,res['locations'])
+
+    SubElement(alert, 'code').text = "system_version 0.1"
+    SubElement(alert, 'note').text = note % res['mnr']
+
+    if l_alert != 'Alert':
+        references = []
+        for ref in filter(lambda ref: ref, res['references'].split(" ")):
+            references.append(sender + "," + identifier_prefix + ref)
+        SubElement(alert, 'references').text = " ".join(references)
+
+
+    if res.get('phenomenon_number') and res.get('phenomenon_name'):
+        incidents = " ".join([res.get('phenomenon_number'),res.get('phenomenon_name')])
+    elif res.get('phenomenon_name'):
+        incidents = res['phenomenon_name']
+    elif res.get('phenomenon_number'):
+        incidents = res['phenomenon_number']
+    else:
+        incidents=""
+
+    if (incidents):
+        SubElement(alert, 'incidents').text = incidents
+
+
+    for locs in res['locations']:
+        make_info(alert, db, headline_no, event_type, l_type, locs, res, senders,"no")
+        make_info(alert, db, headline_en, event_type, l_type, locs, res, senders,"en")
+
+    return etree.tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
+                     pretty_print=True, standalone=True)
+
+
 def generate_capalert_fare(xmldoc,db):
     """Obtains the locations from the XML document given by xmldoc and the
     database, db, and returns a CAP alert.

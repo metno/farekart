@@ -22,7 +22,7 @@ import dateutil.parser
 
 from lxml import etree
 from generatejson_fare import make_list_of_valid_files
-from generate_capalert import generate_capalert_fare
+from generate_capalert import generate_capalert_fare, generate_capalert_v1
 
 
 def PrintException():
@@ -72,18 +72,33 @@ def generate_capfile_from_tedfile(ted_filename,output_dirname,db):
 
 def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
     cap_filename = ""
+    dirname_v1 = os.path.join(output_dirname, "v1")
+    if (not os.path.isdir(dirname_v1)):
+        os.mkdir(dirname_v1)
     try:
         # find correct file name from the tedDocuments name and termin
         cap_filename= get_capfilename_from_teddoc(xmldoc)
-        cap_filename = os.path.join(output_dirname, cap_filename)
-        sys.stderr.write("File '%s' will be generated\n" % cap_filename)
+        cap_filename_v0 = os.path.join(output_dirname, cap_filename)
+        cap_filename_v1 = os.path.join(dirname_v1, cap_filename)
+        sys.stderr.write("Files '%s' and %s will be generated\n" % (cap_filename_v0, cap_filename_v1))
 
         # generate the CAP alert  from the tedDocument
         capalert = generate_capalert_fare(xmldoc, db)
 
         # write the resulting CAP alert to file
-        with open(cap_filename,'w') as f:
+        with open(cap_filename_v0,'w') as f:
             f.write(capalert)
+
+# Test make capalert version 1, and save to "v1" directory
+        # generate the CAP alert  from the tedDocument
+        capalert = generate_capalert_v1(xmldoc, db)
+
+        # write the resulting CAP alert to file
+        with open(cap_filename_v1,'w') as f:
+            f.write(capalert)
+
+
+
     except Exception as inst:
         sys.stderr.write("CAP file %s could not be made: %s %s \n" % (cap_filename, PrintException() ,inst.message))
 
