@@ -241,12 +241,6 @@ def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, lan
     SubElement(info, 'urgency').text = urgency
     SubElement(info, 'severity').text = severity
     SubElement(info, 'certainty').text = certainty
-    # make eventCode with forecasters heading
-    eventCodes = getEventCode(loc, language, event_type[language], res)
-    for valueName, value in eventCodes.items():
-        eventCode = SubElement(info, 'eventCode')
-        SubElement(eventCode, 'valueName').text = valueName
-        SubElement(eventCode, 'value').text = value
 
 
 
@@ -264,26 +258,22 @@ def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, lan
         SubElement(info, 'instruction').text = loc.get('consequenses')
 
     SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
-    # MeteoAlarm mandatory elements
-    aw_level = SubElement(info, 'parameter')
-    SubElement(aw_level, 'valueName').text = "awareness_level"
-    SubElement(aw_level, 'value').text = make_awareness_level(severity)
-    aw_type = SubElement(info, 'parameter')
-    SubElement(aw_type, 'valueName').text = "awareness_type"
-    SubElement(aw_type, 'value').text = make_awareness_type(l_type)
-    # MET internal elements. Possibly used by Yr and others.
-    met_trigger = SubElement(info, 'parameter')
-    SubElement(met_trigger, 'valueName').text = "trigger_level"
-    SubElement(met_trigger, 'value').text = loc['triggerlevel']
-    met_ret = SubElement(info, 'parameter')
-    SubElement(met_ret, 'valueName').text = "return_period"
-    SubElement(met_ret, 'value').text = loc['returnperiod']
+
+    parameters = get_parameters(loc, language,res)
+    for valueName, value in parameters.items():
+        parameter = SubElement(info, 'parameter')
+        SubElement(parameter, 'valueName').text = valueName
+        SubElement(parameter, 'value').text = value
+
     # Link to graphical representation
     if pict:
         resource = SubElement(info, 'resource')
         SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
         SubElement(resource, 'mimeType').text = "image/png"
         SubElement(resource, 'uri').text = pict
+
+
+
 
     # Link to further information
     if infolink:
@@ -327,6 +317,35 @@ def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, lan
         if ceiling:
             SubElement(area, 'ceiling').text = ceiling
 
+
+
+def get_parameters(loc, lang,res):
+
+    severity=loc['severity'].lower()
+    phenomenon_name = res.get('phenomenon_name')
+
+    parameters={}
+
+    if lang == "no":
+        parameters["event_manual_header"] = loc['heading']
+    else:
+          parameters["event_manual_header"]  = loc['englishheading']
+    parameters["event_level_response"]=\
+            get_event_level_response(severity,phenomenon_name,lang)
+    parameters["event_level_type"]=\
+            get_event_level_type(severity,lang)
+    # MeteoAlarm mandatory elements
+    parameters["awareness_level"]= make_awareness_level(severity)
+    parameters["awareness_type"]= make_awareness_type(res['phenomenon_type'])
+    # MET internal elements. Possibly used by Yr and others.
+    parameters["trigger_level"]=loc['triggerlevel']
+    parameters["return_period"]= loc['returnperiod']
+    parameters['event_message_number'] = res.get('mnr')
+    if phenomenon_name:
+        parameters["incident_name"]=phenomenon_name
+
+
+    return parameters
 
 
 
@@ -558,3 +577,42 @@ def make_awareness_type( typ ):
         ret = "1; Wind"
 
     return ret
+
+def get_event_level_response(severity,phenomenon_name,lang):
+    if lang == "no":
+        level_response = {'minor': "Ulempe",
+                'moderate': u"Følg med",
+                'severe': u"Vær forberedt",
+                'extreme': u'Ekstremvær%s %s'}
+
+    else:
+        level_response = {'minor': "Inconvenience",
+                'moderate': "Be aware",
+                'severe': "Be prepared",
+                'extreme': "Take action! Extreme weather %s"}
+
+    response = level_response[severity]
+    if (severity=="extreme" and phenomenon_name):
+        if lang == "no":
+            response = response%("et",phenomenon_name)
+        else:
+            response = response%(phenomenon_name)
+
+    return response
+
+def get_event_level_type(severity,lang):
+    if lang == "no":
+        level_type = {'minor': "",
+                'moderate': u"Utfordrende situasjon",
+                'severe': u"Farlig situasjon",
+                'extreme': u"Ekstrem situasjon"}
+
+    else:
+        level_type = {'minor': "",
+                'moderate': "Challenging situation",
+                'severe': "Dangerous situation",
+                'extreme': "Extreme situation"}
+
+    type = level_type[severity]
+
+    return type
