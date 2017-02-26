@@ -3,6 +3,7 @@
 """Generates CAP alert."""
 
 from fare_common import retrieve_from_xml_fare, get_latlon
+from fare_setup import *
 from lxml import etree
 from lxml.etree import Element, SubElement
 import dateutil.parser
@@ -35,30 +36,6 @@ def generate_capalert_v1(xmldoc,db):
         end ALERT"""
 
     res = retrieve_from_xml_fare(xmldoc)
-
-
-    senders = {"no": "Meteorologisk Institutt",
-               "nb": "Meteorologisk Institutt",
-               "nn": "Meteorologisk Institutt",
-               "en-GB": "MET Norway"}
-
-    sender = "noreply@met.no"
-    identifier_prefix= "2.49.0.1.578.0.NO."
-
-
-    event_types = { "Wind": u"Vind",
-                    "snow-ice" : u"Snø-Is",
-                    "Thunderstorm" : u"Tordenbyger",
-                    "Fog" : u"Tåke",
-                    "high-temperature" : u"Høye temperaturer",
-                    "low-temperature" : u"Lave temperaturer",
-                    "coastalevent" : u"Hendelse på kysten",
-                    "forest-fire" : u"Skogsbrann",
-                    "avalanches"  : u"Skred",
-                    "Rain" : u"Store nedbørsmengder",
-                    "flooding" : u"Flom",
-                    "rain-flooding" : u"Flom fra regn",
-                    "Polar-low" : u"Polart lavtrykk"}
 
     l_type = res['phenomenon_type']
     event_type = { "no": event_types[l_type], "en-GB":l_type}
@@ -137,35 +114,9 @@ def generate_capalert_fare(xmldoc,db):
 
     res = retrieve_from_xml_fare(xmldoc)
 
-
-    senders = {"no": "Meteorologisk Institutt",
-               "nb": "Meteorologisk Institutt",
-               "nn": "Meteorologisk Institutt",
-               "en": "MET Norway"}
-
-    sender = "noreply@met.no"
-    identifier_prefix= "2.49.0.1.578.0.NO."
-
-    note =  "Message number %s"
-
-
-    event_types = { "Wind": u"Vind",
-                    "snow-ice" : u"Snø-Is",
-                    "Thunderstorm" : u"Tordenbyger",
-                    "Fog" : u"Tåke",
-                    "high-temperature" : u"Høye temperaturer",
-                    "low-temperature" : u"Lave temperaturer",
-                    "coastalevent" : u"Hendelse på kysten",
-                    "forest-fire" : u"Skogsbrann",
-                    "avalanches"  : u"Skred",
-                    "Rain" : u"Store nedbørsmengder",
-                    "flooding" : u"Flom",
-                    "rain-flooding" : u"Flom fra regn",
-                    "Polar-low" : u"Polart lavtrykk"}
-
+    note = "Message number %s"
     l_type = res['phenomenon_type']
     event_type = { "no": event_types[l_type], "en":l_type}
-
 
     l_alert = res['alert']
     termin = dateutil.parser.parse(res['termin'])
@@ -332,11 +283,10 @@ def get_parameters(loc, lang,res):
           parameters["event_manual_header"]  = loc['englishheading']
     parameters["event_level_response"]=\
             get_event_level_response(severity,phenomenon_name,lang)
-    parameters["event_level_type"]=\
-            get_event_level_type(severity,lang)
+    parameters["event_level_type"]= level_type[lang][severity]
     # MeteoAlarm mandatory elements
     parameters["awareness_level"]= make_awareness_level(severity)
-    parameters["awareness_type"]= make_awareness_type(res['phenomenon_type'])
+    parameters["awareness_type"]= awareness_types.get(res['phenomenon_type'],"1; Wind")
     # MET internal elements. Possibly used by Yr and others.
     parameters["trigger_level"]=loc['triggerlevel']
     parameters["return_period"]= loc['returnperiod']
@@ -397,7 +347,7 @@ def make_info(alert, db, headline, event_type, l_type, locs, res, senders,langua
     SubElement(aw_level, 'value').text = make_awareness_level(severity)
     aw_type = SubElement(info, 'parameter')
     SubElement(aw_type, 'valueName').text = "awareness_type"
-    SubElement(aw_type, 'value').text = make_awareness_type(l_type)
+    SubElement(aw_type, 'value').text = awareness_types.get(res['phenomenon_type'],"1; Wind")
     # MET internal elements. Possibly used by Yr and others.
     met_trigger = SubElement(info, 'parameter')
     SubElement(met_trigger, 'valueName').text = "trigger_level"
@@ -503,28 +453,12 @@ def get_headline(type,lang, sent, locations):
                "en-GB":u'%s alert for %s issued by MET Norway %s.',
                 "en":u'%s alert for %s issued by MET Norway %s.'}
 
-    event_types = { "Wind": u"Vind",
-                    "snow-ice" : u"Snø-Is",
-                    "Thunderstorm" : u"Tordenbyger",
-                    "Fog" : u"Tåke",
-                    "high-temperature" : u"Høye temperaturer",
-                    "low-temperature" : u"Lave temperaturer",
-                    "coastalevent" : u"Hendelse på kysten",
-                    "forest-fire" : u"Skogsbrann",
-                    "avalanches"  : u"Skred",
-                    "Rain" : u"Store nedbørsmengder",
-                    "flooding" : u"Flom",
-                    "rain-flooding" : u"Flom fra regn",
-                    "Polar-low" : u"Polart lavtrykk"}
-
     location_name = ""
 
     for locs in locations:
         if location_name:
             location_name += ", "
         location_name += locs['name']
-
-
 
 
     headline = notes[lang] % (type,location_name, sent)
@@ -550,48 +484,8 @@ def make_awareness_level( sev ):
     return ret
 
 
-def make_awareness_type( typ ):
-    """ Returns MeteoAlarm awareness-type based on warning type
-     """
-
-    # The types are defined in the TED template and are therefore used unchanged
-
-    types = {'Wind': "1; Wind",
-             'snow-ice': "2; snow-ice",
-             'Thunderstorm': "3; Thunderstorm",
-             'Fog': "4; Fog",
-             'high-temperature':"5; high-temperature",
-             'low-temperature':"6; low-temperature",
-             'coastalevent':"7; coastalevent",
-             'forest-fire':"8; forest-fire",
-             'avalanches':"9; avalanches",
-             'Rain':"10; Rain",
-             'flooding':"12; flooding",
-             'rain-flood':"13; rain-flood",
-             'Polar-low':"14; Polar-low"}
-
-    try:
-        ret = types[typ]
-    except:
-        print "WRONG TYPE ( %s ) TO make_awarness_TYPE. RETURNING DEFAULT VALUE, WIND" % typ
-        ret = "1; Wind"
-
-    return ret
-
 def get_event_level_response(severity,phenomenon_name,lang):
-    if lang == "no":
-        level_response = {'minor': "Ulempe",
-                'moderate': u"Følg med",
-                'severe': u"Vær forberedt",
-                'extreme': u'Ekstremvær%s %s'}
-
-    else:
-        level_response = {'minor': "Inconvenience",
-                'moderate': "Be aware",
-                'severe': "Be prepared",
-                'extreme': "Take action! Extreme weather %s"}
-
-    response = level_response[severity]
+    response = level_response[lang][severity]
     if (severity=="extreme" and phenomenon_name):
         if lang == "no":
             response = response%("et",phenomenon_name)
@@ -601,18 +495,7 @@ def get_event_level_response(severity,phenomenon_name,lang):
     return response
 
 def get_event_level_type(severity,lang):
-    if lang == "no":
-        level_type = {'minor': "",
-                'moderate': u"Utfordrende situasjon",
-                'severe': u"Farlig situasjon",
-                'extreme': u"Ekstrem situasjon"}
 
-    else:
-        level_type = {'minor': "",
-                'moderate': "Challenging situation",
-                'severe': "Dangerous situation",
-                'extreme': "Extreme situation"}
-
-    type = level_type[severity]
+    type = level_type[lang][severity]
 
     return type
