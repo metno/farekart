@@ -10,7 +10,7 @@ senders ={
 sender = "noreply@met.no"
 identifier_prefix= "2.49.0.1.578.0.NO."
 
-
+#event types used in old version
 event_types = {
         "Wind": u"Vind",
         "snow-ice" : u"Snø-Is",
@@ -26,6 +26,44 @@ event_types = {
         "rain-flooding" : u"Flom fra regn",
          "Polar-low" : u"Polart lavtrykk"
     }
+
+#mapping from Meteoalarm event types to our event types, migh be obsolete later
+event_types_land = {
+        "Wind": {"no":u"Vind","en-GB":"Wind"},
+        "snow-ice" : {"no":u"Vanskelige kjøreforhold","en-GB":"Difficult driving conditions"},
+        "Thunderstorm" : {"no":u"Tordenvær","en-GB":"Thunderstorm"},
+        "Fog" : {"no":u"Tåke","en-GB":"Fog"},
+        "high-temperature" : {"no":u"Høye temperaturer","en-GB":"High temperature"},
+        "low-temperature" : {"no":u"Lave temperaturer","en-GB":"Low temperature"},
+        "coastalevent" : {"no":u"Stormflo","en-GB":"Storm surge"},
+        "forest-fire" : {"no":u"Skogbrann","en-GB":"Forest fire"},
+        "avalanches"  : {"no":u"Skred","en-GB":"avalanches"},
+        "Rain" : {"no":u"Regn","en-GB":"Rain"},
+        "flooding" : {"no":u"Flom","en-GB":"flooding"},
+        "rain-flooding" : {"no":u"Styrtregn","en-GB":"Flash flood"},
+        "Polar-low" : {"no":u"Polart lavtrykk-land","en-GB":"Polar-low"},
+    }
+
+
+#mapping from Meteoalarm event types to our event types, migh be obsolete later
+event_types_marine = {
+        "Wind": {"no":u"Kuling","en-GB":"Gale"},
+        "coastalevent" : {"no":u"Ising","en-GB":"Icing"},
+        "Polar-low" : {"no":u"Polart lavtrykk-marine","en-GB":"Polar-low"}
+    }
+
+event_type_default={"no":u"Farevarsel","en-GB":"Danger warning"}
+
+event_level_name={
+    "vind":{
+        "moderate":" Kraftig vind",
+        "severe": "Svært kraftig vind",
+        "extreme": "Ekstrem vind"
+
+
+    }
+
+}
 
 level_response ={
     "no": {
@@ -68,6 +106,6 @@ awareness_types = {
     'Rain':"10; Rain",
     'flooding':"12; flooding",
     'rain-flood':"13; rain-flood",
-    'Polar-low':"14; Polar-low"
+    'Polar-low':""
 }
 

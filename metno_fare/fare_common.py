@@ -111,33 +111,34 @@ def retrieve_from_xml_fare(xmldoc):
         termin = p.get('termin')
 
 
-    for time in root.iter('time'):
 
-        desc = time.find('description')
-        if (desc is not None):
-            res['background_description'] = desc.findtext('in')
+    for time in root.iter('time'):
 
         vto = time.get('vto')
         vfrom = time.get('vfrom')
 
-        for location in time.iter('location'):
+        for f in time.iter('forecasttype'):
+            forecasttype= f.get('name')
 
-            loc = {}
+            for location in f.iter('location'):
+                #print(forecasttype)
+                res['forecasttype']=forecasttype
+                loc = {}
 
-            loc['id'] = location.get('id')
-            loc['name'] = location.find('header').text
-            loc['effective'] = termin
+                loc['id'] = location.get('id')
+                loc['name'] = location.find('header').text
+                loc['effective'] = termin
 
-            for param in location.findall('parameter'):
-                nam = param.get('name')
-                temp = param.find('in')
-                value = "\n".join(temp.itertext())
-                loc[nam]=value
+                for param in location.findall('parameter'):
+                    nam = param.get('name')
+                    temp = param.find('in')
+                    value = "\n".join(temp.itertext())
+                    loc[nam]=value
 
-            loc['vfrom']=vfrom
-            loc['vto']=vto
+                loc['vfrom']=vfrom
+                loc['vto']=vto
 
-            locations.append(loc)
+                locations.append(loc)
 
     res['locations'] = locations
     res['termin'] = termin

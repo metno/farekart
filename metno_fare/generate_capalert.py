@@ -34,12 +34,15 @@ def generate_capalert_v1(xmldoc,db):
             |                    end INFO
             |
         end ALERT"""
-
     res = retrieve_from_xml_fare(xmldoc)
 
     l_type = res['phenomenon_type']
-    event_type = { "no": event_types[l_type], "en-GB":l_type}
 
+
+    if res['forecasttype'] in ['gale','pl']:
+        event_type = event_types_marine.get(l_type,event_type_default)
+    else:
+        event_type = event_types_land.get(l_type,event_type_default)
 
     l_alert = res['alert']
     termin = dateutil.parser.parse(res['termin'])
@@ -79,8 +82,8 @@ def generate_capalert_v1(xmldoc,db):
 
 
     for loc in res['locations']:
-        make_info_v1(alert, db, headline_no, event_type, l_type, loc, res, senders,"no")
-        make_info_v1(alert, db, headline_en, event_type, l_type, loc, res, senders,"en-GB")
+        make_info_v1(alert, db, headline_no, event_type, loc, res, senders,"no")
+        make_info_v1(alert, db, headline_en, event_type, loc, res, senders,"en-GB")
 
     return etree.tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
@@ -173,15 +176,15 @@ def generate_capalert_fare(xmldoc,db):
 
 
 
-def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, language):
+def make_info_v1(alert, db, headline, event_type, loc, res, senders, language):
 
     onset = dateutil.parser.parse(loc['vfrom'])
     expires = dateutil.parser.parse(loc['vto'])
     effective = dateutil.parser.parse(loc['effective'])
 
     urgency = "Future"
-    severity = loc.get("severity")
-    certainty = loc.get("certainty")
+    severity = loc.get("severity", "").strip()
+    certainty = loc.get("certainty", "").strip()
     pict = loc['picturelink']
     infolink = loc['infolink']
 
@@ -272,7 +275,7 @@ def make_info_v1(alert, db, headline, event_type, l_type, loc, res, senders, lan
 
 def get_parameters(loc, lang,res):
 
-    severity=loc['severity'].lower()
+    severity=loc['severity'].lower().strip()
     phenomenon_name = res.get('phenomenon_name')
 
     parameters={}
@@ -306,10 +309,12 @@ def make_info(alert, db, headline, event_type, l_type, locs, res, senders,langua
     onset = dateutil.parser.parse(locs['vfrom'])
     expires = dateutil.parser.parse(locs['vto'])
     effective = dateutil.parser.parse(locs['effective'])
+    urgency="Future"
+    severity = locs.get("severity", "").strip()
+    certainty = locs.get("certainty", "").strip()
 
-    urgency = "Future"
-    severity = locs.get("severity")
-    certainty = locs.get("certainty")
+
+
     pict = locs['picturelink']
     infolink = locs['infolink']
 
