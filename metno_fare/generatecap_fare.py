@@ -22,8 +22,8 @@ import dateutil.parser
 
 from lxml import etree
 from generatejson_fare import make_list_of_valid_files
-from generate_capalert import generate_capalert_fare, generate_capalert_v1
-
+from generate_capalert import generate_capalert_fare
+from generate_capalert_v1 import generate_capalert_v1
 
 def PrintException():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -89,13 +89,16 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
         with open(cap_filename_v0,'w') as f:
             f.write(capalert)
 
-# Test make capalert version 1, and save to "v1" directory
-        # generate the CAP alert  from the tedDocument
-        capalert = generate_capalert_v1(xmldoc, db)
 
-        # write the resulting CAP alert to file
-        with open(cap_filename_v1,'w') as f:
-            f.write(capalert)
+        make_v1=True
+        if (make_v1):
+            # Test make capalert version 1, and save to "v1" directory
+            # generate the CAP alert  from the tedDocument
+            capalert = generate_capalert_v1(xmldoc, db)
+
+            # write the resulting CAP alert to file
+            with open(cap_filename_v1,'w') as f:
+                f.write(capalert)
 
 
 

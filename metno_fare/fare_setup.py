@@ -10,49 +10,33 @@ senders ={
 sender = "noreply@met.no"
 identifier_prefix= "2.49.0.1.578.0.NO."
 
-#event types used in old version
-event_types = {
-        "Wind": u"Vind",
-        "snow-ice" : u"Snø-Is",
-        "Thunderstorm" : u"Tordenbyger",
-        "Fog" : u"Tåke",
-        "high-temperature" : u"Høye temperaturer",
-        "low-temperature" : u"Lave temperaturer",
-        "coastalevent" : u"Hendelse på kysten",
-        "forest-fire" : u"Skogsbrann",
-        "avalanches"  : u"Skred",
-        "Rain" : u"Store nedbørsmengder",
-        "flooding" : u"Flom",
-        "rain-flooding" : u"Flom fra regn",
-         "Polar-low" : u"Polart lavtrykk"
-    }
 
-#mapping from Meteoalarm event types to our event types, migh be obsolete later
+#mapping from Meteoalarm event types in our template to our event types on land, migh be obsolete later
 event_types_land = {
-        "Wind": {"no":u"Vind","en-GB":"Wind"},
-        "snow-ice" : {"no":u"Vanskelige kjøreforhold","en-GB":"Difficult driving conditions"},
-        "Thunderstorm" : {"no":u"Tordenvær","en-GB":"Thunderstorm"},
-        "Fog" : {"no":u"Tåke","en-GB":"Fog"},
-        "high-temperature" : {"no":u"Høye temperaturer","en-GB":"High temperature"},
-        "low-temperature" : {"no":u"Lave temperaturer","en-GB":"Low temperature"},
-        "coastalevent" : {"no":u"Stormflo","en-GB":"Storm surge"},
-        "forest-fire" : {"no":u"Skogbrann","en-GB":"Forest fire"},
-        "avalanches"  : {"no":u"Skred","en-GB":"avalanches"},
-        "Rain" : {"no":u"Regn","en-GB":"Rain"},
-        "flooding" : {"no":u"Flom","en-GB":"flooding"},
-        "rain-flooding" : {"no":u"Styrtregn","en-GB":"Flash flood"},
-        "Polar-low" : {"no":u"Polart lavtrykk-land","en-GB":"Polar-low"},
+        "Wind": "wind",
+        "snow-ice" : "drivingConditions",
+        "Thunderstorm" : "thunder",
+        "Fog" :"fog",
+        "high-temperature" : "highTemperature",
+        "low-temperature" : "lowTemperature",
+        "coastalevent" : "stormSurge",
+        "forest-fire" : "forestFire",
+        "avalanches"  : "avalanches",
+        "Rain" : "rain",
+        "flooding" : "flooding",
+        "rain-flooding" :"flashFlood",
+        "Polar-low" : "polarLow"
     }
 
 
-#mapping from Meteoalarm event types to our event types, migh be obsolete later
+#mapping from Meteoalarm event types to our marine event types, migh be obsolete later
 event_types_marine = {
-        "Wind": {"no":u"Kuling","en-GB":"Gale"},
-        "coastalevent" : {"no":u"Ising","en-GB":"Icing"},
-        "Polar-low" : {"no":u"Polart lavtrykk-marine","en-GB":"Polar-low"}
+        "Wind": "gale",
+        "coastalevent" : "icing",
+        "Polar-low" : "polarLow"
     }
 
-event_type_default={"no":u"Farevarsel","en-GB":"Danger warning"}
+event_type_default="dangerWarning"
 
 event_level_name={
     "vind":{
@@ -91,21 +75,4 @@ level_type = {
             'severe': "Dangerous situation",
             'extreme': "Extreme situation"}
     }
-
-# awareness_type used in Meteoalarm
-awareness_types = {
-    'Wind': "1; Wind",
-    'snow-ice': "2; snow-ice",
-    'Thunderstorm': "3; Thunderstorm",
-    'Fog': "4; Fog",
-    'high-temperature':"5; high-temperature",
-    'low-temperature':"6; low-temperature",
-    'coastalevent':"7; coastalevent",
-    'forest-fire':"8; forest-fire",
-    'avalanches':"9; avalanches",
-    'Rain':"10; Rain",
-    'flooding':"12; flooding",
-    'rain-flood':"13; rain-flood",
-    'Polar-low':""
-}
 
