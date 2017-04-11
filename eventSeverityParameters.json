@@ -1,46 +1,62 @@
 {
-    "awareness_types": {
-        "thunder": "3; Thunderstorm",
-        "avalanches": "9; avalanches",
-        "blowingSnow": "2; snow-ice",
-        "drivingConditions": "2; snow-ice",
-        "flashFlood": "13; rain-flood",
-        "rain": "10; rain",
-        "gale": "1; Wind",
-        "snow": "2; snow-ice",
-        "stormSurge": "7; coastalevent",
-        "wind": "1; Wind",
-        "forestFire": "8; forest-fire",
-        "icing": "7; coastalevent"
+    "severityResponse": {
+        "en-GB": {
+            "Extreme": "Take action! Extreme weather %s",
+            "Moderate": "Be aware",
+            "Minor": "Inconvenience",
+            "Severe": "Be prepared"
+        },
+        "no": {
+            "Extreme": "Ekstremvær%s %s",
+            "Moderate": "Følg med",
+            "Minor": "Ulempe",
+            "Severe": "Vær forberedt"
+        }
     },
     "eventNames": {
-        "rain": {
-            "en-GB": "Rain",
-            "no": "Regn"
+        "drivingConditions": {
+            "en-GB": "Difficult driving conditions",
+            "no": "Vanskelige kjøreforhold"
         },
-        "uvRadiation": {
-            "en-GB": "UV radiation",
-            "no": "UV-stråling"
+        "fog": {
+            "en-GB": "Fog",
+            "no": "Tåke"
+        },
+        "high-temperature": {
+            "en-GB": "High temperature",
+            "no": "Høye temperaturer"
         },
         "avalanches": {
             "en-GB": "avalanches",
             "no": "Snøskred"
         },
+        "rainFlood": {
+            "en-GB": "Rain flood",
+            "no": "Styrtregn"
+        },
+        "thunder": {
+            "en-GB": "Thunderstorm",
+            "no": "Torden"
+        },
         "blowingSnow": {
             "en-GB": "Blowing snow",
             "no": "Snøfokk"
         },
-        "airPollution": {
-            "en-GB": "Air pollution",
-            "no": "Luftforurensning"
+        "polarLow": {
+            "en-GB": "Polar low",
+            "no": "Polare lavtrykk"
         },
-        "drivingConditions": {
-            "en-GB": "Difficult driving conditions",
-            "no": "Vanskelige kjøreforhold"
+        "rain": {
+            "en-GB": "Rain",
+            "no": "Regn"
         },
-        "flashFlood": {
-            "en-GB": "Flash flood",
-            "no": "Styrtregn"
+        "stormSurge": {
+            "en-GB": "Storm Surge",
+            "no": "Stormflo"
+        },
+        "forestFire": {
+            "en-GB": "Forest fire danger",
+            "no": "Skogbrannfare"
         },
         "icing": {
             "en-GB": "Icing",
@@ -50,45 +66,553 @@
             "en-GB": "Pollen",
             "no": "Pollenvarsel"
         },
-        "high-temperature": {
-            "en-GB": "High temperature",
-            "no": "Høye temperaturer"
-        },
-        "thunder": {
-            "en-GB": "Thunderstorm",
-            "no": "Torden"
-        },
-        "gale": {
-            "en-GB": "Gale",
-            "no": "Kuling"
+        "low-temperature": {
+            "en-GB": "Low temperature",
+            "no": "Lave temperaturer"
         },
         "snow": {
             "en-GB": "Snow",
             "no": "Snø"
         },
-        "stormSurge": {
-            "en-GB": "Storm Surge",
-            "no": "Stormflo"
+        "airPollution": {
+            "en-GB": "Air pollution",
+            "no": "Luftforurensning"
+        },
+        "uvRadiation": {
+            "en-GB": "UV radiation",
+            "no": "UV-stråling"
+        },
+        "gale": {
+            "en-GB": "Gale",
+            "no": "Kuling"
         },
         "wind": {
             "en-GB": "Wind",
             "no": "Vind"
+        }
+    },
+    "awareness_types": {
+        "icing": "7; coastalevent",
+        "avalanches": "9; avalanches",
+        "thunder": "3; Thunderstorm",
+        "blowingSnow": "2; snow-ice",
+        "rain": "10; rain",
+        "stormSurge": "7; coastalevent",
+        "forestFire": "8; forest-fire",
+        "gale": "1; Wind",
+        "snow": "2; snow-ice",
+        "flashFlood": "13; rain-flood",
+        "drivingConditions": "2; snow-ice",
+        "wind": "1; Wind"
+    },
+    "eventSeverityName": {
+        "gale": {
+            "Possible": {
+                "en-GB": {},
+                "no": {}
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Gale Warning",
+                    "Extreme": "Storm warning",
+                    "Severe": "Storm warning"
+                },
+                "no": {
+                    "Moderate": "Kulingvarsel",
+                    "Extreme": "Stormvarsel",
+                    "Severe": "Stormvarsel"
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
         },
-        "forestFire": {
-            "en-GB": "Forest fire danger",
-            "no": "Skogbrannfare"
+        "avalanches": {
+            "Possible": {
+                "en-GB": {},
+                "no": {}
+            },
+            "Likely": {
+                "en-GB": {},
+                "no": {}
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "rainFlood": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of heavy rainshowers",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "mulighet for kraftige regnbyger",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Heavy rainshowers",
+                    "Extreme": "Extreme rainshowers",
+                    "Severe": "Very heavy rainshowers"
+                },
+                "no": {
+                    "Moderate": "Kraftige regnbyger",
+                    "Extreme": "Ekstreme regnbyger",
+                    "Severe": "Svært kraftige regnbyger"
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "thunder": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of heavy thunderstorms",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "mulighet for kraftige tordenbyger ",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Heavy thunderstorms",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Kraftige tordenbyger ",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "blowingSnow": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of blowing snow",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "mulighet for kraftig snøfokk",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Blowing snow",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Kraftig snøfokk",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
         },
         "polarLow": {
-            "en-GB": "Polar low",
-            "no": "Polare lavtrykk"
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "Risk of polar low",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "mulighet for polart lavtrykk",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Polar low",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Fare for polart lavtrykk",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": "Polar low observed",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": " polart lavtrykk observert",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            }
         },
-        "fog": {
-            "en-GB": "Fog",
-            "no": "Tåke"
+        "rain": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of heavy rainfall",
+                    "Extreme": "possibility of extreme rainfall",
+                    "Severe": "possibility of very heavy rainfall"
+                },
+                "no": {
+                    "Moderate": "mulighet for mye regn",
+                    "Extreme": "mulighet for ekstremt mye regn",
+                    "Severe": "mulighet for svært mye regn"
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Heavy rainfall",
+                    "Extreme": "Extreme rainfall",
+                    "Severe": "Very heavy rainfall"
+                },
+                "no": {
+                    "Moderate": "Mye regn",
+                    "Extreme": "Ekstremt mye regn",
+                    "Severe": "Svært mye regn"
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": "Heavy rainfall observed",
+                    "Extreme": "Extreme rainfall observed",
+                    "Severe": "Very heavy rainfall observed"
+                },
+                "no": {
+                    "Moderate": "mye regn observert ",
+                    "Extreme": "Ekstremt mye regn observert",
+                    "Severe": "svært mye regn observert"
+                }
+            }
         },
-        "low-temperature": {
-            "en-GB": "Low temperature",
-            "no": "Lave temperaturer"
+        "stormSurge": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of storm surge",
+                    "Extreme": "possibility of extreme storm surge",
+                    "Severe": "possibility of severe storm surge"
+                },
+                "no": {
+                    "Moderate": "mulighet for  stormflo",
+                    "Extreme": "mulighet for ekstrem stormflo",
+                    "Severe": "mulighet for kraftig stormflo"
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Storm surge",
+                    "Extreme": "Extreme storm surge",
+                    "Severe": "Severe storm surge"
+                },
+                "no": {
+                    "Moderate": "Stormflo",
+                    "Extreme": "Ekstrem stormflo",
+                    "Severe": "Kraftig stormflo"
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": "Storm surge observed",
+                    "Extreme": "Extreme storm surge observed",
+                    "Severe": "Severe storm surge observed"
+                },
+                "no": {
+                    "Moderate": "stormflo observert ",
+                    "Extreme": "Ekstrem stormflo observert",
+                    "Severe": " kraftig stormflo observert"
+                }
+            }
+        },
+        "forestFire": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "Risk of forest fires",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Mulig fare for skogbrann",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Forest fire danger",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Stor skogbrannfare",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            }
+        },
+        "icing": {
+            "Possible": {
+                "en-GB": {},
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Risk of icing",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Fare for ising",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            }
+        },
+        "pollen": {
+            "Possible": {
+                "en-GB": {},
+                "no": {}
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Kraftig pollenspredning",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Kraftig pollenspredning",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "snow": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of heavy snowfall",
+                    "Extreme": "possibility of extreme snowfall",
+                    "Severe": "possibility of very heavy snowfall"
+                },
+                "no": {
+                    "Moderate": "mulighet for store snømengder",
+                    "Extreme": "mulighet for ekstreme snømengder",
+                    "Severe": "mulighet for svært store snømengder"
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Heavy snowfall",
+                    "Extreme": "Extreme snowfall",
+                    "Severe": "Very heavy snowfall"
+                },
+                "no": {
+                    "Moderate": "Store snømengder",
+                    "Extreme": "Ekstreme snømengder",
+                    "Severe": "Svært store snømengder"
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": "Heavy snowfall observed",
+                    "Extreme": "Extreme snowfall observed",
+                    "Severe": "Very heavy snowfall observed"
+                },
+                "no": {
+                    "Moderate": "store snømengder observert ",
+                    "Extreme": "Ekstreme snømengder observert",
+                    "Severe": " svært store snømengder observert"
+                }
+            }
+        },
+        "airPollution": {
+            "Possible": {
+                "en-GB": {},
+                "no": {}
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Kraftig luftforurensing",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Kraftig luftforurensing",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "uvRadiation": {
+            "Possible": {
+                "en-GB": {},
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "High UV radiation / High UV index",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Kraftig UV-stråling",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {},
+                "no": {}
+            }
+        },
+        "drivingConditions": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Difficult driving conditions",
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": "Vanskelige kjøreforhold",
+                    "Extreme": null,
+                    "Severe": null
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                },
+                "no": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                }
+            }
+        },
+        "wind": {
+            "Possible": {
+                "en-GB": {
+                    "Moderate": "possibility of heavy wind",
+                    "Extreme": "mulighet for ekstrem vind",
+                    "Severe": "possiblity of very heavy wind"
+                },
+                "no": {
+                    "Moderate": "mulighet for kraftig vind",
+                    "Extreme": "mulighet for ekstrem vind",
+                    "Severe": "mulighet for svært kraftig vind"
+                }
+            },
+            "Likely": {
+                "en-GB": {
+                    "Moderate": "Strong winds",
+                    "Extreme": "Extreme winds",
+                    "Severe": "Very strong winds"
+                },
+                "no": {
+                    "Moderate": "Kraftig vind",
+                    "Extreme": "Ekstrem vind",
+                    "Severe": "Svært kraftig vind"
+                }
+            },
+            "Observed": {
+                "en-GB": {
+                    "Moderate": "Heavy wind ongoing",
+                    "Extreme": "Extreme wind ongoing",
+                    "Severe": "Very heavy wind ongoing"
+                },
+                "no": {
+                    "Moderate": "kraftig vind pågår",
+                    "Extreme": "Ekstrem vind pågår",
+                    "Severe": " svært kraftig vind pågår"
+                }
+            }
+        }
+    },
+    "awareness_levels": {
+        "Extreme": "4; red; Extreme",
+        "Moderate": "2; yellow; Moderate",
+        "Minor": "1; green; Minor",
+        "Severe": "3; orange; Severe"
+    },
+    "severitySeriousness": {
+        "en-GB": {
+            "Extreme": "Extreme situation",
+            "Moderate": "Challenging situation",
+            "Minor": "",
+            "Severe": "Dangerous situation"
+        },
+        "no": {
+            "Extreme": "Ekstrem situasjon",
+            "Moderate": "Utfordrende situasjon",
+            "Minor": "",
+            "Severe": "Farlig situasjon"
         }
     },
     "eventTypes": [
@@ -96,7 +620,7 @@
         "gale",
         "rain",
         "snow",
-        "flashFlood",
+        "rainFlood",
         "thunder",
         "blowingSnow",
         "stormSurge",
@@ -108,525 +632,5 @@
         "uvRadiation",
         "pollen",
         "airPollution"
-    ],
-    "severitySeriousness": {
-        "en-GB": {
-            "minor": "",
-            "moderate": "Challenging situation",
-            "severe": "Dangerous situation",
-            "extreme": "Extreme situation"
-        },
-        "no": {
-            "minor": "",
-            "moderate": "Utfordrende situasjon",
-            "severe": "Farlig situasjon",
-            "extreme": "Ekstrem situasjon"
-        }
-    },
-    "awareness_levels": {
-        "minor": "1; green; Minor",
-        "moderate": "2; yellow; Moderate",
-        "severe": "3; orange; Severe",
-        "extreme": "4; red; Extreme"
-    },
-    "eventSeverityName": {
-        "thunder": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftige tordenbyger ",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftige tordenbyger ",
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Heavy thunderstorms",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Kraftige tordenbyger ",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "uvRadiation": {
-            "possible": {
-                "en-GB": {},
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "High UV radiation / High UV index",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Kraftig UV-stråling",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "avalanches": {
-            "possible": {
-                "en-GB": {},
-                "no": {}
-            },
-            "likely": {
-                "en-GB": {},
-                "no": {}
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "blowingSnow": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftig snøfokk",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftig snøfokk",
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Blowing snow",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Kraftig snøfokk",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "airPollution": {
-            "possible": {
-                "en-GB": {},
-                "no": {}
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Kraftig luftforurensing",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Kraftig luftforurensing",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "drivingConditions": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Difficult driving conditions",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Vanskelige kjøreforhold",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            }
-        },
-        "flashFlood": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftige regnbyger",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "mulighet for kraftige regnbyger",
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": "Very heavy rainshowers",
-                    "moderate": "Heavy rainshowers",
-                    "extreme": "Extreme rainshowers"
-                },
-                "no": {
-                    "severe": "Svært kraftige regnbyger",
-                    "moderate": "Kraftige regnbyger",
-                    "extreme": "Ekstreme regnbyger"
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "icing": {
-            "possible": {
-                "en-GB": {},
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Risk of icing",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Fare for ising",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            }
-        },
-        "pollen": {
-            "possible": {
-                "en-GB": {},
-                "no": {}
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Kraftig pollenspredning",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Kraftig pollenspredning",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "rain": {
-            "possible": {
-                "en-GB": {
-                    "severe": "mulighet for svært store nedbørmengder",
-                    "moderate": "mulighet for store nedbørmengder",
-                    "extreme": "mulighet for ekstreme nedbørmengder"
-                },
-                "no": {
-                    "severe": "mulighet for svært store nedbørmengder",
-                    "moderate": "mulighet for store nedbørmengder",
-                    "extreme": "mulighet for ekstreme nedbørmengder"
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": "Very heavy rainfall",
-                    "moderate": "Heavy rainfall",
-                    "extreme": "Extreme rainfall"
-                },
-                "no": {
-                    "severe": "Svært mye regn",
-                    "moderate": "Mye regn",
-                    "extreme": "Ekstremt mye regn"
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": "Very heavy precipitation observed",
-                    "moderate": "Heavy precipitation observed",
-                    "extreme": "Extreme precipitation observed"
-                },
-                "no": {
-                    "severe": "svært store nedbørmengder observert",
-                    "moderate": "store nedbørmengder observert ",
-                    "extreme": "Ekstreme nedbørmengder observert"
-                }
-            }
-        },
-        "gale": {
-            "possible": {
-                "en-GB": {},
-                "no": {}
-            },
-            "likely": {
-                "en-GB": {},
-                "no": {
-                    "severe": "Stormvarsel",
-                    "moderate": "Kulingvarsel",
-                    "extreme": "Stormvarsel"
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {}
-            }
-        },
-        "snow": {
-            "possible": {
-                "en-GB": {
-                    "severe": "mulighet for svært store snømengder",
-                    "moderate": "mulighet for store snømengder",
-                    "extreme": "mulighet for ekstreme snømengder"
-                },
-                "no": {
-                    "severe": "mulighet for svært store snømengder",
-                    "moderate": "mulighet for store snømengder",
-                    "extreme": "mulighet for ekstreme snømengder"
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": "Very heavy snowfall",
-                    "moderate": "Heavy snowfall",
-                    "extreme": "Extreme snowfall"
-                },
-                "no": {
-                    "severe": "Svært store snømengder",
-                    "moderate": "Store snømengder",
-                    "extreme": "Ekstreme snømengder"
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": "svært store snømengder observert ",
-                    "moderate": " store snømengder observert",
-                    "extreme": "ekstreme snømengder observert "
-                },
-                "no": {
-                    "severe": " svært store snømengder observert",
-                    "moderate": "store snømengder observert ",
-                    "extreme": "Ekstreme snømengder observert"
-                }
-            }
-        },
-        "stormSurge": {
-            "possible": {
-                "en-GB": {
-                    "severe": "mulighet for kraftig stormflo",
-                    "moderate": "mulighet for  stormflo",
-                    "extreme": "mulighet for ekstrem stormflo"
-                },
-                "no": {
-                    "severe": "mulighet for kraftig stormflo",
-                    "moderate": "mulighet for  stormflo",
-                    "extreme": "mulighet for ekstrem stormflo"
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": "Severe storm surge",
-                    "moderate": "Storm surge",
-                    "extreme": "Extreme storm surge"
-                },
-                "no": {
-                    "severe": "Kraftig stormflo",
-                    "moderate": "Stormflo",
-                    "extreme": "Ekstrem stormflo"
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": "kraftig stormflo observert ",
-                    "moderate": "stormflo observert ",
-                    "extreme": "ekstrem stormflo observert "
-                },
-                "no": {
-                    "severe": " kraftig stormflo observert",
-                    "moderate": "stormflo observert ",
-                    "extreme": "Ekstrem stormflo observert"
-                }
-            }
-        },
-        "wind": {
-            "possible": {
-                "en-GB": {
-                    "severe": "possiblity of very heavy wind",
-                    "moderate": "possibility of heavy wind",
-                    "extreme": "mulighet for ekstrem vind"
-                },
-                "no": {
-                    "severe": "mulighet for svært kraftig vind",
-                    "moderate": "mulighet for kraftig vind",
-                    "extreme": "mulighet for ekstrem vind"
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": "Very strong winds",
-                    "moderate": "Strong winds",
-                    "extreme": "Extreme winds"
-                },
-                "no": {
-                    "severe": "Svært kraftig vind",
-                    "moderate": "Kraftig vind",
-                    "extreme": "Ekstrem vind"
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": "Very heavy wind ongoing",
-                    "moderate": "Heavy wind ongoing",
-                    "extreme": "Extreme wind ongoing"
-                },
-                "no": {
-                    "severe": " svært kraftig vind pågår",
-                    "moderate": "kraftig vind pågår",
-                    "extreme": "Ekstrem vind pågår"
-                }
-            }
-        },
-        "forestFire": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Mulig fare for skogbrann",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Mulig fare for skogbrann",
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "High forest fire danger",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Stor skogbrannfare",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {},
-                "no": {
-                    "severe": null,
-                    "moderate": null,
-                    "extreme": null
-                }
-            }
-        },
-        "polarLow": {
-            "possible": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "mulighet for polart lavtrykk",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "mulighet for polart lavtrykk",
-                    "extreme": null
-                }
-            },
-            "likely": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "Risk of polar low",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": "Fare for polart lavtrykk",
-                    "extreme": null
-                }
-            },
-            "observed": {
-                "en-GB": {
-                    "severe": null,
-                    "moderate": "polart lavtrykk observert ",
-                    "extreme": null
-                },
-                "no": {
-                    "severe": null,
-                    "moderate": " polart lavtrykk observert",
-                    "extreme": null
-                }
-            }
-        }
-    },
-    "severityResponse": {
-        "en-GB": {
-            "minor": "Inconvenience",
-            "moderate": "Be aware",
-            "severe": "Be prepared",
-            "extreme": "Take action! Extreme weather %s"
-        },
-        "no": {
-            "minor": "Ulempe",
-            "moderate": "Følg med",
-            "severe": "Vær forberedt",
-            "extreme": "Ekstremvær%s %s"
-        }
-    }
+    ]
 }

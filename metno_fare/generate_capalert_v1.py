@@ -8,25 +8,119 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 import dateutil.parser
 import json
+import locale
 
 # global variables
 event_types=[]
 awareness_types={}
+awareness_levels={}
 events={}
+severityResponse={}
+severitySeriousness={}
+eventSeverityName={}
 
+class info:
+    def __init__(self,lang,event_type,geographicDomain,phenomenon_name,loc,db):
+        self.lang=lang
+        self.event_type=event_type
+        self.geographicDomain=geographicDomain
+        self.phenomenon_name=phenomenon_name
+        self.onset = dateutil.parser.parse(loc['vfrom'])
+        self.expires = dateutil.parser.parse(loc['vto'])
+        self.effective = dateutil.parser.parse(loc['effective'])
+        self.urgency = "Future"
+        self.severity = loc.get("severity", "").strip()
+        self.certainty = loc.get("certainty", "").strip()
+        self.pict = loc['picturelink']
+        self.infolink = loc['infolink']
+        self.event = events[event_type][lang]
+        if event_type not in ['gale','forestFire']:
+            self.eventEndingTime=self.expires
+        else:
+            self.eventEndingTime=None
+
+        if (lang=="no"):
+            self.eventManualHeader=loc['heading']
+        else:
+            self.eventManualHeader=loc['englishheading']
+
+        self.triggerLevel=loc['triggerlevel']
+        self.returnPeriod = loc['returnperiod']
+
+        self.eventSeverityName=eventSeverityName[self.event_type][self.certainty][self.lang][self.severity]
+
+        # TODO instructions are hardcoded  but should be in Json file
+        if lang == "no":
+            self.description = loc.get('varsel')
+            self.consequences = loc.get('instruction')
+            self.instruction = u"Vurder behov for forebyggende tiltak. Beredskapsaktører skal vurdere fortløpende behov for beredskap"
+        elif lang.startswith("en"):
+            self.description = loc['englishforecast']
+            self.consequences = loc.get('consequenses')
+            self.instruction= u"Consider the need for preventive measures. Emergency Operators should consider ongoing need for preparedness "
+
+
+    # info for the area element. One for each info
+        self.areaDesc = loc['name']
+        self.altitude = loc.get('altitude')
+        self.ceiling = loc.get('ceiling')
+        self.polygon=get_polygon(db, loc)
+
+    def get_parameters(self):
+
+        parameters={}
+
+        parameters["eventManualHeader"]  = self.eventManualHeader
+        parameters["severityResponse"]=\
+                getSeverityResponse(self.severity,self.phenomenon_name,self.lang)
+        parameters["severitySeriousness"]= severitySeriousness[self.lang][self.severity]
+
+        # MeteoAlarm mandatory elements
+        parameters["awareness_level"]= awareness_levels.get(self.severity,"")
+        parameters["awareness_type"]= awareness_types.get(self.event_type,"")
+
+        # MET internal elements. Possibly used by Yr and others.
+        parameters["triggerLevel"]=self.triggerLevel
+        parameters["returnPeriod"]= self.returnPeriod
+
+        if self.phenomenon_name:
+            parameters["incidentName"]=self.phenomenon_name
+
+        parameters["geographicDomain"]=self.geographicDomain
+        if (self.eventEndingTime):
+            parameters["eventEndingTime"]=self.eventEndingTime.strftime("%Y-%m-%dT%H:00:00+00:00")
+
+        parameters["consequences"] = self.consequences
+        parameters["eventSeverityName"] = self.eventSeverityName
+
+
+        return parameters
+
+    def set_all_locations_name(self,locs):
+        self.all_locations_name = get_all_locations_name(locs)
+
+    def create_headline(self):
+        self.headline = get_headline(self.eventSeverityName,self.lang,self.onset,self.expires,self.all_locations_name)
 
 def read_json():
     global event_types
     global awareness_types
+    global awareness_levels
     global events
+    global severityResponse
+    global severitySeriousness
+    global eventSeverityName
     with open("eventSeverityParameters.json", "r") as file:
         esp= file.read()
 
     eventSeverityParameters=json.loads(esp)
     event_types = eventSeverityParameters['eventTypes']
     awareness_types = eventSeverityParameters['awareness_types']
+    awareness_levels = eventSeverityParameters['awareness_levels']
     events = eventSeverityParameters['eventNames']
-
+    severityResponse=eventSeverityParameters['severityResponse']
+    severitySeriousness=eventSeverityParameters['severitySeriousness']
+    eventSeverityName=eventSeverityParameters['eventSeverityName']
 
 def generate_capalert_v1(xmldoc,db):
     """Obtains the locations from the XML document given by xmldoc and the
@@ -57,13 +151,6 @@ def generate_capalert_v1(xmldoc,db):
 
     read_json()
 
-    l_type = res['phenomenon_type']
-
-    if res['forecasttype'] in ['gale','pl']:
-        event_type = event_types_marine.get(l_type,event_type_default)
-    else:
-        event_type = event_types_land.get(l_type,event_type_default)
-
     l_alert = res['alert']
     termin = dateutil.parser.parse(res['termin'])
 
@@ -81,16 +168,11 @@ def generate_capalert_v1(xmldoc,db):
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
 
-    # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
-
-#TODO set correct event_type
-    #eventSeverityName=
-    headline_no = get_headline( event_type,"no",sent_time, res['locations'])
-    headline_en = get_headline(event_type,"en-GB",sent_time,res['locations'])
 
     # Insert CAP-version number
     SubElement(alert, 'code').text = "CAP-V12.NO.V1.0"
 
+    # Optional element, although 'references' is mandatory for UPDATE and CANCEL.
     if l_alert != 'Alert':
         references = []
         for ref in filter(lambda ref: ref, res['references'].split(" ")):
@@ -98,88 +180,130 @@ def generate_capalert_v1(xmldoc,db):
         SubElement(alert, 'references').text = " ".join(references)
 
 
-
     if res.get('phenomenon_number'):
         SubElement(alert, 'incidents').text = incidents
 
+    # get information common for all info blocks
+    event_type = get_event_type(res)
+    geographicDomain=get_geographicDomain(res)
+    phenomenon_name = res.get('phenomenon_name')
 
+
+    languages = ["no", "en-GB"]
     for loc in res['locations']:
-        make_info_v1(alert, db, headline_no, event_type, loc, res, senders,"no")
-        make_info_v1(alert, db, headline_en, event_type, loc, res, senders,"en-GB")
+        for lang in languages:
+            l_info = info(lang,event_type,geographicDomain,phenomenon_name,loc,db)
+            l_info.set_all_locations_name(res['locations'])
+            l_info.create_headline()
+
+            make_info_element(alert ,l_info)
 
     return etree.tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
 
 
+def get_geographicDomain(res):
+    if res['forecasttype'] in ['gale', 'pl']:
+        geographicDomain="marine"
+    else:
+        geographicDomain="land"
+    return geographicDomain
 
-def make_info_v1(alert, db, headline, event_type, loc, res, senders, language):
+def get_event_type(res):
+    # mapping from Meteoalarm event types in our template to our event types on land, migh be obsolete later
+    event_types_land = {
+        "Wind": "wind",
+        "snow-ice": "drivingConditions",
+        "Thunderstorm": "thunder",
+        "Fog": "fog",
+        "high-temperature": "highTemperature",
+        "low-temperature": "lowTemperature",
+        "coastalevent": "stormSurge",
+        "forest-fire": "forestFire",
+        "avalanches": "avalanches",
+        "Rain": "rain",
+        "flooding": "flooding",
+        "rain-flooding": "flashFlood",
+        "Polar-low": "polarLow"
+    }
 
-    onset = dateutil.parser.parse(loc['vfrom'])
-    expires = dateutil.parser.parse(loc['vto'])
-    effective = dateutil.parser.parse(loc['effective'])
+    # mapping from Meteoalarm event types to our marine event types, migh be obsolete later
+    event_types_marine = {
+        "Wind": "gale",
+        "coastalevent": "icing",
+        "Polar-low": "polarLow"
+    }
 
-    urgency = "Future"
-    severity = loc.get("severity", "").strip()
-    certainty = loc.get("certainty", "").strip()
-    pict = loc['picturelink']
-    infolink = loc['infolink']
+    event_type_default = "dangerWarning"
+
+    l_type = res['phenomenon_type']
+    if res['forecasttype'] in ['gale', 'pl']:
+        event_type = event_types_marine.get(l_type, l_type)
+    else:
+        event_type = event_types_land.get(l_type, l_type)
+    return event_type
+
+
+def make_info_element(alert, l_info):
 
     info = SubElement(alert, 'info')
-    SubElement(info, 'language').text = language
+    SubElement(info, 'language').text = l_info.lang
     SubElement(info, 'category').text = 'Met'
-    SubElement(info, 'event').text = events[event_type][language]
-    SubElement(info, 'urgency').text = urgency
-    SubElement(info, 'severity').text = severity
-    SubElement(info, 'certainty').text = certainty
+    SubElement(info, 'event').text = l_info.event
+    SubElement(info, 'urgency').text = l_info.urgency
+    SubElement(info, 'severity').text = l_info.severity
+    SubElement(info, 'certainty').text = l_info.certainty
 
     eventCode = SubElement(info, 'eventCode')
     SubElement(eventCode, 'valueName').text = "eventType"
-    SubElement(eventCode, 'value').text = event_type
+    SubElement(eventCode, 'value').text = l_info.event_type
 
     # Write UTC times to the CAP file.
-    SubElement(info, 'effective').text = effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    SubElement(info, 'onset').text = onset.strftime("%Y-%m-%dT%H:00:00+00:00")
-    SubElement(info, 'expires').text = expires.strftime("%Y-%m-%dT%H:00:00+00:00")
-    SubElement(info, 'senderName').text = senders[language]
-    SubElement(info, 'headline').text = headline
-    if language=="no":
-        SubElement(info, 'description').text = loc.get('varsel')
-        SubElement(info, 'instruction').text = loc.get('instruction')
-    elif language.startswith("en"):
-        SubElement(info, 'description').text = loc['englishforecast']
-        SubElement(info, 'instruction').text = loc.get('consequenses')
-
+    SubElement(info, 'effective').text = l_info.effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'onset').text = l_info.onset.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(info, 'expires').text = l_info.expires.strftime("%Y-%m-%dT%H:00:00+00:00")
+    SubElement(info, 'senderName').text = senders[l_info.lang]
+    SubElement(info, 'headline').text = l_info.headline
+    SubElement(info, 'description').text = l_info.description
+    SubElement(info, 'instruction').text = l_info.instruction
     SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
 
-    parameters = get_parameters(loc, language,res,event_type)
+    parameters = l_info.get_parameters()
     for valueName, value in parameters.items():
         parameter = SubElement(info, 'parameter')
         SubElement(parameter, 'valueName').text = valueName
         SubElement(parameter, 'value').text = value
 
     # Link to graphical representation
-    if pict:
+    if l_info.pict:
         resource = SubElement(info, 'resource')
         SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
         SubElement(resource, 'mimeType').text = "image/png"
-        SubElement(resource, 'uri').text = pict
-
-
-
+        SubElement(resource, 'uri').text = l_info.pict
 
     # Link to further information
-    if infolink:
+    if l_info.infolink:
         resource = SubElement(info, 'resource')
         SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
         SubElement(resource, 'mimeType').text = "text/html"
-        SubElement(resource, 'uri').text = infolink
+        SubElement(resource, 'uri').text = l_info.infolink
 
     area = SubElement(info, 'area')
-    SubElement(area, 'areaDesc').text = loc['name']
+    SubElement(area, 'areaDesc').text = l_info.areaDesc
 
-    altitude = loc.get('altitude')
-    ceiling = loc.get('ceiling')
+    if (l_info.polygon):
+        polygon = SubElement(area, 'polygon')
+        polygon.text = l_info.polygon
 
+    if l_info.altitude:
+            SubElement(area, 'altitude').text = l_info.altitude
+
+    if l_info.ceiling:
+            SubElement(area, 'ceiling').text = l_info.ceiling
+
+
+def get_polygon(db, loc):
+    text = u''
     name, latlon = get_latlon(loc['id'], db)
     if len(latlon) >= 3:
 
@@ -187,9 +311,6 @@ def make_info_v1(alert, db, headline, event_type, loc, res, senders, language):
         # point identical to the first to close the polygon (at least
         # four points in total). Each point is specified by coordinates
         # of the form, latitude,longitude.
-        polygon = SubElement(area, 'polygon')
-
-        text = u''
 
         for lon, lat in latlon:
             line = u"%f,%f\n" % (lat, lon)
@@ -200,84 +321,40 @@ def make_info_v1(alert, db, headline, event_type, loc, res, senders, language):
             lon, lat = latlon[0]
             text += u"%f,%f\n" % (lat, lon)
 
-        polygon.text = text
+    return text
 
+def get_headline(type,lang, onset, expires , all_locations_name):
 
-        if altitude:
-            SubElement(area, 'altitude').text = altitude
+    headline_templates = { "no":u'%s, %s ,%s til %s.',
+               "en-GB":u'%s, %s .%s to %s.'}
 
-        if ceiling:
-            SubElement(area, 'ceiling').text = ceiling
-
-
-
-def get_parameters(loc, lang,res,event_type):
-
-    severity=loc['severity'].lower().strip()
-    phenomenon_name = res.get('phenomenon_name')
-
-    parameters={}
-
-    if lang == "no":
-        parameters["event_manual_header"] = loc['heading']
+    # sudo locale-gen nb_NO.utf8 if this does not work
+    if (lang == "no"):
+        locale.setlocale(locale.LC_ALL, "nb_NO.utf8")
     else:
-          parameters["event_manual_header"]  = loc['englishheading']
-    parameters["event_level_response"]=\
-            get_event_level_response(severity,phenomenon_name,lang)
-    parameters["event_level_type"]= level_type[lang][severity]
-    # MeteoAlarm mandatory elements
-    parameters["awareness_level"]= make_awareness_level(severity)
-    parameters["awareness_type"]= awareness_types.get(event_type,"")
-    # MET internal elements. Possibly used by Yr and others.
-    parameters["trigger_level"]=loc['triggerlevel']
-    parameters["return_period"]= loc['returnperiod']
-    parameters['event_message_number'] = res.get('mnr')
-    if phenomenon_name:
-        parameters["incident_name"]=phenomenon_name
+        locale.setlocale(locale.LC_ALL, "en_GB.utf8")
+
+    #vfrom = onset.strftime("%A %d %B %H:%M")
+    #vto = expires.strftime("%A %d %B %H:%M")
+    vfrom = onset.strftime("%d %B %H:%M")
+    vto = expires.strftime("%d %B %H:%M")
+
+    headline = headline_templates[lang] % (type,all_locations_name, vfrom,vto)
+
+    return headline
 
 
-    return parameters
-
-
-def get_headline(type,lang, sent, locations):
-
-    notes = { "no":u'Varsel for %s for %s utstedt av Meteorologisk Institutt %s.',
-               "en-GB":u'%s alert for %s issued by MET Norway %s.',
-                "en":u'%s alert for %s issued by MET Norway %s.'}
-
+def get_all_locations_name(locations):
     location_name = ""
-
     for locs in locations:
         if location_name:
             location_name += ", "
         location_name += locs['name']
+    return location_name
 
 
-    headline = notes[lang] % (type,location_name, sent)
-    return headline
-
-
-def make_awareness_level( sev ):
-    """ Returns MeteoAlarm awareness-level based on severity """
-
-    levels = {'min': "1; green; Minor",
-              'mod': "2; yellow; Moderate",
-              'sev': "3; orange; Severe",
-              'ext': "4; red; Extreme"}
-
-    lev = sev[:3].lower()
-
-    try:
-        ret = levels[lev]
-    except:
-        print "WRONG SEVERITY TO make_awarness_level. RETURNING DEFAULT VALUE"
-        ret = "2; yellow; Moderate"
-
-    return ret
-
-
-def get_event_level_response(severity,phenomenon_name,lang):
-    response = level_response[lang][severity]
+def getSeverityResponse(severity,phenomenon_name,lang):
+    response = severityResponse[lang][severity]
     if (severity=="extreme" and phenomenon_name):
         if lang == "no":
             response = response%("et",phenomenon_name)
@@ -285,9 +362,3 @@ def get_event_level_response(severity,phenomenon_name,lang):
             response = response%(phenomenon_name)
 
     return response
-
-def get_event_level_type(severity,lang):
-
-    type = level_type[lang][severity]
-
-    return type
