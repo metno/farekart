@@ -164,7 +164,7 @@ def generate_capalert_v1(xmldoc,db):
     SubElement(alert, 'identifier').text = identifier_prefix + identifier
     SubElement(alert, 'sender').text =  sender
     SubElement(alert, 'sent').text = sent_time
-    SubElement(alert, 'status').text = res.get('status','Alert')
+    SubElement(alert, 'status').text = res.get('status','Actual')
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
 
@@ -266,7 +266,8 @@ def make_info_element(alert, l_info):
     SubElement(info, 'headline').text = l_info.headline
     SubElement(info, 'description').text = l_info.description
     SubElement(info, 'instruction').text = l_info.instruction
-    SubElement(info, 'web').text = "http://met.no/Meteorologi/A_varsle_varet/Varsling_av_farlig_var/"
+    SubElement(info, 'web').text = "https://www.met.no/vaer-og-klima/farevarsel-og-ekstremvaer"
+
 
     parameters = l_info.get_parameters()
     for valueName, value in parameters.items():
