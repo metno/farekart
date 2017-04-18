@@ -82,14 +82,22 @@ if __name__ == "__main__":
     generate_files_cap_fare(fare_documentname,dirname, schema_dirname,db)
     generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db,make_v1=True)
 
-    dirnames = [dirname, dirname_v1]
-    for output_dir in dirnames:
+    dirnames = {"v0": dirname, "v1":dirname_v1}
+    for (prefix,output_dir) in dirnames.items():
         # Generate an RSS file to describe the CAP files created.
         filebase = os.path.join(output_dir, fare_documentname)
+        print output_dir
         rss_file = "CAP.rss"
-        publish_dir = os.getenv("CAP_PUBLISH_DIR", output_dir)
+        publish_dir = os.getenv("CAP_PUBLISH_DIR")
+        if publish_dir:
+            publish_dir=os.path.join(publish_dir, prefix)
+        else:
+            publish_dir=output_dir
+        if (not os.path.isdir(publish_dir)):
+            os.mkdir(publish_dir)
+        print publish_dir
         base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-        base_url=os.path.join(base_url, output_dir)
+        base_url=os.path.join(base_url, prefix)
         publishcap.main(filebase, rss_file, output_dir, publish_dir, base_url)
         if dirname != publish_dir:
             shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(publish_dir, 'CAP_en.json'))
