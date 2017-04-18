@@ -83,19 +83,17 @@ if __name__ == "__main__":
     generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db,make_v1=True)
 
     dirnames = [dirname, dirname_v1]
-    for dir in dirnames:
-        #generate RSS-file
-        pass
-
-    # Generate an RSS file to describe the CAP files created.
-    filebase = os.path.join(dirname,  fare_documentname)
-    rss_file = "CAP.rss"
-    output_dir = os.getenv("CAP_PUBLISH_DIR", dirname)
-    base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-    publishcap.main(filebase,rss_file, dirname, output_dir, base_url)
-    if dirname != output_dir:
-        shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(output_dir, 'CAP_en.json'))
-        shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(output_dir, 'CAP_no.json'))
+    for output_dir in dirnames:
+        # Generate an RSS file to describe the CAP files created.
+        filebase = os.path.join(output_dir, fare_documentname)
+        rss_file = "CAP.rss"
+        publish_dir = os.getenv("CAP_PUBLISH_DIR", output_dir)
+        base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
+        base_url=os.path.join(base_url, output_dir)
+        publishcap.main(filebase, rss_file, output_dir, publish_dir, base_url)
+        if dirname != publish_dir:
+            shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(publish_dir, 'CAP_en.json'))
+            shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(publish_dir, 'CAP_no.json'))
 
 
     sys.stderr.write("Start creating kml-files\n")
