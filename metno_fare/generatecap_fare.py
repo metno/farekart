@@ -52,20 +52,20 @@ def get_ted_docs(db, select_string):
     return result
 
 
-def generate_capfiles_from_teddir(ted_directory,output_dirname,db):
+def generate_capfiles_from_teddir(ted_directory,output_dirname,db,make_v1=False):
     filenames = os.listdir(ted_directory)
     for ted_filename in filenames:
-        generate_capfile_from_tedfile(os.path.join(ted_directory,ted_filename),output_dirname,db)
+        generate_capfile_from_tedfile(os.path.join(ted_directory,ted_filename),output_dirname,db,make_v1)
 
 
-def generate_capfile_from_tedfile(ted_filename,output_dirname,db):
+def generate_capfile_from_tedfile(ted_filename,output_dirname,db,make_v1=False):
     """reads the tedfile with the given filename
     writes cap-file, the name is given by the termin time and product name of the ted document
     """
     try:
     # open tedDocument file for reading
         with open(ted_filename,'r') as f:
-            generate_capfile_from_teddoc(f.read(),output_dirname,db)
+            generate_capfile_from_teddoc(f.read(),output_dirname,db,make_v1)
 
     except Exception as inst:
         sys.stderr.write("File %s could not be converted to CAP: %s \n" % (ted_filename, PrintException()))
@@ -198,19 +198,19 @@ if __name__ == "__main__":
     if ted_filename == None:
         #read xml from the database
         sys.stderr.write("Filename is None\n")
-        generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
+        generate_capfiles_from_teddb(ted_documentname,output_dirname,db,True)
     elif os.path.isfile(ted_filename):
         sys.stderr.write("File %s will be converted to CAP\n" % ted_filename)
-        generate_capfile_from_tedfile(ted_filename,output_dirname,db)
+        generate_capfile_from_tedfile(ted_filename,output_dirname,db,True)
     elif os.path.isdir(ted_filename):
         sys.stderr.write("Directory %s should be converted to CAP\n" % ted_filename)
-        generate_capfiles_from_teddir(ted_filename,output_dirname,db)
+        generate_capfiles_from_teddir(ted_filename,output_dirname,db,True)
     else:
         sys.stderr.write("%s is not a file or directory. No conversion is done\n" % ted_filename)
         exit
 
 
     filebase = os.path.join(output_dirname,ted_documentname)
-    make_list_of_valid_files(filebase, schema_dirname)
+    make_list_of_valid_files(filebase, schema_dirname,True)
 
 
