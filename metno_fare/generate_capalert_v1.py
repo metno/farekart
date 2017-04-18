@@ -9,6 +9,7 @@ from lxml.etree import Element, SubElement
 import dateutil.parser
 import json
 import locale
+import os
 
 # global variables
 event_types=[]
@@ -111,7 +112,17 @@ def read_json():
     global severityResponse
     global severitySeriousness
     global eventSeverityName
-    with open("eventSeverityParameters.json", "r") as file:
+    filename ="eventSeverityParameters.json"
+    filename_local= os.path.join("etc",filename)
+    #filename_global = os.path.join(os.path.abspath(os.sep), "etc", "farekart", filename)
+    filename_global = os.path.join(os.sep, "etc", "farekart", filename)
+    print filename_local
+    print filename_global
+    if (os.path.isfile(filename_local)):
+        filename=filename_local
+    else:
+        filename=filename_global
+    with open(filename, "r") as file:
         esp= file.read()
 
     eventSeverityParameters=json.loads(esp)

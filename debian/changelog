@@ -1,3 +1,10 @@
+python-farekart (0.3.13-1) UNRELEASED; urgency=medium
+
+  * Create CAP-V12.NO.V1.0
+  * Added eventSeverityParameters.json for parameters depending on event/severity	
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Tue, 18 Apr 2017 13:13:22 +0200
+
 python-farekart (0.3.12-1) precise; urgency=low
 
   * Sort entries in Json-file according to sent time, and only include warnings that expired less than 4 weeeks ago

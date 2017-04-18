@@ -9,10 +9,13 @@ setup(
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.3.11",
+    version="0.3.13",
     packages=["metno_fare"],
     scripts=["faremeldinger.py", "cap2kml.py"],
     data_files=[("share/xml/farekart", 
                  ["schemas/XMLSchema.xsd", "schemas/CAP-v1.2.xsd",
-                  "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"])]
+                  "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"]),
+                ("etc/farekart",["etc/eventSeverityParameters.json"])
+
+                ]
     )
