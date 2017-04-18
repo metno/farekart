@@ -75,7 +75,17 @@ if __name__ == "__main__":
 
     # Farevarsler in CAP format
     fare_documentname="METfare"
+
+    dirname_v1 = os.path.join(dirname, "v1")
+    if (not os.path.isdir(dirname_v1)):
+        os.mkdir(dirname_v1)
     generate_files_cap_fare(fare_documentname,dirname, schema_dirname,db)
+    generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db,make_v1=True)
+
+    dirnames = [dirname, dirname_v1]
+    for dir in dirnames:
+        #generate RSS-file
+        pass
 
     # Generate an RSS file to describe the CAP files created.
     filebase = os.path.join(dirname,  fare_documentname)

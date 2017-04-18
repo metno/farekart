@@ -14,7 +14,7 @@ nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 MAX_WEEKS_TO_KEEP = 4
 
 
-def make_list_of_valid_files(filebase,schemas):
+def make_list_of_valid_files(filebase,schemas,make_v1):
     """Compiles a Json file containing information about each of the CAP
         files that start with the given filebase, writing the Json file to the
         directory containing the files."""
@@ -66,6 +66,11 @@ def make_list_of_valid_files(filebase,schemas):
                     valueName= eventCode.find('cap:valueName',nsmap).text
                     value = eventCode.find('cap:value',nsmap).text
                     capinfo[valueName]=value
+                for parameter in info.findall('cap:parameter', nsmap):
+                    valueName = parameter.find('cap:valueName', nsmap).text
+                    value = parameter.find('cap:value', nsmap).text
+                    capinfo[valueName] = value
+
                 # This headline should be common for all info elements
                 capinfo['headline'] = info.find('cap:headline', nsmap).text
                 capalert['capinfos'].append(capinfo)
@@ -79,8 +84,10 @@ def make_list_of_valid_files(filebase,schemas):
     update_references(capalerts,references)
 
     cap_no_list = make_cap_list("no",capalerts)
-    cap_en_list = make_cap_list("en",capalerts)
-
+    if make_v1:
+        cap_en_list = make_cap_list("en-GB",capalerts)
+    else:
+        cap_en_list = make_cap_list("en",capalerts)
     dirname = os.path.dirname(filebase)
     write_json(cap_no_list, dirname, "CAP_no.json")
     write_json(cap_en_list, dirname, "CAP_en.json")
@@ -173,7 +180,11 @@ def make_description(info):
 
 
     if "event_level_name" in info:
+        # old version
         subtitle = info['event_level_name']
+    elif "eventSeverityName" in info:
+        #version v1
+        subtitle = info['eventSeverityName']
     else:
         subtitle = u""
 

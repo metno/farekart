@@ -70,36 +70,25 @@ def generate_capfile_from_tedfile(ted_filename,output_dirname,db):
     except Exception as inst:
         sys.stderr.write("File %s could not be converted to CAP: %s \n" % (ted_filename, PrintException()))
 
-def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
+def generate_capfile_from_teddoc(xmldoc, output_dirname,db,make_v1=False):
     cap_filename = ""
-    dirname_v1 = os.path.join(output_dirname, "v1")
-    if (not os.path.isdir(dirname_v1)):
-        os.mkdir(dirname_v1)
     try:
         # find correct file name from the tedDocuments name and termin
         cap_filename= get_capfilename_from_teddoc(xmldoc)
-        cap_filename_v0 = os.path.join(output_dirname, cap_filename)
-        cap_filename_v1 = os.path.join(dirname_v1, cap_filename)
-        sys.stderr.write("Files '%s' and %s will be generated\n" % (cap_filename_v0, cap_filename_v1))
+        cap_filename = os.path.join(output_dirname, cap_filename)
+        sys.stderr.write("File '%s' will be generated\n" % (cap_filename))
 
-        # generate the CAP alert  from the tedDocument
-        capalert = generate_capalert_fare(xmldoc, db)
-
-        # write the resulting CAP alert to file
-        with open(cap_filename_v0,'w') as f:
-            f.write(capalert)
-
-
-        make_v1=True
         if (make_v1):
-            # Test make capalert version 1, and save to "v1" directory
+            # Test make capalert version 1
             # generate the CAP alert  from the tedDocument
             capalert = generate_capalert_v1(xmldoc, db)
+        else:
+            # generate the CAP alert  from the tedDocument
+            capalert = generate_capalert_fare(xmldoc, db)
 
-            # write the resulting CAP alert to file
-            with open(cap_filename_v1,'w') as f:
-                f.write(capalert)
-
+        # write the resulting CAP alert to file
+        with open(cap_filename,'w') as f:
+            f.write(capalert)
 
 
     except Exception as inst:
@@ -117,14 +106,14 @@ def get_capfilename_from_teddoc(xmldoc):
     return filename
 
 
-def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db):
+def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db,make_v1=False):
     """Generates CAP files for the warnings obtained from the database, db,
     for documents with
     Writes an index file for all CAP files in output_dirname."""
 
-    generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
+    generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1)
     filebase = os.path.join(output_dirname,ted_documentname)
-    make_list_of_valid_files(filebase, schemas)
+    make_list_of_valid_files(filebase, schemas,make_v1)
 
 
 
@@ -143,7 +132,7 @@ def download_ted_documents(download_dirname,ted_documentname,db):
             f.write(doc[0])
 
 
-def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
+def generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1):
     select_string = 'select value,termin,lang from document where name = "%s"' % ted_documentname
     docs = get_ted_docs(db, select_string)
     for doc in docs:
@@ -151,7 +140,7 @@ def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
         if (os.path.isfile(capfilename)):
             sys.stderr.write("File '%s' already exists!\n" % capfilename)
         else:
-            generate_capfile_from_teddoc(doc[0], output_dirname, db)
+            generate_capfile_from_teddoc(doc[0], output_dirname, db,make_v1)
 
 if __name__ == "__main__":
 
