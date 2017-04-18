@@ -15,7 +15,7 @@ setup(
     data_files=[("share/xml/farekart", 
                  ["schemas/XMLSchema.xsd", "schemas/CAP-v1.2.xsd",
                   "xsl/capatomproduct.xsl", "xsl/dst_check.xsl"]),
-                ("etc/farekart",["etc/eventSeverityParameters.json"])
+                ("/etc/farekart",["etc/eventSeverityParameters.json"])
 
                 ]
     )
