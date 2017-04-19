@@ -49,16 +49,19 @@ class info:
         self.returnPeriod = loc['returnperiod']
 
         self.eventSeverityName=eventSeverityName[self.event_type][self.certainty][self.lang][self.severity]
+        if not self.eventSeverityName:
+            # in case eventSeverityName is not set, just use the self.event
+            self.eventSeverityName = self.event
 
         # TODO instructions are hardcoded  but should be in Json file
         if lang == "no":
             self.description = loc.get('varsel')
             self.consequences = loc.get('instruction')
-            self.instruction = u"Vurder behov for forebyggende tiltak. Beredskapsaktører skal vurdere fortløpende behov for beredskap"
+            self.instruction = u"Vurder behov for forebyggende tiltak. Beredskapsaktører skal vurdere fortløpende behov for beredskap."
         elif lang.startswith("en"):
             self.description = loc['englishforecast']
             self.consequences = loc.get('consequenses')
-            self.instruction= u"Consider the need for preventive measures. Emergency Operators should consider ongoing need for preparedness "
+            self.instruction= u"Consider the need for preventive measures. Emergency Operators should consider ongoing need for preparedness. "
 
 
     # info for the area element. One for each info
@@ -93,7 +96,8 @@ class info:
 
         if (self.consequences):
             parameters["consequences"] = self.consequences
-        parameters["eventSeverityName"] = self.eventSeverityName
+        if (self.eventSeverityName):
+            parameters["eventSeverityName"] = self.eventSeverityName
 
 
         return parameters
@@ -235,7 +239,7 @@ def get_event_type(res):
         "avalanches": "avalanches",
         "Rain": "rain",
         "flooding": "flooding",
-        "rain-flooding": "flashFlood",
+        "rain-flooding": "rainFlood",
         "Polar-low": "polarLow"
     }
 
@@ -246,13 +250,16 @@ def get_event_type(res):
         "Polar-low": "polarLow"
     }
 
-    event_type_default = "dangerWarning"
 
     l_type = res['phenomenon_type']
     if res['forecasttype'] in ['gale', 'pl']:
         event_type = event_types_marine.get(l_type, l_type)
     else:
         event_type = event_types_land.get(l_type, l_type)
+
+    if event_type not in event_types:
+        print("ERROR in generate_cap_alert_v1.get_event_type: Could not find correct event type for",l_type, " not possible to produce correct CAP")
+
     return event_type
 
 
@@ -283,9 +290,11 @@ def make_info_element(alert, l_info):
 
     parameters = l_info.get_parameters()
     for valueName, value in parameters.items():
-        parameter = SubElement(info, 'parameter')
-        SubElement(parameter, 'valueName').text = valueName
-        SubElement(parameter, 'value').text = value
+        # do not use empty parameters
+        if (value):
+            parameter = SubElement(info, 'parameter')
+            SubElement(parameter, 'valueName').text = valueName
+            SubElement(parameter, 'value').text = value
 
     # Link to graphical representation
     if l_info.pict:
@@ -373,5 +382,10 @@ def getSeverityResponse(severity,phenomenon_name,lang):
             response = response%("et",phenomenon_name)
         else:
             response = response%(phenomenon_name)
+    else:
+        if lang == "no":
+            response = response%("","")
+        else:
+            response = response%("")
 
     return response

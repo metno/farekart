@@ -382,7 +382,11 @@
         },
         "icing": {
             "Possible": {
-                "en-GB": {},
+                "en-GB": {
+                    "Moderate": null,
+                    "Extreme": null,
+                    "Severe": null
+                },
                 "no": {
                     "Moderate": null,
                     "Extreme": null,
