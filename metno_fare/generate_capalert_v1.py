@@ -377,15 +377,16 @@ def get_all_locations_name(locations):
 
 def getSeverityResponse(severity,phenomenon_name,lang):
     response = severityResponse[lang][severity]
-    if (severity=="extreme" and phenomenon_name):
-        if lang == "no":
-            response = response%("et",phenomenon_name)
+    if (severity=="extreme"):
+        if phenomenon_name:
+            if lang == "no":
+                response = response%("et",phenomenon_name)
+            else:
+                response = response%(phenomenon_name)
         else:
-            response = response%(phenomenon_name)
-    else:
-        if lang == "no":
-            response = response%("","")
-        else:
-            response = response%("")
+            if lang == "no":
+                response = response%("","")
+            else:
+                response = response%("")
 
     return response
