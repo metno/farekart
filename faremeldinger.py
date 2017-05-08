@@ -99,9 +99,9 @@ if __name__ == "__main__":
         base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
         base_url=os.path.join(base_url, prefix)
         publishcap.main(filebase, rss_file, output_dir, publish_dir, base_url)
-        if dirname != publish_dir:
-            shutil.copy2(os.path.join(dirname, 'CAP_en.json'), os.path.join(publish_dir, 'CAP_en.json'))
-            shutil.copy2(os.path.join(dirname, 'CAP_no.json'), os.path.join(publish_dir, 'CAP_no.json'))
+        if output_dir != publish_dir:
+            shutil.copy2(os.path.join(output_dir, 'CAP_en.json'), os.path.join(publish_dir, 'CAP_en.json'))
+            shutil.copy2(os.path.join(output_dir, 'CAP_no.json'), os.path.join(publish_dir, 'CAP_no.json'))
 
 
     sys.stderr.write("Start creating kml-files\n")

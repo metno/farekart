@@ -351,11 +351,12 @@ def get_headline(type,lang, onset, expires , all_locations_name):
     headline_templates = { "no":u'%s, %s, %s til %s.',
                "en-GB":u'%s, %s, %s to %s.'}
 
+    # disable temporarily
     # sudo locale-gen nb_NO.utf8 if this does not work
-    if (lang == "no"):
-        locale.setlocale(locale.LC_ALL, "nb_NO.utf8")
-    else:
-        locale.setlocale(locale.LC_ALL, "en_GB.utf8")
+    #if (lang == "no"):
+    # locale.setlocale(locale.LC_ALL, "nb_NO.utf8")
+    #else:
+    #    locale.setlocale(locale.LC_ALL, "en_GB.utf8")
 
     #vfrom = onset.strftime("%A %d %B %H:%M")
     #vto = expires.strftime("%A %d %B %H:%M")
