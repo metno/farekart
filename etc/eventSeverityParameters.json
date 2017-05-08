@@ -101,7 +101,7 @@
         "forestFire": "8; forest-fire",
         "gale": "1; Wind",
         "snow": "2; snow-ice",
-        "flashFlood": "13; rain-flood",
+        "rainFlood": "13; rain-flood",
         "drivingConditions": "2; snow-ice",
         "wind": "1; Wind"
     },

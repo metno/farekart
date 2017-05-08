@@ -52,6 +52,8 @@ class info:
         if not self.eventSeverityName:
             # in case eventSeverityName is not set, just use the self.event
             self.eventSeverityName = self.event
+        if self.eventSeverityName:
+            self.eventSeverityName = unicode(self.eventSeverityName).capitalize()
 
         # TODO instructions are hardcoded  but should be in Json file
         if lang == "no":
@@ -120,8 +122,6 @@ def read_json():
     filename_local= os.path.join("etc",filename)
     #filename_global = os.path.join(os.path.abspath(os.sep), "etc", "farekart", filename)
     filename_global = os.path.join(os.sep, "etc", "farekart", filename)
-    print filename_local
-    print filename_global
     if (os.path.isfile(filename_local)):
         filename=filename_local
     else:
@@ -137,6 +137,7 @@ def read_json():
     severityResponse=eventSeverityParameters['severityResponse']
     severitySeriousness=eventSeverityParameters['severitySeriousness']
     eventSeverityName=eventSeverityParameters['eventSeverityName']
+
 
 def generate_capalert_v1(xmldoc,db):
     """Obtains the locations from the XML document given by xmldoc and the
@@ -377,7 +378,7 @@ def get_all_locations_name(locations):
 
 def getSeverityResponse(severity,phenomenon_name,lang):
     response = severityResponse[lang][severity]
-    if (severity=="extreme"):
+    if (severity=="Extreme"):
         if phenomenon_name:
             if lang == "no":
                 response = response%("et",phenomenon_name)
