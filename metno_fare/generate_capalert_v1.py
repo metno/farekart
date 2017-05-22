@@ -1,24 +1,15 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 """Generates CAP alert."""
+import dateutil.parser
+from lxml import etree
 
+from lxml.etree import Element, SubElement
+
+from event_awareness_parameters import *
 from fare_common import retrieve_from_xml_fare, get_latlon
 from fare_setup import *
-from lxml import etree
-from lxml.etree import Element, SubElement
-import dateutil.parser
-import json
-import locale
-import os
 
-# global variables
-event_types=[]
-awareness_types={}
-awareness_levels={}
-events={}
-severityResponse={}
-severitySeriousness={}
-eventSeverityName={}
 
 class info:
     def __init__(self,lang,event_type,geographicDomain,phenomenon_name,loc,db):
@@ -34,7 +25,19 @@ class info:
         self.certainty = loc.get("certainty", "").strip()
         self.pict = loc['picturelink']
         self.infolink = loc['infolink']
-        self.event = events[event_type][lang]
+
+        # dependencies of parameters on event_type, lang,certainty and severity handled in event_awareness_par
+        self.event_awareness_par = event_awareness_parameters(event_type,lang,self.certainty,self.severity)
+
+        self.event = self.event_awareness_par.events
+        self.eventAwarenessName = self.event_awareness_par.eventAwarenessName
+
+        if not self.eventAwarenessName:
+            # in case eventSeverityName is not set, just use the self.event
+            self.eventAwarenessName = self.event
+        if self.eventAwarenessName:
+            self.eventAwarenessName = unicode(self.eventAwarenessName).capitalize()
+
         if event_type not in ['gale','forestFire']:
             self.eventEndingTime=self.expires
         else:
@@ -48,12 +51,7 @@ class info:
         self.triggerLevel=loc['triggerlevel']
         self.returnPeriod = loc['returnperiod']
 
-        self.eventSeverityName=eventSeverityName[self.event_type][self.certainty][self.lang][self.severity]
-        if not self.eventSeverityName:
-            # in case eventSeverityName is not set, just use the self.event
-            self.eventSeverityName = self.event
-        if self.eventSeverityName:
-            self.eventSeverityName = unicode(self.eventSeverityName).capitalize()
+
 
         # TODO instructions are hardcoded  but should be in Json file
         if lang == "no":
@@ -78,12 +76,12 @@ class info:
 
         parameters["eventManualHeader"]  = self.eventManualHeader
         parameters["awarenessResponse"]=\
-                getSeverityResponse(self.severity,self.phenomenon_name,self.lang)
-        parameters["awarenessSeriousness"]= severitySeriousness[self.lang][self.severity]
+                self.event_awareness_par.getSeverityResponse(self.phenomenon_name)
+        parameters["awarenessSeriousness"]= self.event_awareness_par.awarenessSeriousness
 
         # MeteoAlarm mandatory elements
-        parameters["awareness_level"]= awareness_levels.get(self.severity,"")
-        parameters["awareness_type"]= awareness_types.get(self.event_type,"")
+        parameters["awareness_level"]= self.event_awareness_par.awareness_levels
+        parameters["awareness_type"]= self.event_awareness_par.awareness_types
 
         # MET internal elements. Possibly used by Yr and others.
         parameters["triggerLevel"]=self.triggerLevel
@@ -97,8 +95,8 @@ class info:
             parameters["eventEndingTime"]=self.eventEndingTime.strftime("%Y-%m-%dT%H:00:00+00:00")
         if (self.consequences):
             parameters["consequences"] = self.consequences
-        if (self.eventSeverityName):
-            parameters["eventAwarenessName"] = self.eventSeverityName
+        if (self.eventAwarenessName):
+            parameters["eventAwarenessName"] = self.eventAwarenessName
 
 
         return parameters
@@ -107,34 +105,7 @@ class info:
         self.all_locations_name = get_all_locations_name(locs)
 
     def create_headline(self):
-        self.headline = get_headline(self.eventSeverityName,self.lang,self.onset,self.expires,self.all_locations_name)
-
-def read_json():
-    global event_types
-    global awareness_types
-    global awareness_levels
-    global events
-    global severityResponse
-    global severitySeriousness
-    global eventSeverityName
-    filename ="eventSeverityParameters.json"
-    filename_local= os.path.join("etc",filename)
-    filename_global = os.path.join(os.sep, "etc", "farekart", filename)
-    if (os.path.isfile(filename_local)):
-        filename=filename_local
-    else:
-        filename=filename_global
-    with open(filename, "r") as file:
-        esp= file.read()
-
-    eventSeverityParameters=json.loads(esp)
-    event_types = eventSeverityParameters['eventTypes']
-    awareness_types = eventSeverityParameters['awareness_types']
-    awareness_levels = eventSeverityParameters['awareness_levels']
-    events = eventSeverityParameters['eventNames']
-    severityResponse=eventSeverityParameters['severityResponse']
-    severitySeriousness=eventSeverityParameters['severitySeriousness']
-    eventSeverityName=eventSeverityParameters['eventSeverityName']
+        self.headline = get_headline(self.eventAwarenessName, self.lang, self.onset, self.expires, self.all_locations_name)
 
 
 def generate_capalert_v1(xmldoc,db):
@@ -163,8 +134,6 @@ def generate_capalert_v1(xmldoc,db):
             |
         end ALERT"""
     res = retrieve_from_xml_fare(xmldoc)
-
-    read_json()
 
     l_alert = res['alert']
     termin = dateutil.parser.parse(res['termin'])
@@ -202,7 +171,6 @@ def generate_capalert_v1(xmldoc,db):
     event_type = get_event_type(res)
     geographicDomain=get_geographicDomain(res)
     phenomenon_name = res.get('phenomenon_name')
-
 
     languages = ["no", "en-GB"]
     for loc in res['locations']:
@@ -255,9 +223,6 @@ def get_event_type(res):
         event_type = event_types_marine.get(l_type, l_type)
     else:
         event_type = event_types_land.get(l_type, l_type)
-
-    if event_type not in event_types:
-        print("ERROR in generate_cap_alert_v1.get_event_type: Could not find correct event type for",l_type, " not possible to produce correct CAP")
 
     return event_type
 
@@ -375,18 +340,3 @@ def get_all_locations_name(locations):
     return location_name
 
 
-def getSeverityResponse(severity,phenomenon_name,lang):
-    response = severityResponse[lang][severity]
-    if (severity=="Extreme"):
-        if phenomenon_name:
-            if lang == "no":
-                response = response%("et",phenomenon_name)
-            else:
-                response = response%(phenomenon_name)
-        else:
-            if lang == "no":
-                response = response%("","")
-            else:
-                response = response%("")
-
-    return response

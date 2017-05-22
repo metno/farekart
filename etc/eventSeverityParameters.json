@@ -37,21 +37,21 @@
         "stormSurge": "7; coastalevent",
         "blowingSnow": "2; snow-ice"
     },
-    "severityResponse": {
+    "awarenessResponse": {
         "no": {
             "Severe": "Vær forberedt",
             "Moderate": "Følg med",
-            "Extreme": "Ekstremvær%s %s",
+            "Extreme": "Ekstremværet",
             "Minor": "Ulempe"
         },
         "en-GB": {
             "Severe": "Be prepared",
             "Moderate": "Be aware",
-            "Extreme": "Take action! Extreme weather %s",
+            "Extreme": "Take action! Extreme weather",
             "Minor": "Inconvenience"
         }
     },
-    "eventSeverityName": {
+    "eventAwarenessName": {
         "thunder": {
             "Likely": {
                 "no": {
@@ -739,7 +739,7 @@
             "en-GB": "Blowing snow"
         }
     },
-    "severitySeriousness": {
+    "awarenessSeriousness": {
         "no": {
             "Severe": "Farlig situasjon",
             "Moderate": "Utfordrende situasjon",
