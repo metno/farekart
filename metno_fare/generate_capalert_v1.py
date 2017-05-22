@@ -77,9 +77,9 @@ class info:
         parameters={}
 
         parameters["eventManualHeader"]  = self.eventManualHeader
-        parameters["severityResponse"]=\
+        parameters["awarenessResponse"]=\
                 getSeverityResponse(self.severity,self.phenomenon_name,self.lang)
-        parameters["severitySeriousness"]= severitySeriousness[self.lang][self.severity]
+        parameters["awarenessSeriousness"]= severitySeriousness[self.lang][self.severity]
 
         # MeteoAlarm mandatory elements
         parameters["awareness_level"]= awareness_levels.get(self.severity,"")
@@ -95,11 +95,10 @@ class info:
         parameters["geographicDomain"]=self.geographicDomain
         if (self.eventEndingTime):
             parameters["eventEndingTime"]=self.eventEndingTime.strftime("%Y-%m-%dT%H:00:00+00:00")
-
         if (self.consequences):
             parameters["consequences"] = self.consequences
         if (self.eventSeverityName):
-            parameters["eventSeverityName"] = self.eventSeverityName
+            parameters["eventAwarenessName"] = self.eventSeverityName
 
 
         return parameters
@@ -120,7 +119,6 @@ def read_json():
     global eventSeverityName
     filename ="eventSeverityParameters.json"
     filename_local= os.path.join("etc",filename)
-    #filename_global = os.path.join(os.path.abspath(os.sep), "etc", "farekart", filename)
     filename_global = os.path.join(os.sep, "etc", "farekart", filename)
     if (os.path.isfile(filename_local)):
         filename=filename_local

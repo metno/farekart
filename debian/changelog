@@ -1,8 +1,11 @@
-python-farekart (0.3.13-2) UNRELEASED; urgency=medium
+python-farekart (0.3.14-1) RELEASED; urgency=medium
 
-  * bugfix
-
- -- Helen Korsmo <helenk@pc4365.pc.met.no>  Mon, 08 May 2017 15:39:32 +0200
+  * Changed parameter names:
+  *  eventSeverityName    ->   eventAwarenessName
+  *  severitySeriousness  ->    awarenessSeriousness	
+  *  severityResponse     ->   awarenessResponse
+	
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Mon, 22 May 2017 10:03:46 +0200
 
 python-farekart (0.3.13-1) RELEASED; urgency=medium
 
