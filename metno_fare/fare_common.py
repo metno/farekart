@@ -31,6 +31,22 @@ def get_xml_docs(db, dateto, select_string):
 
     return result
 
+def translate_name(db,lang,name):
+    translated_name=name
+    if (lang=="en-GB"):
+        select_string = "select english from phrase4 where bokmal = %s"
+        try:
+            cur = db.cursor()
+            cur.execute(select_string, (name,))
+            result = cur.fetchone()
+            if result and result[0]:
+                translated_name = result[0].decode("iso8859-1")
+
+        except MySQLdb.Error, e:
+            print "Error %d: %s" % (e.args[0], e.args[1])
+
+    return translated_name
+
 
 def get_latlon(n, db):
     """Retrieves the Geographical corners for the given TED defined area ID, n,

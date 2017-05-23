@@ -7,7 +7,7 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 
 from event_awareness_parameters import *
-from fare_common import retrieve_from_xml_fare, get_latlon
+from fare_common import retrieve_from_xml_fare, get_latlon, translate_name
 from fare_setup import *
 
 
@@ -65,7 +65,7 @@ class info:
 
 
     # info for the area element. One for each info
-        self.areaDesc = loc['name']
+        self.areaDesc = translate_name(db,lang,loc['name'])
         self.altitude = loc.get('altitude')
         self.ceiling = loc.get('ceiling')
         self.polygon=get_polygon(db, loc)
@@ -101,8 +101,8 @@ class info:
 
         return parameters
 
-    def set_all_locations_name(self,locs):
-        self.all_locations_name = get_all_locations_name(locs)
+    def set_all_locations_name(self,all_locations_name):
+        self.all_locations_name = all_locations_name
 
     def create_headline(self):
         self.headline = get_headline(self.eventAwarenessName, self.lang, self.onset, self.expires, self.all_locations_name)
@@ -173,10 +173,15 @@ def generate_capalert_v1(xmldoc,db):
     phenomenon_name = res.get('phenomenon_name')
 
     languages = ["no", "en-GB"]
+
+    all_location_names={}
+    for lang in languages:
+        all_location_names[lang]=get_all_locations_name(db,lang,res['locations'])
+
     for loc in res['locations']:
         for lang in languages:
             l_info = info(lang,event_type,geographicDomain,phenomenon_name,loc,db)
-            l_info.set_all_locations_name(res['locations'])
+            l_info.set_all_locations_name(all_location_names[lang])
             l_info.create_headline()
 
             make_info_element(alert ,l_info)
@@ -331,12 +336,12 @@ def get_headline(type,lang, onset, expires , all_locations_name):
     return headline
 
 
-def get_all_locations_name(locations):
+def get_all_locations_name(db, lang,locations):
     location_name = ""
     for locs in locations:
         if location_name:
             location_name += ", "
-        location_name += locs['name']
+        location_name += translate_name(db,lang,locs['name'])
     return location_name
 
 
