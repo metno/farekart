@@ -18,10 +18,10 @@
         "airPollution"
     ],
     "awareness_levels": {
-        "Severe": "3; orange; Severe",
-        "Moderate": "2; yellow; Moderate",
-        "Extreme": "4; red; Extreme",
-        "Minor": "1; green; Minor"
+        "Orange": "3; orange; Severe",
+        "Yellow": "2; yellow; Moderate",
+        "Red": "4; red; Extreme",
+        "Green": "1; green; Minor"
     },
     "awareness_types": {
         "thunder": "3; Thunderstorm",
@@ -39,16 +39,16 @@
     },
     "awarenessResponse": {
         "no": {
-            "Severe": "Vær forberedt",
-            "Moderate": "Følg med",
-            "Extreme": "Ekstremværet",
-            "Minor": "Ulempe"
+            "Orange": "Vær forberedt",
+            "Yellow": "Følg med",
+            "Red": "Ekstremværet",
+            "Green": "Ulempe"
         },
         "en-GB": {
-            "Severe": "Be prepared",
-            "Moderate": "Be aware",
-            "Extreme": "Take action! Extreme weather",
-            "Minor": "Inconvenience"
+            "Orange": "Be prepared",
+            "Yellow": "Be aware",
+            "Red": "Take action! Extreme weather",
+            "Green": "Inconvenience"
         }
     },
     "eventAwarenessName": {
@@ -741,16 +741,43 @@
     },
     "awarenessSeriousness": {
         "no": {
-            "Severe": "Farlig situasjon",
-            "Moderate": "Utfordrende situasjon",
-            "Extreme": "Ekstrem situasjon",
-            "Minor": ""
+            "Orange": "Alvorlig situasjon",
+            "Yellow": "Utfordrende situasjon",
+            "Red": "Ekstrem situasjon",
+            "Green": ""
         },
         "en-GB": {
-            "Severe": "Dangerous situation",
-            "Moderate": "Challenging situation",
-            "Extreme": "Extreme situation",
-            "Minor": ""
+            "Orange": "Severe situation",
+            "Yellow": "Challenging situation",
+            "Red": "Extreme situation",
+            "Green": ""
         }
+    },
+    "awareness": {
+        "Likely": {
+            "Extreme": "Red",
+            "Severe": "Orange",
+            "Moderate": "Yellow",
+            "Minor": "Green"
+        },
+        "Observed": {
+            "Extreme": "Red",
+            "Severe": "Orange",
+            "Moderate": "Yellow",
+            "Minor": "Green"
+        },
+        "Possible": {
+            "Extreme": "Orange",
+            "Severe": "Yellow",
+            "Moderate": "Green",
+            "Minor": "Green"
+        },
+        "Unlikely": {
+            "Extreme": "Yellow",
+            "Severe": "Green",
+            "Moderate": "Green",
+            "Minor": "Green"
+        }
+
     }
 }

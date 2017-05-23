@@ -6,14 +6,20 @@ class event_awareness_parameters:
         eventSeverityParameters=self.read_json()
         self.event_types = eventSeverityParameters['eventTypes']
         self.events = eventSeverityParameters['eventNames'][event_type][lang]
-        self.eventAwarenessName = \
+        # should depend on severity and certainty
+        awareness =  eventSeverityParameters['awareness'][certainty][severity]
+        try:
+            self.eventAwarenessName = \
             eventSeverityParameters['eventAwarenessName'][event_type][certainty][lang][severity]
-        self.awarenessResponse = eventSeverityParameters['awarenessResponse'][lang][severity]
-        self.awarenessSeriousness = eventSeverityParameters['awarenessSeriousness'][lang][severity]
+        except:
+            self.eventAwarenessName=""
+        self.awarenessResponse = eventSeverityParameters['awarenessResponse'][lang][awareness]
+
+        self.awarenessSeriousness = eventSeverityParameters['awarenessSeriousness'][lang][awareness]
 
         # MeteoAlarm mandatory elements
         self.awareness_types = eventSeverityParameters['awareness_types'].get(event_type, "")
-        self.awareness_levels = eventSeverityParameters['awareness_levels'].get(severity, "")
+        self.awareness_levels = eventSeverityParameters['awareness_levels'].get(awareness, "")
 
 
 
