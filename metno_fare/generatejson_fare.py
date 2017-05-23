@@ -182,9 +182,9 @@ def make_description(info):
     if "event_level_name" in info:
         # old version
         subtitle = info['event_level_name']
-    elif "eventSeverityName" in info:
+    elif "eventAwarenessName" in info:
         #version v1
-        subtitle = info['eventSeverityName']
+        subtitle = info['eventAwarenessName']
     else:
         subtitle = u""
 
