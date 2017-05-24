@@ -8,8 +8,7 @@ from lxml.etree import Element, SubElement
 
 from event_awareness_parameters import *
 from fare_common import retrieve_from_xml_fare, get_latlon, translate_name
-from fare_setup import *
-
+import fare_setup
 
 class info:
     def __init__(self,lang,event_type,geographicDomain,phenomenon_name,loc,db):
@@ -20,7 +19,8 @@ class info:
         self.onset = dateutil.parser.parse(loc['vfrom'])
         self.expires = dateutil.parser.parse(loc['vto'])
         self.effective = dateutil.parser.parse(loc['effective'])
-        self.urgency = "Future"
+        self.responseType=fare_setup.responseType
+        self.urgency = fare_setup.urgency
         self.severity = loc.get("severity", "").strip()
         self.certainty = loc.get("certainty", "").strip()
         self.pict = loc['picturelink']
@@ -42,11 +42,6 @@ class info:
             self.eventEndingTime=self.expires
         else:
             self.eventEndingTime=None
-
-        if (lang=="no"):
-            self.eventManualHeader=loc['heading']
-        else:
-            self.eventManualHeader=loc['englishheading']
 
         self.triggerLevel=loc['triggerlevel']
         self.returnPeriod = loc['returnperiod']
@@ -74,7 +69,6 @@ class info:
 
         parameters={}
 
-        parameters["eventManualHeader"]  = self.eventManualHeader
         parameters["awarenessResponse"]=\
                 self.event_awareness_par.getSeverityResponse(self.phenomenon_name)
         parameters["awarenessSeriousness"]= self.event_awareness_par.awarenessSeriousness
@@ -145,8 +139,8 @@ def generate_capalert_v1(xmldoc,db):
 
     sent_time = termin.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
-    SubElement(alert, 'identifier').text = identifier_prefix + identifier
-    SubElement(alert, 'sender').text =  sender
+    SubElement(alert, 'identifier').text = fare_setup.identifier_prefix + identifier
+    SubElement(alert, 'sender').text =  fare_setup.sender
     SubElement(alert, 'sent').text = sent_time
     SubElement(alert, 'status').text = res.get('status','Actual')
     SubElement(alert, 'msgType').text = l_alert
@@ -172,14 +166,12 @@ def generate_capalert_v1(xmldoc,db):
     geographicDomain=get_geographicDomain(res)
     phenomenon_name = res.get('phenomenon_name')
 
-    languages = ["no", "en-GB"]
-
     all_location_names={}
-    for lang in languages:
+    for lang in fare_setup.languages:
         all_location_names[lang]=get_all_locations_name(db,lang,res['locations'])
 
     for loc in res['locations']:
-        for lang in languages:
+        for lang in fare_setup.languages:
             l_info = info(lang,event_type,geographicDomain,phenomenon_name,loc,db)
             l_info.set_all_locations_name(all_location_names[lang])
             l_info.create_headline()
@@ -238,6 +230,7 @@ def make_info_element(alert, l_info):
     SubElement(info, 'language').text = l_info.lang
     SubElement(info, 'category').text = 'Met'
     SubElement(info, 'event').text = l_info.event
+    SubElement(info,'responseType').text = l_info.responseType
     SubElement(info, 'urgency').text = l_info.urgency
     SubElement(info, 'severity').text = l_info.severity
     SubElement(info, 'certainty').text = l_info.certainty
@@ -250,12 +243,12 @@ def make_info_element(alert, l_info):
     SubElement(info, 'effective').text = l_info.effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
     SubElement(info, 'onset').text = l_info.onset.strftime("%Y-%m-%dT%H:00:00+00:00")
     SubElement(info, 'expires').text = l_info.expires.strftime("%Y-%m-%dT%H:00:00+00:00")
-    SubElement(info, 'senderName').text = senders[l_info.lang]
+    SubElement(info, 'senderName').text = fare_setup.senders[l_info.lang]
     SubElement(info, 'headline').text = l_info.headline
     SubElement(info, 'description').text = l_info.description
     SubElement(info, 'instruction').text = l_info.instruction
-    SubElement(info, 'web').text = "https://www.met.no/vaer-og-klima/farevarsel-og-ekstremvaer"
-
+    SubElement(info, 'web').text = fare_setup.web
+    SubElement(info, 'contact').text = fare_setup.contact[l_info.lang]
 
     parameters = l_info.get_parameters()
     for valueName, value in parameters.items():

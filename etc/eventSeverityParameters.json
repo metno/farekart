@@ -118,14 +118,14 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": null,
-                    "Moderate": null,
-                    "Severe": null
+                    "Extreme": "Stormvarsel",
+                    "Moderate": "Kulingvarsel",
+                    "Severe": "Stormvarsel"
                 },
                 "en-GB": {
-                    "Extreme": null,
-                    "Moderate": null,
-                    "Severe": null
+                    "Extreme": "Storm warning",
+                    "Moderate": "Gale Warning",
+                    "Severe": "Storm warning"
                 }
             },
             "Possible": {
@@ -420,12 +420,12 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": null,
+                    "Moderate": "Stor skogbrannfare",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": null,
+                    "Moderate": "Forest fire danger",
                     "Severe": null
                 }
             },
