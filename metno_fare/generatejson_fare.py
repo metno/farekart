@@ -24,7 +24,7 @@ def make_list_of_valid_files(filebase,schemas,make_v1):
     filenames.sort()
 
     # Load the CAP schema.
-    schema_doc = etree.parse(os.path.join(schemas, "CAP-v1.2.xsd"))
+    schema_doc = etree.parse(os.path.join(schemas, "CAP_Schema.xsd"))
     schema = etree.XMLSchema(schema_doc)
 
     capalerts={}
