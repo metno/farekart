@@ -1,9 +1,16 @@
-python-farekart (0.3.15-1) UNRELEASED; urgency=medium
+python-farekart (0.3.15-2) RELEASED; urgency=medium
+
+  * bugfix
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Wed, 31 May 2017 08:34:51 +0200
+
+python-farekart (0.3.15-1) RELEASED; urgency=medium
 
   * Changes in parameters (awareness use certainty and severity)
   * removed eventManualHeader
+  * 
 
- -- Helen Korsmo <helenk@pc4365.pc.met.no>  Mon, 29 May 2017 11:21:46 +0200
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Wed, 31 May 2017 08:34:28 +0200
 
 python-farekart (0.3.14-1) RELEASED; urgency=medium
 

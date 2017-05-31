@@ -154,7 +154,7 @@ def generate_capalert_v1(xmldoc,db):
     if l_alert != 'Alert':
         references = []
         for ref in filter(lambda ref: ref, res['references'].split(" ")):
-            references.append(sender + "," + identifier_prefix + ref)
+            references.append(fare_setup.sender + "," + fare_setup.identifier_prefix + ref)
         SubElement(alert, 'references').text = " ".join(references)
 
 
