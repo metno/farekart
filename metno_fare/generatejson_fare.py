@@ -148,6 +148,11 @@ def make_cap_list(language, capalerts):
                 expires_list.append(dateutil.parser.parse(info['expires']))
                 onset_list.append(dateutil.parser.parse(info['onset']))
                 cap_entry['description'] += make_description(info)
+                if 'eventType' in info:
+                    cap_entry['eventType']=info['eventType']
+                if 'geographicDomain' in info:
+                    cap_entry['geographicDomain']=info['geographicDomain']
+
 
         onset = min(onset_list)
         expires = max(expires_list)
