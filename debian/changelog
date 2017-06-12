@@ -1,3 +1,9 @@
+python-farekart (0.3.15-4) UNRELEASED; urgency=medium
+
+  * eventType changed to  event in Json-file
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Mon, 12 Jun 2017 11:42:59 +0200
+
 python-farekart (0.3.15-3) RELEASED; urgency=medium
 
   * added eventType/geographicDomain in Json-file
