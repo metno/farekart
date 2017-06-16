@@ -38,10 +38,17 @@ class info:
         if self.eventAwarenessName:
             self.eventAwarenessName = unicode(self.eventAwarenessName).capitalize()
 
-        if event_type not in ['gale','forestFire']:
-            self.eventEndingTime=self.expires
+
+        if 'eventEndingTime' in loc:
+            if loc['eventEndingTime']=="Yes":
+                self.eventEndingTime=self.expires
+            else:
+                self.eventEndingTime=None
         else:
-            self.eventEndingTime=None
+            if event_type not in ['gale','forestFire']:
+                self.eventEndingTime=self.expires
+            else:
+                self.eventEndingTime=None
 
         self.triggerLevel=loc['triggerlevel']
         self.returnPeriod = loc['returnperiod']
