@@ -11,10 +11,10 @@ from fare_common import retrieve_from_xml_fare, get_latlon, translate_name
 import fare_setup
 
 class info:
-    def __init__(self,lang,event_type,geographicDomain,phenomenon_name,loc,db):
+    def __init__(self,lang,event_type,phenomenon_name,loc,db):
         self.lang=lang
         self.event_type=event_type
-        self.geographicDomain=geographicDomain
+        self.geographicDomain = fare_setup.geographicDomain[event_type]
         self.phenomenon_name=phenomenon_name
         self.onset = dateutil.parser.parse(loc['vfrom'])
         self.expires = dateutil.parser.parse(loc['vto'])
@@ -55,16 +55,14 @@ class info:
 
 
 
-        # TODO instructions are hardcoded  but should be in Json file
         if lang == "no":
             self.description = loc.get('varsel')
             self.consequences = loc.get('instruction')
-            self.instruction = u"Vurder behov for forebyggende tiltak. Beredskapsaktører skal vurdere fortløpende behov for beredskap."
         elif lang.startswith("en"):
             self.description = loc['englishforecast']
             self.consequences = loc.get('consequenses')
-            self.instruction= u"Consider the need for preventive measures. Emergency Operators should consider ongoing need for preparedness. "
 
+        self.instruction = fare_setup.instructions[lang]
 
     # info for the area element. One for each info
         self.areaDesc = translate_name(db,lang,loc['name'])
@@ -170,7 +168,6 @@ def generate_capalert_v1(xmldoc,db):
 
     # get information common for all info blocks
     event_type = get_event_type(res)
-    geographicDomain=get_geographicDomain(res)
     phenomenon_name = res.get('phenomenon_name')
 
     all_location_names={}
@@ -179,7 +176,7 @@ def generate_capalert_v1(xmldoc,db):
 
     for loc in res['locations']:
         for lang in fare_setup.languages:
-            l_info = info(lang,event_type,geographicDomain,phenomenon_name,loc,db)
+            l_info = info(lang,event_type,phenomenon_name,loc,db)
             l_info.set_all_locations_name(all_location_names[lang])
             l_info.create_headline()
 
@@ -188,13 +185,6 @@ def generate_capalert_v1(xmldoc,db):
     return etree.tostring(alert.getroottree(), encoding="UTF-8", xml_declaration=True,
                      pretty_print=True, standalone=True)
 
-
-def get_geographicDomain(res):
-    if res['forecasttype'] in ['gale', 'pl']:
-        geographicDomain="marine"
-    else:
-        geographicDomain="land"
-    return geographicDomain
 
 def get_event_type(res):
     # mapping from Meteoalarm event types in our template to our event types on land, migh be obsolete later

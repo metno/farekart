@@ -5,6 +5,8 @@ class event_awareness_parameters:
     def __init__(self,event_type, lang,certainty,severity):
         eventSeverityParameters=self.read_json()
         self.event_types = eventSeverityParameters['eventTypes']
+        if event_type not in self.event_types:
+            print("Warning: %s is not a supported event type!" % event_type)
         self.events = eventSeverityParameters['eventNames'][event_type][lang]
         # should depend on severity and certainty
         awareness =  eventSeverityParameters['awareness'][certainty][severity]
