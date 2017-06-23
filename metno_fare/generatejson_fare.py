@@ -154,10 +154,12 @@ def make_cap_list(language, capalerts):
                     cap_entry['geographicDomain']=info['geographicDomain']
 
 
-        onset = min(onset_list)
-        expires = max(expires_list)
-        cap_entry['t_onset'] =onset.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-        cap_entry['t_expires'] = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        if (onset_list):
+            onset = min(onset_list)
+            cap_entry['t_onset'] = onset.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        if (expires_list):
+            expires = max(expires_list)
+            cap_entry['t_expires'] = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
         # keep entries for MAX_WEEKS_TO_KEEP
         # keep all exteme warnings
