@@ -24,6 +24,7 @@ from lxml import etree
 from generatejson_fare import make_list_of_valid_files
 from generate_capalert import generate_capalert_fare
 from generate_capalert_v1 import generate_capalert_v1
+import publishcap
 
 def PrintException():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -212,5 +213,5 @@ if __name__ == "__main__":
 
     filebase = os.path.join(output_dirname,ted_documentname)
     make_list_of_valid_files(filebase, schema_dirname,True)
-
-
+    # should be the directory to publish CAP
+    publishcap.main(output_dirname)

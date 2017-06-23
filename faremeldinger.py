@@ -35,7 +35,6 @@ import MySQLdb, shutil
 
 from metno_fare.fare_common import *
 from metno_fare.generatecap_fare import generate_files_cap_fare
-from metno_fare import publishcap
 
 
 if __name__ == "__main__":
@@ -81,28 +80,6 @@ if __name__ == "__main__":
         os.mkdir(dirname_v1)
     generate_files_cap_fare(fare_documentname,dirname, schema_dirname,db)
     generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db,make_v1=True)
-
-    dirnames = {"v0": dirname, "v1":dirname_v1}
-    for (prefix,output_dir) in dirnames.items():
-        # Generate an RSS file to describe the CAP files created.
-        filebase = os.path.join(output_dir, fare_documentname)
-        print output_dir
-        rss_file = "CAP.rss"
-        publish_dir = os.getenv("CAP_PUBLISH_DIR")
-        if publish_dir:
-            publish_dir=os.path.join(publish_dir, prefix)
-        else:
-            publish_dir=output_dir
-        if (not os.path.isdir(publish_dir)):
-            os.mkdir(publish_dir)
-        print publish_dir
-        base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
-        base_url=os.path.join(base_url, prefix)
-        publishcap.main(filebase, rss_file, output_dir, publish_dir, base_url)
-        if output_dir != publish_dir:
-            shutil.copy2(os.path.join(output_dir, 'CAP_en.json'), os.path.join(publish_dir, 'CAP_en.json'))
-            shutil.copy2(os.path.join(output_dir, 'CAP_no.json'), os.path.join(publish_dir, 'CAP_no.json'))
-
 
     sys.stderr.write("Start creating kml-files\n")
     # Obtain a string containing the local time for the start of the current hour.

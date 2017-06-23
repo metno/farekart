@@ -62,15 +62,15 @@ def parse_cap_file(cap_file = None, cap_text = None):
     return root
 
 
-def main(filebase, rss_file, output_dir, publish_dir, base_url):
+def main(output_dir):
     """Controls the overall processing of CAP and index files to create an RSS feed.
     The given args are the arguments supplied by the user on the command line."""
 
     # Get the current time.
     now = datetime.datetime.now(dateutil.tz.tzutc())
 
-    if not os.path.exists(publish_dir):
-        os.mkdir(publish_dir)
+    rss_file = "CAP.rss"
+    base_url = os.getenv("CAP_BASE_URL", "http://api.met.no/CAP")
 
     # Ensure that the base URL ends with a trailing slash.
     if not base_url.endswith("/"):
@@ -128,14 +128,4 @@ def main(filebase, rss_file, output_dir, publish_dir, base_url):
         ElementTree(rss).write(f, encoding='UTF-8', xml_declaration=True, pretty_print=True)
         f.close()
 
-        if output_dir != publish_dir:
-            shutil.copy2(os.path.join(output_dir, rss_lang_file), os.path.join(publish_dir, rss_lang_file))
 
-
-    # copy files to publish_dir
-    if output_dir != publish_dir:
-        filesearch = "{0}*.cap.xml".format(filebase)
-        filenames = glob.glob(filesearch)
-        for file_name in filenames:
-            file_name = os.path.split(file_name)[1]
-            shutil.copy2(os.path.join(output_dir, file_name), os.path.join(publish_dir, file_name))
