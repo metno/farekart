@@ -113,7 +113,6 @@ def retrieve_from_xml_fare(xmldoc):
       alert = t.find('msgtype').text # all this stuff is common to the whole CAP-file
       mnr   = t.find('msgnumber').text
       references = t.find('msgreferences').text
-      sender = t.find('msgauthor').text
       id = t.find('msgidentifier').text
 
     header = root.find('productheader')
@@ -158,7 +157,6 @@ def retrieve_from_xml_fare(xmldoc):
 
     res['locations'] = locations
     res['termin'] = termin
-    res['sender'] = sender
     res['id'] = id
     res['mnr'] = mnr
     res['alert'] = alert
