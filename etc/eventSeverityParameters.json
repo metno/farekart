@@ -864,7 +864,7 @@
         }
     },
     "eventNames": {
-        "low-temperature": {
+        "lowTemperature": {
             "no": "Lave temperaturer",
             "en-GB": "Low temperature"
         },
@@ -900,7 +900,7 @@
             "no": "Regn",
             "en-GB": "Rain"
         },
-        "high-temperature": {
+        "highTemperature": {
             "no": "Høye temperaturer",
             "en-GB": "High temperature"
         },

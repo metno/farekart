@@ -57,12 +57,25 @@ class info:
 
         if lang == "no":
             self.description = loc.get('varsel')
+            # old METfare template
             self.consequences = loc.get('instruction')
+            # new METfare template
+            if "consequences_no" in loc:
+                self.consequences=loc.get('consequences_no')
+            self.instruction = loc.get('instructions_no','')
         elif lang.startswith("en"):
             self.description = loc['englishforecast']
+            # old METfare template
             self.consequences = loc.get('consequenses')
+            if "consequences_en" in loc:
+            # new METfare template
+                self.consequences = loc.get('consequences_en')
+            self.instruction = loc.get('instructions_en',"")
 
-        self.instruction = fare_setup.instructions[lang]
+        if self.instruction:
+            self.instruction = " ".join((self.instruction,fare_setup.instructions[lang]))
+        else:
+            self.instruction = fare_setup.instructions[lang]
 
     # info for the area element. One for each info
         self.areaDesc = translate_name(db,lang,loc['name'])
