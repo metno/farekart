@@ -135,7 +135,7 @@ def make_cap_list(language, capalerts):
         cap_entry['area'] = u""
         cap_entry['t_onset'] = u""
         cap_entry['t_expires'] = u""
-        cap_entry['description'] = u"<b>MSGTYPE:</b> %s <br />" %(capalert['msgType'])
+        cap_entry['description'] = capalert['msgType']
 
         for info in capalert['capinfos']:
             if info['language'] == language:
@@ -147,7 +147,8 @@ def make_cap_list(language, capalerts):
                     is_extreme = True
                 expires_list.append(dateutil.parser.parse(info['expires']))
                 onset_list.append(dateutil.parser.parse(info['onset']))
-                cap_entry['description'] += make_description(info)
+
+                cap_entry['description'] = "%s: %s" % (cap_entry['description'],make_description(info))
                 if 'eventType' in info:
                     cap_entry['event']=info['eventType']
                 if 'geographicDomain' in info:
@@ -171,6 +172,8 @@ def make_cap_list(language, capalerts):
 
 
 def make_description(info):
+
+    return info['description']
 
     if info['language'] == 'no':
         desc = u"""<b>%s</b><br /><table>
