@@ -567,7 +567,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": "Risk of icing",
-                    "Severe": null
+                    "Severe": "Risk of severe icing"
                 }
             },
             "Observed": {
@@ -579,7 +579,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": "Risk of icing",
-                    "Severe": null
+                    "Severe": "Risk of severe icing"
                 }
             },
             "Possible": {
