@@ -42,7 +42,7 @@ geographicDomain={
 "rain":"land",
 "flooding":"land",
 "rainFlood":"land",
-"polarLow":"marine",
+"polarLow":None,
 "gale":"marine",
 "icing":"marine",
 "uvRadiation": None,
