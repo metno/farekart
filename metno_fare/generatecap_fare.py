@@ -119,8 +119,7 @@ def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db,make_v1
 
 
 def download_ted_documents(download_dirname,ted_documentname,db):
-    select_string = 'select value,termin,lang from document where name = "%s"' % ted_documentname
-    docs = get_ted_docs(db, select_string)
+    docs = get_ted_documents(db, ted_documentname)
     for doc in docs:
         # write ted-file
         lang = doc[2]
@@ -133,15 +132,22 @@ def download_ted_documents(download_dirname,ted_documentname,db):
             f.write(doc[0])
 
 
-def generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1):
-    select_string = 'select value,termin,lang from document where name = "%s"' % ted_documentname
+def get_ted_documents(db, ted_documentname):
+    select_string = 'select value,termin,lang from document where name = "%s" and status != "tempo"' % ted_documentname
     docs = get_ted_docs(db, select_string)
+    return docs
+
+
+def generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1):
+    docs = get_ted_documents(db, ted_documentname)
     for doc in docs:
         capfilename = os.path.join(output_dirname,get_capfilename_from_teddoc(doc[0]))
         if (os.path.isfile(capfilename)):
             sys.stderr.write("File '%s' already exists!\n" % capfilename)
         else:
             generate_capfile_from_teddoc(doc[0], output_dirname, db,make_v1)
+
+
 
 if __name__ == "__main__":
 
