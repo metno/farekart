@@ -92,12 +92,12 @@
             "Unlikely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "mulighet for kraftige tordenbyger ",
+                    "Moderate": "liten mulighet for kraftige tordenbyger ",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "possibility of heavy thunderstorms",
+                    "Moderate": "small possibility of heavy thunderstorms",
                     "Severe": null
                 }
             }
@@ -445,7 +445,7 @@
                 "no": {
                     "Extreme": null,
                     "Moderate": "Mulig fare for skogbrann",
-                    "Severe": "Mulig fare for stor skogbrannfare"
+                    "Severe": "Mulig fare for stor skogbrann"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -567,7 +567,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": "Risk of icing",
-                    "Severe": null
+                    "Severe": "Risk of severe icing"
                 }
             },
             "Observed": {
@@ -579,7 +579,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": "Risk of icing",
-                    "Severe": null
+                    "Severe": "Risk of severe icing"
                 }
             },
             "Possible": {
