@@ -16,7 +16,7 @@ contact={
 
 
 sender = "noreply@met.no"
-identifier_prefix= "2.49.0.1.578.0.NO."
+identifier_prefix= "2.49.0.1.578.0."
 web = "https://www.met.no/vaer-og-klima/farevarsel-og-ekstremvaer"
 
 instructions={
