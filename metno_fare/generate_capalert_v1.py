@@ -336,6 +336,7 @@ def get_headline(type,lang, onset, expires , all_locations_name):
 
     headline = headline_templates[lang] % (type,all_locations_name, vfrom,vto)
     if (headline):
+        headline=headline.strip()
         headline = headline[0].upper()+ headline[1:]
     return headline
 
