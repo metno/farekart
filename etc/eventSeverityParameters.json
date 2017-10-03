@@ -220,7 +220,7 @@
                 "no": {
                     "Extreme": "Ekstrem vind pågår",
                     "Moderate": "kraftig vind pågår",
-                    "Severe": " svært kraftig vind pågår"
+                    "Severe": "svært kraftig vind pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme wind ongoing",
@@ -235,7 +235,7 @@
                     "Severe": "mulighet for svært kraftig vind"
                 },
                 "en-GB": {
-                    "Extreme": "mulighet for ekstrem vind",
+                    "Extreme": "possibility of extreme wind",
                     "Moderate": "possibility of heavy wind",
                     "Severe": "possiblity of very heavy wind"
                 }
