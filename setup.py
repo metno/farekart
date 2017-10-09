@@ -9,7 +9,7 @@ setup(
     author="Bård Fjukstad",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.3.15",
+    version="0.3.16",
     packages=["metno_fare"],
     scripts=["faremeldinger.py", "cap2kml.py"],
     data_files=[("share/xml/farekart", 
