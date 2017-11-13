@@ -307,7 +307,7 @@ def get_polygon(db, loc):
         # of the form, latitude,longitude.
 
         for lon, lat in latlon:
-            line = u"%f,%f\n" % (lat, lon)
+            line = u"%f,%f " % (lat, lon)
             text += line
 
         # Include the first point again to close the polygon.

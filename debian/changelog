@@ -1,4 +1,10 @@
-python-farekart (0.3.16-1) UNRELEASED; urgency=medium
+python-farekart (0.3.16-2) UNRELEASED; urgency=medium
+
+  * space instead of newline between CAP coordinates
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Mon, 13 Nov 2017 08:19:37 +0100
+
+python-farekart (0.3.16-1) RELEASED; urgency=medium
 
   * Do not read author from METfare
   * consequences and instructions from METfare, new version
