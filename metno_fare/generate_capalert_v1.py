@@ -177,7 +177,7 @@ def generate_capalert_v1(xmldoc,db):
 
 
     if res.get('phenomenon_number'):
-        SubElement(alert, 'incidents').text = incidents
+        SubElement(alert, 'incidents').text=res['phenomenon_number']
 
     # get information common for all info blocks
     event_type = get_event_type(res)
