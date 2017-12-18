@@ -169,12 +169,12 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "vanskelige kjøreforhold observert",
+                    "Moderate": "vanskelige kjøreforhold pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Difficult driving conditions observed",
+                    "Moderate": "Difficult driving conditions ongoing",
                     "Severe": null
                 }
             },
@@ -270,13 +270,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "polart lavtrykk observert",
-                    "Severe": "kraftig polart lavtrykk observert"
+                    "Moderate": "polart lavtrykk pågår",
+                    "Severe": "kraftig polart lavtrykk pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Polar low observed",
-                    "Severe": "Severe polar low observed"
+                    "Moderate": "Polar low ongoing",
+                    "Severe": "Severe polar low ongoing"
                 }
             },
             "Possible": {
@@ -319,14 +319,14 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme snømengder observert",
-                    "Moderate": "store snømengder observert ",
-                    "Severe": " svært store snømengder observert"
+                    "Extreme": "Ekstreme snømengder pågår",
+                    "Moderate": "store snømengder pågår ",
+                    "Severe": " svært store snømengder pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme snowfall observed",
-                    "Moderate": "Heavy snowfall observed",
-                    "Severe": "Very heavy snowfall observed"
+                    "Extreme": "Extreme snowfall ongoing",
+                    "Moderate": "Heavy snowfall ongoing",
+                    "Severe": "Very heavy snowfall ongoing"
                 }
             },
             "Possible": {
@@ -369,14 +369,14 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstremt mye regn observert",
-                    "Moderate": "mye regn observert ",
-                    "Severe": "svært mye regn observert"
+                    "Extreme": "Ekstremt mye regn pågår",
+                    "Moderate": "mye regn pågår ",
+                    "Severe": "svært mye regn pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainfall observed",
-                    "Moderate": "Heavy rainfall observed",
-                    "Severe": "Very heavy rainfall observed"
+                    "Extreme": "Extreme rainfall ongoing",
+                    "Moderate": "Heavy rainfall ongoing",
+                    "Severe": "Very heavy rainfall ongoing"
                 }
             },
             "Possible": {
@@ -420,13 +420,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Stor skogbrannfare",
-                    "Severe": "Meget stor skogbrannfare"
+                    "Moderate": "Stor skogbrannfare pågår",
+                    "Severe": "Meget stor skogbrannfare pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Forest fire danger",
-                    "Severe": "High forest fire danger"
+                    "Moderate": "Forest fire danger ongoing",
+                    "Severe": "High forest fire danger ongoing"
                 }
             },
             "Possible": {
@@ -469,14 +469,14 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme regnbyger observert",
-                    "Moderate": "kraftige regnbyger observert",
-                    "Severe": "svært kraftige regnbyger observert"
+                    "Extreme": "Ekstreme regnbyger pågår",
+                    "Moderate": "kraftige regnbyger pågår",
+                    "Severe": "svært kraftige regnbyger pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainshowers observed",
-                    "Moderate": "Heavy rainshowers observed",
-                    "Severe": "Very heavy rainshowers observed"
+                    "Extreme": "Extreme rainshowers ongoing",
+                    "Moderate": "Heavy rainshowers ongoing",
+                    "Severe": "Very heavy rainshowers ongoing"
                 }
             },
             "Possible": {
@@ -573,13 +573,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Fare for ising",
-                    "Severe": "Fare for kraftig ising"
+                    "Moderate": "Fare for ising pågår",
+                    "Severe": "Fare for kraftig ising pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Risk of icing",
-                    "Severe": "Risk of severe icing"
+                    "Moderate": "Risk of icing ongoing",
+                    "Severe": "Risk of severe icing ongoing"
                 }
             },
             "Possible": {
@@ -724,14 +724,14 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstrem stormflo observert",
-                    "Moderate": "stormflo observert ",
-                    "Severe": " kraftig stormflo observert"
+                    "Extreme": "Ekstrem stormflo pågår",
+                    "Moderate": "stormflo pågår ",
+                    "Severe": " kraftig stormflo pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme storm surge observed",
-                    "Moderate": "Storm surge observed",
-                    "Severe": "Severe storm surge observed"
+                    "Extreme": "Extreme storm surge ongoing",
+                    "Moderate": "Storm surge ongoing",
+                    "Severe": "Severe storm surge ongoing"
                 }
             },
             "Possible": {
@@ -826,12 +826,12 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftig snøfokk",
+                    "Moderate": "Kraftig snøfokk pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Blowing snow",
+                    "Moderate": "Blowing snow ongoing",
                     "Severe": null
                 }
             },
