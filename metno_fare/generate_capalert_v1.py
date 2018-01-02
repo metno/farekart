@@ -74,6 +74,7 @@ class info:
 
         if self.instruction:
             self.instruction = " ".join((self.instruction,fare_setup.instructions[lang]))
+            self.instruction=self.instruction.strip()
         else:
             self.instruction = fare_setup.instructions[lang]
 
@@ -117,7 +118,7 @@ class info:
         self.all_locations_name = all_locations_name
 
     def create_headline(self):
-        self.headline = get_headline(self.eventAwarenessName, self.lang, self.onset, self.expires, self.all_locations_name)
+        self.headline = get_headline(self.eventAwarenessName, self.lang, self.effective, self.expires, self.all_locations_name)
 
 
 def generate_capalert_v1(xmldoc,db):
@@ -317,7 +318,7 @@ def get_polygon(db, loc):
 
     return text
 
-def get_headline(type,lang, onset, expires , all_locations_name):
+def get_headline(type,lang, effective, expires , all_locations_name):
 
     headline_templates = { "no":u'%s, %s, %s til %s.',
                "en-GB":u'%s, %s, %s to %s.'}
@@ -331,8 +332,8 @@ def get_headline(type,lang, onset, expires , all_locations_name):
 
     #vfrom = onset.strftime("%A %d %B %H:%M")
     #vto = expires.strftime("%A %d %B %H:%M")
-    vfrom = onset.strftime("%d %B %H:%M")
-    vto = expires.strftime("%d %B %H:%M")
+    vfrom = effective.strftime("%d %B %H:00")
+    vto = expires.strftime("%d %B %H:00")
 
     headline = headline_templates[lang] % (type,all_locations_name, vfrom,vto)
     if (headline):

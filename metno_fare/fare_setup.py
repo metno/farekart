@@ -20,8 +20,8 @@ identifier_prefix= "2.49.0.1.578.0."
 web = "https://www.met.no/vaer-og-klima/farevarsel-og-ekstremvaer"
 
 instructions={
-        "no":u"Vurder behov for forebyggende tiltak. Beredskapsaktører skal fortløpende vurdere behov for beredskap.",
-        "en-GB": u"Consider the need for preventive measures. Emergency Operators should consider ongoing need for preparedness. "
+        "no":u"",
+        "en-GB": u""
 }
 
 responseType = "Monitor"
