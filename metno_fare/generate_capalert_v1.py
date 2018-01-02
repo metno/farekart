@@ -250,7 +250,7 @@ def make_info_element(alert, l_info):
     SubElement(eventCode, 'value').text = l_info.event_type
 
     # Write UTC times to the CAP file.
-    SubElement(info, 'effective').text = l_info.effective.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    SubElement(info, 'effective').text = l_info.effective.strftime("%Y-%m-%dT%H:00:00+00:00")
     SubElement(info, 'onset').text = l_info.onset.strftime("%Y-%m-%dT%H:00:00+00:00")
     SubElement(info, 'expires').text = l_info.expires.strftime("%Y-%m-%dT%H:00:00+00:00")
     SubElement(info, 'senderName').text = fare_setup.senders[l_info.lang]

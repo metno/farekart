@@ -45,7 +45,7 @@ class event_awareness_parameters:
 
         response = self.awarenessResponse
         if (phenomenon_name):
-            response+=phenomenon_name
+            response+=" " + phenomenon_name
         return response
 
 

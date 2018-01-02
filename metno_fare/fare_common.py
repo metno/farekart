@@ -142,7 +142,7 @@ def retrieve_from_xml_fare(xmldoc):
 
                 loc['id'] = location.get('id')
                 loc['name'] = location.find('header').text
-                loc['effective'] = termin
+
 
                 for param in location.findall('parameter'):
                     nam = param.get('name')
@@ -152,6 +152,7 @@ def retrieve_from_xml_fare(xmldoc):
 
                 loc['vfrom']=vfrom
                 loc['vto']=vto
+                loc['effective'] = vfrom
 
                 locations.append(loc)
 
