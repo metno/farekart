@@ -83,6 +83,7 @@ class info:
         self.altitude = loc.get('altitude')
         self.ceiling = loc.get('ceiling')
         self.polygon=get_polygon(db, loc)
+        self.all_ids=loc.get('all_ids')
 
     def get_parameters(self):
 
@@ -289,6 +290,30 @@ def make_info_element(alert, l_info):
     if (l_info.polygon):
         polygon = SubElement(area, 'polygon')
         polygon.text = l_info.polygon
+
+
+# get administrative geocodes from ted identifiers
+    try:
+        if l_info.all_ids:
+                ted_ids=l_info.all_ids.split(":")
+                geocodes={}
+                for ted_id in ted_ids:
+                    ted2Geo=fare_setup.ted2Geocode.get(ted_id)
+                    if not ted2Geo:
+                        continue
+                    for code,ids in ted2Geo.items():
+                        if code not in geocodes:
+                            geocodes[code]=list()
+                        for id in ids.split(":"):
+                            if id not in geocodes[code]:
+                                geocodes[code].append(id)
+                for valueName,values in geocodes.items():
+                    for value in values:
+                        geocode=SubElement(area,'geocode')
+                        SubElement(geocode, 'valueName').text = valueName
+                        SubElement(geocode, 'value').text =value
+    except Exception:
+        print("Error creating geocode elements!")
 
     if l_info.altitude:
             SubElement(area, 'altitude').text = l_info.altitude

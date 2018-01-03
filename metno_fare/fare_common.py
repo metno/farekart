@@ -141,6 +141,7 @@ def retrieve_from_xml_fare(xmldoc):
                 loc = {}
 
                 loc['id'] = location.get('id')
+                loc['all_ids']=location.get('all_ids')
                 loc['name'] = location.find('header').text
 
 
