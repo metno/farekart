@@ -83,7 +83,7 @@ ted2Geocode = {
 "9009": {"iso 3166-2":"NO-20"},  # Øst-Finnmark
 "9010": {"iso 3166-2":"NO-20"},  # Kyst- og fjordstrøkene i Vest-Finnmark
 "9011": {"iso 3166-2":"NO-20"},  # Finnmarksvidda
-"9021": {"iso 3166-2":"NO-21"},  # Nordenskiöld Land på Spitsbergen
+"9018": {"iso 3166-2":"NO-21"},  # Nordenskiöld Land på Spitsbergen
 # Fjellet i Sør-Norge berører fylkene
     # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
     # Sogn og Fjordane, Møre og Romsdal
