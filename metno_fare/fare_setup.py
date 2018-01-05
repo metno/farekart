@@ -54,17 +54,17 @@ geographicDomain={
 # mapping from ted id to administrative ids
 ted2Geocode = {
 "0601": {"iso 3166-2":"NO-01"},  # Østfold
-"0602": {"iso 3166-2":"NO-02" }, # Akershus
+"0602": {"iso 3166-2":"NO-02"},  # Akershus
 "0603": {"iso 3166-2":"NO-03"},  # Oslo
 "0604": {"iso 3166-2":"NO-04"},  # Hedmark
-"0605": {"iso 3166-2":"NO-05" }, # Oppland
+"0605": {"iso 3166-2":"NO-05"},  # Oppland
 "0606": {"iso 3166-2":"NO-06"},  # Buskerud
 "0607": {"iso 3166-2":"NO-07"},  # Vestfold
-"0608": {"iso 3166-2":"NO-08" }, # Telemark
-"0609": {"iso 3166-2":"NO-09"} , # Aust-Agder
-"0610": {"iso 3166-2":"NO-10"} , # Vest-Agder
-"0611": {"iso 3166-2":"NO-11" }, # Rogaland
-"0612": {"iso 3166-2":"NO-12" }, # Hordaland
+"0608": {"iso 3166-2":"NO-08"},  # Telemark
+"0609": {"iso 3166-2":"NO-09"},  # Aust-Agder
+"0610": {"iso 3166-2":"NO-10"},  # Vest-Agder
+"0611": {"iso 3166-2":"NO-11"},  # Rogaland
+"0612": {"iso 3166-2":"NO-12"},  # Hordaland
 "0614": {"iso 3166-2":"NO-14"},  # Sogn og Fjordane
 "0615": {"iso 3166-2":"NO-15"},  # Møre og Romsdal
 "0616": {"iso 3166-2":"NO-16"},  # Sør-Trøndelag
@@ -83,6 +83,7 @@ ted2Geocode = {
 "9009": {"iso 3166-2":"NO-20"},  # Øst-Finnmark
 "9010": {"iso 3166-2":"NO-20"},  # Kyst- og fjordstrøkene i Vest-Finnmark
 "9011": {"iso 3166-2":"NO-20"},  # Finnmarksvidda
+"9021": {"iso 3166-2":"NO-21"},  # Nordenskiöld Land på Spitsbergen
 # Fjellet i Sør-Norge berører fylkene
     # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
     # Sogn og Fjordane, Møre og Romsdal
