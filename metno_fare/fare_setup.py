@@ -61,6 +61,7 @@ ted2Geocode = {
 "0606": {"iso 3166-2":"NO-06"},  # Buskerud
 "0607": {"iso 3166-2":"NO-07"},  # Vestfold
 "0608": {"iso 3166-2":"NO-08" }, # Telemark
+"0609": {"iso 3166-2":"NO-09"} , # Aust-Agder
 "0610": {"iso 3166-2":"NO-10"} , # Vest-Agder
 "0611": {"iso 3166-2":"NO-11" }, # Rogaland
 "0612": {"iso 3166-2":"NO-12" }, # Hordaland
@@ -83,7 +84,7 @@ ted2Geocode = {
 "9010": {"iso 3166-2":"NO-20"},  # Kyst- og fjordstrøkene i Vest-Finnmark
 "9011": {"iso 3166-2":"NO-20"},  # Finnmarksvidda
 # Fjellet i Sør-Norge berører fylkene
-# Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Hordaland,
-# Sogn og Fjordane, Møre og Romsdal
-"0710" : {"iso 3166-2":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-12:NO-14:NO-15"}
+    # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
+    # Sogn og Fjordane, Møre og Romsdal
+"0710" : {"iso 3166-2":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-11:NO-12:NO-14:NO-15"}
 }
