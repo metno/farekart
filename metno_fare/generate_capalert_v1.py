@@ -345,8 +345,8 @@ def get_polygon(db, loc):
 
 def get_headline(type,lang, effective, expires , all_locations_name):
 
-    headline_templates = { "no":u'%s, %s, %s til %s.',
-               "en-GB":u'%s, %s, %s to %s.'}
+    headline_templates = { "no":u'%s, %s, %s UTC til %s UTC.',
+               "en-GB":u'%s, %s, %s UTC to %s UTC.'}
 
     # disable temporarily
     # sudo locale-gen nb_NO.utf8 if this does not work
