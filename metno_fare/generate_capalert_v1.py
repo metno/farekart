@@ -259,7 +259,8 @@ def make_info_element(alert, l_info):
     SubElement(info, 'headline').text = l_info.headline
     SubElement(info, 'description').text = l_info.description
     SubElement(info, 'instruction').text = l_info.instruction
-    SubElement(info, 'web').text = fare_setup.web
+    if l_info.infolink:
+        SubElement(info, 'web').text = l_info.infolink
     SubElement(info, 'contact').text = fare_setup.contact[l_info.lang]
 
     parameters = l_info.get_parameters()
@@ -277,12 +278,6 @@ def make_info_element(alert, l_info):
         SubElement(resource, 'mimeType').text = "image/png"
         SubElement(resource, 'uri').text = l_info.pict
 
-    # Link to further information
-    if l_info.infolink:
-        resource = SubElement(info, 'resource')
-        SubElement(resource, 'resourceDesc').text = "Tilleggsinformasjon tilgjengelig fra andre"
-        SubElement(resource, 'mimeType').text = "text/html"
-        SubElement(resource, 'uri').text = l_info.infolink
 
     area = SubElement(info, 'area')
     SubElement(area, 'areaDesc').text = l_info.areaDesc
