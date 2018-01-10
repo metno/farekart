@@ -1,4 +1,10 @@
-python-farekart (0.3.16-2) UNRELEASED; urgency=medium
+python-farekart (0.3.16-3) RELEASED; urgency=medium
+
+  * new upstream version, some changes in the content of CAP warnings
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Wed, 10 Jan 2018 17:26:06 +0100
+
+python-farekart (0.3.16-2) RELEASED; urgency=medium
 
   * space instead of newline between CAP coordinates
 
