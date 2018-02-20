@@ -14,7 +14,7 @@ nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 MAX_WEEKS_TO_KEEP = 4
 
 
-def make_list_of_valid_files(filebase,schemas,make_v1):
+def make_list_of_valid_files(filebase,schemas):
     """Compiles a Json file containing information about each of the CAP
         files that start with the given filebase, writing the Json file to the
         directory containing the files."""
@@ -84,10 +84,8 @@ def make_list_of_valid_files(filebase,schemas,make_v1):
     update_references(capalerts,references)
 
     cap_no_list = make_cap_list("no",capalerts)
-    if make_v1:
-        cap_en_list = make_cap_list("en-GB",capalerts)
-    else:
-        cap_en_list = make_cap_list("en",capalerts)
+    cap_en_list = make_cap_list("en-GB",capalerts)
+
     dirname = os.path.dirname(filebase)
     write_json(cap_no_list, dirname, "CAP_no.json")
     write_json(cap_en_list, dirname, "CAP_en.json")

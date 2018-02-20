@@ -53,25 +53,25 @@ def get_ted_docs(db, select_string):
     return result
 
 
-def generate_capfiles_from_teddir(ted_directory,output_dirname,db,make_v1=False):
+def generate_capfiles_from_teddir(ted_directory,output_dirname,db):
     filenames = os.listdir(ted_directory)
     for ted_filename in filenames:
-        generate_capfile_from_tedfile(os.path.join(ted_directory,ted_filename),output_dirname,db,make_v1)
+        generate_capfile_from_tedfile(os.path.join(ted_directory,ted_filename),output_dirname,db)
 
 
-def generate_capfile_from_tedfile(ted_filename,output_dirname,db,make_v1=False):
+def generate_capfile_from_tedfile(ted_filename,output_dirname,db):
     """reads the tedfile with the given filename
     writes cap-file, the name is given by the termin time and product name of the ted document
     """
     try:
     # open tedDocument file for reading
         with open(ted_filename,'r') as f:
-            generate_capfile_from_teddoc(f.read(),output_dirname,db,make_v1)
+            generate_capfile_from_teddoc(f.read(),output_dirname,db)
 
     except Exception as inst:
         sys.stderr.write("File %s could not be converted to CAP: %s \n" % (ted_filename, PrintException()))
 
-def generate_capfile_from_teddoc(xmldoc, output_dirname,db,make_v1=False):
+def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
     cap_filename = ""
     try:
         # find correct file name from the tedDocuments name and termin
@@ -79,13 +79,9 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db,make_v1=False):
         cap_filename = os.path.join(output_dirname, cap_filename)
         sys.stderr.write("File '%s' will be generated\n" % (cap_filename))
 
-        if (make_v1):
-            # Test make capalert version 1
-            # generate the CAP alert  from the tedDocument
-            capalert = generate_capalert_v1(xmldoc, db)
-        else:
-            # generate the CAP alert  from the tedDocument
-            capalert = generate_capalert_fare(xmldoc, db)
+        # Test make capalert version 1
+        # generate the CAP alert  from the tedDocument
+        capalert = generate_capalert_v1(xmldoc, db)
 
         # write the resulting CAP alert to file
         with open(cap_filename,'w') as f:
@@ -107,14 +103,14 @@ def get_capfilename_from_teddoc(xmldoc):
     return filename
 
 
-def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db,make_v1=False):
+def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db):
     """Generates CAP files for the warnings obtained from the database, db,
     for documents with
     Writes an index file for all CAP files in output_dirname."""
 
-    generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1)
+    generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
     filebase = os.path.join(output_dirname,ted_documentname)
-    make_list_of_valid_files(filebase, schemas,make_v1)
+    make_list_of_valid_files(filebase, schemas)
 
 
 
@@ -138,14 +134,14 @@ def get_ted_documents(db, ted_documentname):
     return docs
 
 
-def generate_capfiles_from_teddb(ted_documentname,output_dirname,db,make_v1):
+def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
     docs = get_ted_documents(db, ted_documentname)
     for doc in docs:
         capfilename = os.path.join(output_dirname,get_capfilename_from_teddoc(doc[0]))
         if (os.path.isfile(capfilename)):
             sys.stderr.write("File '%s' already exists!\n" % capfilename)
         else:
-            generate_capfile_from_teddoc(doc[0], output_dirname, db,make_v1)
+            generate_capfile_from_teddoc(doc[0], output_dirname, db)
 
 
 
@@ -205,19 +201,19 @@ if __name__ == "__main__":
     if ted_filename == None:
         #read xml from the database
         sys.stderr.write("Filename is None\n")
-        generate_capfiles_from_teddb(ted_documentname,output_dirname,db,True)
+        generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
     elif os.path.isfile(ted_filename):
         sys.stderr.write("File %s will be converted to CAP\n" % ted_filename)
-        generate_capfile_from_tedfile(ted_filename,output_dirname,db,True)
+        generate_capfile_from_tedfile(ted_filename,output_dirname,db)
     elif os.path.isdir(ted_filename):
         sys.stderr.write("Directory %s should be converted to CAP\n" % ted_filename)
-        generate_capfiles_from_teddir(ted_filename,output_dirname,db,True)
+        generate_capfiles_from_teddir(ted_filename,output_dirname,db)
     else:
         sys.stderr.write("%s is not a file or directory. No conversion is done\n" % ted_filename)
         exit
 
 
     filebase = os.path.join(output_dirname,ted_documentname)
-    make_list_of_valid_files(filebase, schema_dirname,True)
+    make_list_of_valid_files(filebase, schema_dirname)
     # should be the directory to publish CAP
     publishcap.main(output_dirname)

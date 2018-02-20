@@ -78,8 +78,7 @@ if __name__ == "__main__":
     dirname_v1 = os.path.join(dirname, "v1")
     if (not os.path.isdir(dirname_v1)):
         os.mkdir(dirname_v1)
-    generate_files_cap_fare(fare_documentname,dirname, schema_dirname,db)
-    generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db,make_v1=True)
+    generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db)
 
     sys.stderr.write("Start creating kml-files\n")
     # Obtain a string containing the local time for the start of the current hour.
