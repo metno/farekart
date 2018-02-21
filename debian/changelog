@@ -1,3 +1,9 @@
+python-farekart (0.3.16-4) RELEASED; urgency=medium
+
+  * only generate new CAP format (v1). removed some unused code
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Tue, 20 Feb 2018 10:35:11 +0100
+
 python-farekart (0.3.16-3) RELEASED; urgency=medium
 
   * new upstream version, some changes in the content of CAP warnings
