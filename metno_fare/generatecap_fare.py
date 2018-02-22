@@ -211,8 +211,11 @@ if __name__ == "__main__":
         sys.stderr.write("%s is not a file or directory. No conversion is done\n" % ted_filename)
         exit
 
+    try:
+        filebase = os.path.join(output_dirname,ted_documentname)
+        make_list_of_valid_files(filebase, schema_dirname)
+        # should be the directory to publish CAP
+        publishcap.main(output_dirname)
 
-    filebase = os.path.join(output_dirname,ted_documentname)
-    make_list_of_valid_files(filebase, schema_dirname)
-    # should be the directory to publish CAP
-    publishcap.main(output_dirname)
+    except Exception as inst:
+        sys.stderr.write("JSON file could not be made: %s %s \n" % (PrintException() ,inst.message))

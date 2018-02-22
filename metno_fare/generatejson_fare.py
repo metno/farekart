@@ -9,9 +9,19 @@ import os
 import sys
 from lxml import etree
 import dateutil.parser
+import linecache
 
 nsmap = {'cap': 'urn:oasis:names:tc:emergency:cap:1.2'}
 MAX_WEEKS_TO_KEEP = 4
+
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    return 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
 
 
 def make_list_of_valid_files(filebase,schemas):
@@ -55,12 +65,21 @@ def make_list_of_valid_files(filebase,schemas):
                 capinfo={}
                 capinfo['language'] =  info.find('cap:language', nsmap).text
                 capinfo['severity'] =  info.find('cap:severity', nsmap).text
+                capinfo['county'] =  list()
                 vf = info.find('cap:onset', nsmap).text
                 vt = info.find('cap:expires', nsmap).text
                 capinfo['onset'] = vf
                 capinfo['expires'] = vt
                 area = info.find('cap:area', nsmap)
                 capinfo['areaDesc']= area.find('cap:areaDesc', nsmap).text
+                for geocode in area.findall('cap:geocode', nsmap):
+                    try:
+                        valueName = geocode.find('cap:valueName', nsmap).text
+                        value = geocode.find('cap:value', nsmap).text
+                        if valueName == 'county':
+                            capinfo['county'].append(int(value))
+                    except Exception as inst:
+                        sys.stderr.write("Could not get county geocode from CAP file %s,%s : %s %s \n" % (valueName,value,PrintException(), inst.message))
                 capinfo['description'] = info.find('cap:description', nsmap).text
                 for eventCode in info.findall('cap:eventCode', nsmap):
                     valueName= eventCode.find('cap:valueName',nsmap).text
@@ -70,6 +89,8 @@ def make_list_of_valid_files(filebase,schemas):
                     valueName = parameter.find('cap:valueName', nsmap).text
                     value = parameter.find('cap:value', nsmap).text
                     capinfo[valueName] = value
+
+
 
                 # This headline should be common for all info elements
                 capinfo['headline'] = info.find('cap:headline', nsmap).text
@@ -90,6 +111,13 @@ def make_list_of_valid_files(filebase,schemas):
     write_json(cap_no_list, dirname, "CAP_no.json")
     write_json(cap_en_list, dirname, "CAP_en.json")
 
+    # make Json list for testing with counties
+    cap_no_test_list = make_cap_list("no",capalerts,write_counties=True)
+    cap_en_test_list = make_cap_list("en-GB",capalerts,write_counties=True)
+    write_json(cap_no_test_list, dirname, "test_CAP_no.json")
+    write_json(cap_en_test_list, dirname, "test_CAP_en.json")
+
+
 
 def find_references(cap):
     """Finds the references in a CAP document, cap, and yields each identifier
@@ -108,7 +136,7 @@ def find_references(cap):
         yield original_id
 
 
-def make_cap_list(language, capalerts):
+def make_cap_list(language, capalerts,write_counties=False):
     now = datetime.datetime.now(dateutil.tz.tzutc())
     caplist = []
     for identifier, capalert in capalerts.iteritems():
@@ -151,6 +179,9 @@ def make_cap_list(language, capalerts):
                     cap_entry['event']=info['eventType']
                 if 'geographicDomain' in info:
                     cap_entry['geographicDomain']=info['geographicDomain']
+                if write_counties and 'county' in info:
+                    cap_entry['county']=info['county']
+
 
 
         if (onset_list):
