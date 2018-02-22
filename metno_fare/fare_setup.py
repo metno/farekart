@@ -53,39 +53,40 @@ geographicDomain={
 
 # mapping from ted id to administrative ids
 ted2Geocode = {
-"0601": {"iso 3166-2":"NO-01"},  # Østfold
-"0602": {"iso 3166-2":"NO-02"},  # Akershus
-"0603": {"iso 3166-2":"NO-03"},  # Oslo
-"0604": {"iso 3166-2":"NO-04"},  # Hedmark
-"0605": {"iso 3166-2":"NO-05"},  # Oppland
-"0606": {"iso 3166-2":"NO-06"},  # Buskerud
-"0607": {"iso 3166-2":"NO-07"},  # Vestfold
-"0608": {"iso 3166-2":"NO-08"},  # Telemark
-"0609": {"iso 3166-2":"NO-09"},  # Aust-Agder
-"0610": {"iso 3166-2":"NO-10"},  # Vest-Agder
-"0611": {"iso 3166-2":"NO-11"},  # Rogaland
-"0612": {"iso 3166-2":"NO-12"},  # Hordaland
-"0614": {"iso 3166-2":"NO-14"},  # Sogn og Fjordane
-"0615": {"iso 3166-2":"NO-15"},  # Møre og Romsdal
-"0616": {"iso 3166-2":"NO-16"},  # Sør-Trøndelag
-"0617": {"iso 3166-2":"NO-17"},  # Nord-Trøndelag
-"0618": {"iso 3166-2":"NO-18"},  # Nordland
-"0619": {"iso 3166-2":"NO-19"},  # Troms
-"0620": {"iso 3166-2":"NO-20"},  # Finnmark
-"9001": {"iso 3166-2":"NO-18"},  # Helgeland
-"9002": {"iso 3166-2":"NO-18"},  # Saltfjellet
-"9003": {"iso 3166-2":"NO-18"},  # Salten
-"9004": {"iso 3166-2":"NO-18"},  # Lofoten
-"9005": {"iso 3166-2":"NO-18"},  # Ofoten
-"9006": {"iso 3166-2":"NO-18"},  # Vesterålen
-"9007": {"iso 3166-2":"NO-19"},  # Sør-Troms
-"9008": {"iso 3166-2":"NO-19"},  # Nord-Troms
-"9009": {"iso 3166-2":"NO-20"},  # Øst-Finnmark
-"9010": {"iso 3166-2":"NO-20"},  # Kyst- og fjordstrøkene i Vest-Finnmark
-"9011": {"iso 3166-2":"NO-20"},  # Finnmarksvidda
-"9018": {"iso 3166-2":"NO-21"},  # Nordenskiöld Land på Spitsbergen
+"0601": {"iso 3166-2":"NO-01","county":"1:30"},  # Østfold, 30 is code for Viken from 2020
+"0602": {"iso 3166-2":"NO-02","county":"2:30"},  # Akershus, 30 is code for Viken from 2020
+"0603": {"iso 3166-2":"NO-03","county":"3"},     # Oslo
+"0604": {"iso 3166-2":"NO-04","county":"4:34"},  # Hedmark, 34 is code for Innlandet from 2020
+"0605": {"iso 3166-2":"NO-05","county":"5:34"},  # Oppland,, 34 is code for Innlandet from 2020
+"0606": {"iso 3166-2":"NO-06","county":"6:30"},  # Buskerud, 30 is code for Viken from 2020
+"0607": {"iso 3166-2":"NO-07","county":"7:38"},  # Vestfold, 38 is code for Telemark og Vestfold from 2020
+"0608": {"iso 3166-2":"NO-08","county":"8:38"},  # Telemark, 38 is code for Telemark og Vestfold from 2020
+"0609": {"iso 3166-2":"NO-09","county":"9:42"},  # Aust-Agder, 42 is code for Agder from 2020
+"0610": {"iso 3166-2":"NO-10","county":"10:42"}, # Vest-Agder, 42 is code for Agder from 2020
+"0611": {"iso 3166-2":"NO-11","county":"11"},    # Rogaland
+"0612": {"iso 3166-2":"NO-12","county":"12:46"}, # Hordaland, 46 is code for Vestlandet from 2020
+"0614": {"iso 3166-2":"NO-14","county":"14:46"}, # Sogn og Fjordane, 46 is code for Vestlandet from 2020
+"0615": {"iso 3166-2":"NO-15","county":"15"},    # Møre og Romsdal
+"0616": {"iso 3166-2":"NO-16","county":"16:50"}, # Sør-Trøndelag, 50 is new code for Trøndelag from 2018
+"0617": {"iso 3166-2":"NO-17","county":"17:50"}, # Nord-Trøndelag, 50 is new code for Trøndelag from 2018
+"0618": {"iso 3166-2":"NO-18","county":"18"},    # Nordland
+"0619": {"iso 3166-2":"NO-19","county":"19:54"}, # Troms, 54 is code for Troms og Finnmark from 2020
+"0620": {"iso 3166-2":"NO-20","county":"20:54"}, # Finnmark, , 54 is code for Troms og Finnmark from 2020
+"9001": {"iso 3166-2":"NO-18","county":"18"},    # Helgeland
+"9002": {"iso 3166-2":"NO-18","county":"18"},    # Saltfjellet
+"9003": {"iso 3166-2":"NO-18","county":"18"},    # Salten
+"9004": {"iso 3166-2":"NO-18","county":"18"},    # Lofoten
+"9005": {"iso 3166-2":"NO-18","county":"18"},    # Ofoten
+"9006": {"iso 3166-2":"NO-18","county":"18"},    # Vesterålen
+"9007": {"iso 3166-2":"NO-19","county":"19:54"}, # Sør-Troms
+"9008": {"iso 3166-2":"NO-19","county":"19:54"}, # Nord-Troms
+"9009": {"iso 3166-2":"NO-20","county":"20:54"}, # Øst-Finnmark
+"9010": {"iso 3166-2":"NO-20","county":"20:54"}, # Kyst- og fjordstrøkene i Vest-Finnmark
+"9011": {"iso 3166-2":"NO-20","county":"20:54"}, # Finnmarksvidda
+"9018": {"iso 3166-2":"NO-21","county":"21",},   # Nordenskiöld Land på Spitsbergen
 # Fjellet i Sør-Norge berører fylkene
     # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
     # Sogn og Fjordane, Møre og Romsdal
-"0710" : {"iso 3166-2":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-11:NO-12:NO-14:NO-15"}
+"0710" : {"iso 3166-2":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-11:NO-12:NO-14:NO-15",
+          "county":"16:5:4:6:8:9:10:11:12:14:15:50:34:30:38:42:46",}
 }
