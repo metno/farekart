@@ -929,8 +929,8 @@
             "en-GB": "Pollen"
         },
         "stormSurge": {
-            "no": "Stormflo",
-            "en-GB": "Storm Surge"
+            "no": "Vannstand på havet",
+            "en-GB": "Water level"
         },
         "airPollution": {
             "no": "Luftforurensning",
