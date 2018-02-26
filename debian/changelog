@@ -1,3 +1,16 @@
+python-farekart (0.3.16-6) RELEASED; urgency=medium
+
+  * eventSeverity for stormSurge changed
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Mon, 26 Feb 2018 08:04:09 +0100
+
+python-farekart (0.3.16-5) RELEASED; urgency=medium
+
+   * eventSeverity for stormSurge changed.
+   * Create test-Json files with county codes
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Mon, 26 Feb 2018 07:35:59 +0100
+	
 python-farekart (0.3.16-4) RELEASED; urgency=medium
 
   * only generate new CAP format (v1). removed some unused code
