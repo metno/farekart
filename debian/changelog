@@ -1,3 +1,9 @@
+python-farekart (0.3.16-7) RELEASED; urgency=medium
+
+  * county codes in Json-files
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Wed, 14 Mar 2018 08:01:32 +0100
+
 python-farekart (0.3.16-6) RELEASED; urgency=medium
 
   * eventSeverity for stormSurge changed

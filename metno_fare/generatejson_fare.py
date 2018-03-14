@@ -104,8 +104,8 @@ def make_list_of_valid_files(filebase,schemas):
 
     update_references(capalerts,references)
 
-    cap_no_list = make_cap_list("no",capalerts)
-    cap_en_list = make_cap_list("en-GB",capalerts)
+    cap_no_list = make_cap_list("no",capalerts,write_counties=True)
+    cap_en_list = make_cap_list("en-GB",capalerts,write_counties=True)
 
     dirname = os.path.dirname(filebase)
     write_json(cap_no_list, dirname, "CAP_no.json")
