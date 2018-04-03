@@ -77,7 +77,7 @@ def make_list_of_valid_files(filebase,schemas):
                         valueName = geocode.find('cap:valueName', nsmap).text
                         value = geocode.find('cap:value', nsmap).text
                         if valueName == 'county':
-                            capinfo['county'].append(int(value))
+                            capinfo['county'].append(value)
                     except Exception as inst:
                         sys.stderr.write("Could not get county geocode from CAP file %s,%s : %s %s \n" % (valueName,value,PrintException(), inst.message))
                 capinfo['description'] = info.find('cap:description', nsmap).text

@@ -53,15 +53,15 @@ geographicDomain={
 
 # mapping from ted id to administrative ids
 ted2Geocode = {
-"0601": {"iso 3166-2":"NO-01","county":"1:30"},  # Østfold, 30 is code for Viken from 2020
-"0602": {"iso 3166-2":"NO-02","county":"2:30"},  # Akershus, 30 is code for Viken from 2020
-"0603": {"iso 3166-2":"NO-03","county":"3"},     # Oslo
-"0604": {"iso 3166-2":"NO-04","county":"4:34"},  # Hedmark, 34 is code for Innlandet from 2020
-"0605": {"iso 3166-2":"NO-05","county":"5:34"},  # Oppland,, 34 is code for Innlandet from 2020
-"0606": {"iso 3166-2":"NO-06","county":"6:30"},  # Buskerud, 30 is code for Viken from 2020
-"0607": {"iso 3166-2":"NO-07","county":"7:38"},  # Vestfold, 38 is code for Telemark og Vestfold from 2020
-"0608": {"iso 3166-2":"NO-08","county":"8:38"},  # Telemark, 38 is code for Telemark og Vestfold from 2020
-"0609": {"iso 3166-2":"NO-09","county":"9:42"},  # Aust-Agder, 42 is code for Agder from 2020
+"0601": {"iso 3166-2":"NO-01","county":"01:30"},  # Østfold, 30 is code for Viken from 2020
+"0602": {"iso 3166-2":"NO-02","county":"02:30"},  # Akershus, 30 is code for Viken from 2020
+"0603": {"iso 3166-2":"NO-03","county":"03"},     # Oslo
+"0604": {"iso 3166-2":"NO-04","county":"04:34"},  # Hedmark, 34 is code for Innlandet from 2020
+"0605": {"iso 3166-2":"NO-05","county":"05:34"},  # Oppland,, 34 is code for Innlandet from 2020
+"0606": {"iso 3166-2":"NO-06","county":"06:30"},  # Buskerud, 30 is code for Viken from 2020
+"0607": {"iso 3166-2":"NO-07","county":"07:38"},  # Vestfold, 38 is code for Telemark og Vestfold from 2020
+"0608": {"iso 3166-2":"NO-08","county":"08:38"},  # Telemark, 38 is code for Telemark og Vestfold from 2020
+"0609": {"iso 3166-2":"NO-09","county":"09:42"},  # Aust-Agder, 42 is code for Agder from 2020
 "0610": {"iso 3166-2":"NO-10","county":"10:42"}, # Vest-Agder, 42 is code for Agder from 2020
 "0611": {"iso 3166-2":"NO-11","county":"11"},    # Rogaland
 "0612": {"iso 3166-2":"NO-12","county":"12:46"}, # Hordaland, 46 is code for Vestlandet from 2020
@@ -88,5 +88,5 @@ ted2Geocode = {
     # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
     # Sogn og Fjordane, Møre og Romsdal
 "0710" : {"iso 3166-2":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-11:NO-12:NO-14:NO-15",
-          "county":"16:5:4:6:8:9:10:11:12:14:15:50:34:30:38:42:46",}
+          "county":"16:05:04:06:08:09:10:11:12:14:15:50:34:30:38:42:46",}
 }
