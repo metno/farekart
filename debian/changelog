@@ -1,3 +1,9 @@
+python-farekart (0.3.16-8) RELEASED; urgency=medium
+
+  * changed county codes, added MunicipalityId
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Thu, 05 Apr 2018 10:16:10 +0200
+
 python-farekart (0.3.16-7) RELEASED; urgency=medium
 
   * county codes in Json-files
