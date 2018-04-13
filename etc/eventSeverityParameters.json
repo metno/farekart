@@ -712,9 +712,9 @@
         "stormSurge": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstremt høy vannstand på havet",
-                    "Moderate": "Høy vannstand på havet",
-                    "Severe": "Svært høy vannstand på havet"
+                    "Extreme": "Ekstremt høy vannstand",
+                    "Moderate": "Høy vannstand",
+                    "Severe": "Svært høy vannstand"
                 },
                 "en-GB": {
                     "Extreme": "Extreme water level",
@@ -724,9 +724,9 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstremt høy vannstand på havet pågår",
-                    "Moderate": "Høy vannstand på havet pågår ",
-                    "Severe": "Svært høy vannstand på havet pågår"
+                    "Extreme": "Ekstremt høy vannstand pågår",
+                    "Moderate": "Høy vannstand pågår ",
+                    "Severe": "Svært høy vannstand pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme water level ongoing",
@@ -736,9 +736,9 @@
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstremt høy vannstand på havet",
-                    "Moderate": "mulighet for høy vannstand på havet",
-                    "Severe": "mulighet for svært høy vannstand på havet"
+                    "Extreme": "mulighet for ekstremt høy vannstand",
+                    "Moderate": "mulighet for høy vannstand",
+                    "Severe": "mulighet for svært høy vannstand"
                 },
                 "en-GB": {
                     "Extreme": "Possibility of extreme water level",
@@ -748,9 +748,9 @@
             },
              "Unlikely": {
                 "no": {
-                    "Extreme": "liten mulighet for ekstremt høy vannstand på havet",
-                    "Moderate": "liten mulighet for høy vannstand på havet",
-                    "Severe": "liten mulighet for svært høy vannstand på havet"
+                    "Extreme": "liten mulighet for ekstremt høy vannstand",
+                    "Moderate": "liten mulighet for høy vannstand",
+                    "Severe": "liten mulighet for svært høy vannstand"
                 },
                 "en-GB": {
                     "Extreme": "small possibility of extreme water level",
@@ -929,8 +929,8 @@
             "en-GB": "Pollen"
         },
         "stormSurge": {
-            "no": "Vannstand",
-            "en-GB": "Water level"
+            "no": "Vannstand langs kysten og i fjordene",
+            "en-GB": "Water level at the coast and in the fjords"
         },
         "airPollution": {
             "no": "Luftforurensning",
