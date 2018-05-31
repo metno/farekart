@@ -56,24 +56,24 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftige tordenbyger, gult nivå",
+                    "Moderate": "Kraftige tordenbyger",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Heavy thunderstorms, yellow level",
+                    "Moderate": "Heavy thunderstorms",
                     "Severe": null
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftige tordenbyger pågår, gult nivå",
+                    "Moderate": "Kraftige tordenbyger pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Heavy thunderstorms ongoing, yellow level",
+                    "Moderate": "Heavy thunderstorms ongoing",
                     "Severe": null
                 }
             },
@@ -81,12 +81,12 @@
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for svært kraftige tordenbyger, gult nivå"
+                    "Severe": "mulighet for svært kraftige tordenbyger"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "possibility of very heavy thunderstorms, yellow level"
+                    "Severe": "possibility of very heavy thunderstorms"
                 }
             },
             "Unlikely": {
@@ -157,24 +157,24 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Vanskelige kjøreforhold, gult nivå",
+                    "Moderate": "Vanskelige kjøreforhold",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Difficult driving conditions, yellow level",
+                    "Moderate": "Difficult driving conditions",
                     "Severe": null
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "vanskelige kjøreforhold pågår, gult nivå",
+                    "Moderate": "vanskelige kjøreforhold pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Difficult driving conditions ongoing, yellow level",
+                    "Moderate": "Difficult driving conditions ongoing",
                     "Severe": null
                 }
             },
@@ -206,49 +206,49 @@
         "wind": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstrem vind, rødt nivå",
-                    "Moderate": "Kraftig vind, gult nivå",
-                    "Severe": "Svært kraftig vind, oransje nivå"
+                    "Extreme": "Ekstrem vind",
+                    "Moderate": "Kraftig vind",
+                    "Severe": "Svært kraftig vind"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme winds, red level",
-                    "Moderate": "Strong winds, yellow level",
-                    "Severe": "Very strong winds, orange level"
+                    "Extreme": "Extreme winds",
+                    "Moderate": "Strong winds",
+                    "Severe": "Very strong winds"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstrem vind pågår, rødt nivå",
-                    "Moderate": "kraftig vind pågår, gult nivå",
-                    "Severe": "svært kraftig vind pågår, oransje nivå"
+                    "Extreme": "Ekstrem vind pågår",
+                    "Moderate": "kraftig vind pågår",
+                    "Severe": "svært kraftig vind pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme wind ongoing, red level",
-                    "Moderate": "Heavy wind ongoing, yellow level",
-                    "Severe": "Very heavy wind ongoing, orange level"
+                    "Extreme": "Extreme wind ongoing",
+                    "Moderate": "Heavy wind ongoing",
+                    "Severe": "Very heavy wind ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstrem vind, oransje nivå",
+                    "Extreme": "mulighet for ekstrem vind",
                     "Moderate": null,
-                    "Severe": "mulighet for svært kraftig vind, gult nivå"
+                    "Severe": "mulighet for svært kraftig vind"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme wind, orange level",
+                    "Extreme": "possibility of extreme wind",
                     "Moderate": null,
-                    "Severe": "possiblity of very heavy wind, yellow level"
+                    "Severe": "possiblity of very heavy wind"
                 }
 
             },
              "Unlikely": {
                  "no": {
-                     "Extreme": "liten mulighet for ekstrem vind, gult nivå",
+                     "Extreme": "liten mulighet for ekstrem vind",
                      "Moderate": null,
                      "Severe": null
                  },
                  "en-GB": {
-                     "Extreme": "small possibility of ekstrem vind, gult nivå",
+                     "Extreme": "small possibility of ekstrem vind",
                      "Moderate": null,
                      "Severe": null
                  }
@@ -258,37 +258,37 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Fare for polart lavtrykk, gult nivå",
-                    "Severe": "Fare for kraftig polart lavtrykk, oransje nivå"
+                    "Moderate": "Fare for polart lavtrykk",
+                    "Severe": "Fare for kraftig polart lavtrykk"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Polar low, yellow level",
-                    "Severe": "Severe polar low, orange level"
+                    "Moderate": "Polar low",
+                    "Severe": "Severe polar low"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "polart lavtrykk pågår, gult nivå",
-                    "Severe": "kraftig polart lavtrykk pågår, oransje nivå"
+                    "Moderate": "polart lavtrykk pågår",
+                    "Severe": "kraftig polart lavtrykk pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Polar low ongoing, yellow level",
-                    "Severe": "Severe polar low ongoing, orange level"
+                    "Moderate": "Polar low ongoing",
+                    "Severe": "Severe polar low ongoing"
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for kraftig polart lavtrykk, gult nivå"
+                    "Severe": "mulighet for kraftig polart lavtrykk"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Risk of severe polar low, gult nivå"
+                    "Severe": "Risk of severe polar low"
                 }
             },
             "Unlikely": {
@@ -307,38 +307,38 @@
         "snow": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstreme snømengder, rødt nivå",
-                    "Moderate": "Store snømengder, gult nivå",
-                    "Severe": "Svært store snømengder, oransje nivå"
+                    "Extreme": "Ekstreme snømengder",
+                    "Moderate": "Store snømengder",
+                    "Severe": "Svært store snømengder"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme snowfall, red level",
-                    "Moderate": "Heavy snowfall, yellow level",
-                    "Severe": "Very heavy snowfall, orange level"
+                    "Extreme": "Extreme snowfall",
+                    "Moderate": "Heavy snowfall",
+                    "Severe": "Very heavy snowfall"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme snømengder pågår, rødt nivå",
-                    "Moderate": "store snømengder pågår, gult nivå",
-                    "Severe": " svært store snømengder pågår, oransje nivå"
+                    "Extreme": "Ekstreme snømengder pågår",
+                    "Moderate": "store snømengder pågår",
+                    "Severe": " svært store snømengder pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme snowfall ongoing, red level",
-                    "Moderate": "Heavy snowfall ongoing, yellow level",
-                    "Severe": "Very heavy snowfall ongoing, orange level"
+                    "Extreme": "Extreme snowfall ongoing",
+                    "Moderate": "Heavy snowfall ongoing",
+                    "Severe": "Very heavy snowfall ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstreme snømengder, oransje nivå",
+                    "Extreme": "mulighet for ekstreme snømengder",
                     "Moderate": null,
-                    "Severe": "mulighet for svært store snømengder, gult nivå"
+                    "Severe": "mulighet for svært store snømengder"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme snowfall, orange level",
+                    "Extreme": "possibility of extreme snowfall",
                     "Moderate": null,
-                    "Severe": "possibility of very heavy snowfall, yellow level"
+                    "Severe": "possibility of very heavy snowfall"
                 }
             },
             "Unlikely": {
@@ -357,48 +357,48 @@
         "rain": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstremt mye regn, rødt nivå",
-                    "Moderate": "Mye regn, gult nivå",
-                    "Severe": "Svært mye regn, oransje nivå"
+                    "Extreme": "Ekstremt mye regn",
+                    "Moderate": "Mye regn",
+                    "Severe": "Svært mye regn"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainfall, red level",
-                    "Moderate": "Heavy rainfall, yellow level",
-                    "Severe": "Very heavy rainfall, orange level"
+                    "Extreme": "Extreme rainfall",
+                    "Moderate": "Heavy rainfall",
+                    "Severe": "Very heavy rainfall"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstremt mye regn pågår, rødt nivå",
-                    "Moderate": "mye regn pågår, gult nivå",
-                    "Severe": "svært mye regn pågår, oransje nivå"
+                    "Extreme": "Ekstremt mye regn pågår",
+                    "Moderate": "mye regn pågår",
+                    "Severe": "svært mye regn pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainfall ongoing, red level",
-                    "Moderate": "Heavy rainfall ongoing, yellow level",
-                    "Severe": "Very heavy rainfall ongoing, orange level"
+                    "Extreme": "Extreme rainfall ongoing",
+                    "Moderate": "Heavy rainfall ongoing",
+                    "Severe": "Very heavy rainfall ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstremt mye regn, oransje nivå",
+                    "Extreme": "mulighet for ekstremt mye regn",
                     "Moderate": null,
-                    "Severe": "mulighet for svært mye regn, gult nivå"
+                    "Severe": "mulighet for svært mye regn"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme rainfall, orange level",
+                    "Extreme": "possibility of extreme rainfall",
                     "Moderate": null,
-                    "Severe": "possibility of very heavy rainfall, yellow level"
+                    "Severe": "possibility of very heavy rainfall"
                 }
             },
              "Unlikely": {
                  "no": {
-                     "Extreme": "liten mulighet for ekstremt mye regn, gult nivå",
+                     "Extreme": "liten mulighet for ekstremt mye regn",
                      "Moderate": null,
                      "Severe": null
                  },
                  "en-GB": {
-                     "Extreme": "small possibility of extreme rainfall, yellow level",
+                     "Extreme": "small possibility of extreme rainfall",
                      "Moderate": null,
                      "Severe": null
                  }
@@ -408,37 +408,37 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Stor skogbrannfare, gult nivå",
-                    "Severe": "Meget stor skogbrannfare, oransje nivå"
+                    "Moderate": "Stor skogbrannfare",
+                    "Severe": "Meget stor skogbrannfare"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Forest fire danger, yellow level",
-                    "Severe": "High forest fire danger, orange level"
+                    "Moderate": "Forest fire danger",
+                    "Severe": "High forest fire danger"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Stor skogbrannfare pågår, gult nivå",
-                    "Severe": "Meget stor skogbrannfare pågår, oransje nivå"
+                    "Moderate": "Stor skogbrannfare pågår",
+                    "Severe": "Meget stor skogbrannfare pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Forest fire danger ongoing, yellow level",
-                    "Severe": "High forest fire danger ongoing, orange level"
+                    "Moderate": "Forest fire danger ongoing",
+                    "Severe": "High forest fire danger ongoing"
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Mulig fare for stor skogbrann, gult nivå"
+                    "Severe": "Mulig fare for stor skogbrann"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Risk of large forest fires, yellow level"
+                    "Severe": "Risk of large forest fires"
                 }
             },
             "Unlikely": {
@@ -457,48 +457,48 @@
         "rainFlood": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstreme regnbyger, rødt nivå",
-                    "Moderate": "Kraftige regnbyger, gult nivå",
-                    "Severe": "Svært kraftige regnbyger, oransje nivå"
+                    "Extreme": "Ekstreme regnbyger",
+                    "Moderate": "Kraftige regnbyger",
+                    "Severe": "Svært kraftige regnbyger"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainshowers, red level",
-                    "Moderate": "Heavy rainshowers, yellow level",
-                    "Severe": "Very heavy rainshowers, orange level"
+                    "Extreme": "Extreme rainshowers",
+                    "Moderate": "Heavy rainshowers",
+                    "Severe": "Very heavy rainshowers"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme regnbyger pågår, rødt nivå",
-                    "Moderate": "kraftige regnbyger pågår, gult nivå",
-                    "Severe": "svært kraftige regnbyger pågår, oransje nivå"
+                    "Extreme": "Ekstreme regnbyger pågår",
+                    "Moderate": "kraftige regnbyger pågår",
+                    "Severe": "svært kraftige regnbyger pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainshowers ongoing, red level",
-                    "Moderate": "Heavy rainshowers ongoing, yellow level",
-                    "Severe": "Very heavy rainshowers ongoing, orange level"
+                    "Extreme": "Extreme rainshowers ongoing",
+                    "Moderate": "Heavy rainshowers ongoing",
+                    "Severe": "Very heavy rainshowers ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstreme regnbyger, oransje nivå",
+                    "Extreme": "mulighet for ekstreme regnbyger",
                     "Moderate": null,
-                    "Severe": "mulighet for svært kraftige regnbyger, gult nivå"
+                    "Severe": "mulighet for svært kraftige regnbyger"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme rainshowers, orange level",
+                    "Extreme": "possibility of extreme rainshowers",
                     "Moderate": null,
-                    "Severe": "possibility of very heavy rainshowers, yellow level"
+                    "Severe": "possibility of very heavy rainshowers"
                 }
             },
              "Unlikely": {
                 "no": {
-                    "Extreme": "liten mulighet for ekstreme regnbyger, gult nivå",
+                    "Extreme": "liten mulighet for ekstreme regnbyger",
                     "Moderate": null,
                     "Severe": null
                 },
                 "en-GB": {
-                    "Extreme": "small possibility of extreme rainshowers, yellow level",
+                    "Extreme": "small possibility of extreme rainshowers",
                     "Moderate": null,
                     "Severe": null
                 }
@@ -561,37 +561,37 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Fare for ising, gult nivå",
-                    "Severe": "Fare for kraftig ising, oransje nivå"
+                    "Moderate": "Fare for ising",
+                    "Severe": "Fare for kraftig ising"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Risk of icing, yellow level",
-                    "Severe": "Risk of severe icing, orange level"
+                    "Moderate": "Risk of icing",
+                    "Severe": "Risk of severe icing"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Fare for ising pågår, gult nivå",
-                    "Severe": "Fare for kraftig ising pågår, oransje nivå"
+                    "Moderate": "Fare for ising pågår",
+                    "Severe": "Fare for kraftig ising pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Risk of icing ongoing, yellow level",
-                    "Severe": "Risk of severe icing ongoing, orange level"
+                    "Moderate": "Risk of icing ongoing",
+                    "Severe": "Risk of severe icing ongoing"
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for kraftig ising, gult nivå"
+                    "Severe": "mulighet for kraftig ising"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "small risk of severe icing, yellow level"
+                    "Severe": "small risk of severe icing"
                 }
             },
             "Unlikely": {
@@ -712,48 +712,48 @@
         "stormSurge": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstremt høy vannstand, rødt nivå",
-                    "Moderate": "Høy vannstand, gult nivå",
-                    "Severe": "Svært høy vannstand, oransje nivå"
+                    "Extreme": "Ekstremt høy vannstand",
+                    "Moderate": "Høy vannstand",
+                    "Severe": "Svært høy vannstand"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme water level, red level",
-                    "Moderate": "High water level, yellow level",
-                    "Severe": "Very high water level, orange level"
+                    "Extreme": "Extreme water level",
+                    "Moderate": "High water level",
+                    "Severe": "Very high water level"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstremt høy vannstand pågår, rødt nivå",
-                    "Moderate": "Høy vannstand pågår, gult nivå",
-                    "Severe": "Svært høy vannstand pågår, oransje nivå"
+                    "Extreme": "Ekstremt høy vannstand pågår",
+                    "Moderate": "Høy vannstand pågår",
+                    "Severe": "Svært høy vannstand pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme water level ongoing, red level",
-                    "Moderate": "High water level ongoing, yellow level",
-                    "Severe": "Very high water level ongoing, orange level"
+                    "Extreme": "Extreme water level ongoing",
+                    "Moderate": "High water level ongoing",
+                    "Severe": "Very high water level ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstremt høy vannstand, oransje nivå",
+                    "Extreme": "mulighet for ekstremt høy vannstand",
                     "Moderate": null,
-                    "Severe": "mulighet for svært høy vannstand, gult nivå"
+                    "Severe": "mulighet for svært høy vannstand"
                 },
                 "en-GB": {
-                    "Extreme": "Possibility of extreme water level, orange level",
+                    "Extreme": "Possibility of extreme water level",
                     "Moderate": null,
-                    "Severe": "Possibility of very high water level, yellow level"
+                    "Severe": "Possibility of very high water level"
                 }
             },
              "Unlikely": {
                 "no": {
-                    "Extreme": "liten mulighet for ekstremt høy vannstand, gult nivå",
+                    "Extreme": "liten mulighet for ekstremt høy vannstand",
                     "Moderate": null,
                     "Severe": null
                 },
                 "en-GB": {
-                    "Extreme": "small possibility of extreme water level, yellow level",
+                    "Extreme": "small possibility of extreme water level",
                     "Moderate": null,
                     "Severe": null
                 }
@@ -814,24 +814,24 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftig snøfokk, gult nivå",
+                    "Moderate": "Kraftig snøfokk",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Blowing snow, yellow level",
+                    "Moderate": "Blowing snow",
                     "Severe": null
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftig snøfokk pågår, gult nivå",
+                    "Moderate": "Kraftig snøfokk pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Blowing snow ongoing, yellow level",
+                    "Moderate": "Blowing snow ongoing",
                     "Severe": null
                 }
             },
