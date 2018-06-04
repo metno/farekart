@@ -51,6 +51,20 @@
             "Green": "Inconvenience"
         }
     },
+    "awarenessHeadline": {
+        "no": {
+            "Orange": "Aktsomhetsnivå oransje",
+            "Yellow": "Aktsomhetsnivå gult",
+            "Red": "Aktsomhetsnivå rødt",
+            "Green": "Aktsomhetsnivå grønt"
+        },
+        "en-GB": {
+            "Orange": "Awareness level orange",
+            "Yellow": "Awareness level yellow",
+            "Red": "Awareness level red",
+            "Green": "Awareness level green"
+        }
+    },
     "eventAwarenessName": {
         "thunder": {
             "Likely": {

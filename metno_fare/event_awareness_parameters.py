@@ -18,6 +18,7 @@ class event_awareness_parameters:
         self.awarenessResponse = eventSeverityParameters['awarenessResponse'][lang][awareness]
 
         self.awarenessSeriousness = eventSeverityParameters['awarenessSeriousness'][lang][awareness]
+        self.awarenessHeadline=eventSeverityParameters['awarenessHeadline'][lang][awareness]
 
         # MeteoAlarm mandatory elements
         self.awareness_types = eventSeverityParameters['awareness_types'].get(event_type, "")

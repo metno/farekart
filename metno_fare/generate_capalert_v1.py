@@ -31,6 +31,8 @@ class info:
 
         self.event = self.event_awareness_par.events
         self.eventAwarenessName = self.event_awareness_par.eventAwarenessName
+        self.awarenessHeadline = self.event_awareness_par.awarenessHeadline
+
 
         if not self.eventAwarenessName:
             # in case eventSeverityName is not set, just use the self.event
@@ -118,7 +120,7 @@ class info:
         self.all_locations_name = all_locations_name
 
     def create_headline(self):
-        self.headline = get_headline(self.eventAwarenessName, self.lang, self.effective, self.expires, self.all_locations_name)
+        self.headline = get_headline(self.eventAwarenessName, self.awarenessHeadline, self.phenomenon_name, self.lang, self.effective, self.expires, self.all_locations_name)
 
 
 def generate_capalert_v1(xmldoc,db):
@@ -337,10 +339,10 @@ def get_polygon(db, loc):
 
     return text
 
-def get_headline(type,lang, effective, expires , all_locations_name):
+def get_headline(type,awareness, incident_name,lang, effective, expires , all_locations_name):
 
-    headline_templates = { "no":u'%s, %s, %s UTC til %s UTC.',
-               "en-GB":u'%s, %s, %s UTC to %s UTC.'}
+    headline_templates = { "no":u'%s, %s, %s, %s UTC til %s UTC.',
+               "en-GB":u'%s, %s, %s, %s UTC to %s UTC.'}
 
     # disable temporarily
     # sudo locale-gen nb_NO.utf8 if this does not work
@@ -354,10 +356,22 @@ def get_headline(type,lang, effective, expires , all_locations_name):
     vfrom = effective.strftime("%d %B %H:00")
     vto = expires.strftime("%d %B %H:00")
 
-    headline = headline_templates[lang] % (type,all_locations_name, vfrom,vto)
+    headline = headline_templates[lang] % (type,awareness,all_locations_name, vfrom,vto)
     if (headline):
         headline=headline.strip()
         headline = headline[0].upper()+ headline[1:]
+
+
+    if incident_name:
+        extreme_name=""
+        if lang == "no":
+            extreme_name= u"Ekstremværet " + incident_name + ": "
+        elif lang=="en-GB":
+            extreme_name= "Extreme weather " + incident_name + ": "
+        headline = extreme_name + headline
+
+
+
     return headline
 
 
