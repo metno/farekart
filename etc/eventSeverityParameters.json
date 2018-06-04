@@ -53,16 +53,16 @@
     },
     "awarenessHeadline": {
         "no": {
-            "Orange": "Aktsomhetsnivå oransje",
-            "Yellow": "Aktsomhetsnivå gult",
-            "Red": "Aktsomhetsnivå rødt",
-            "Green": "Aktsomhetsnivå grønt"
+            "Orange": "oransje nivå",
+            "Yellow": "gult nivå",
+            "Red": "rødt nivå",
+            "Green": "grønt nivå"
         },
         "en-GB": {
-            "Orange": "Awareness level orange",
-            "Yellow": "Awareness level yellow",
-            "Red": "Awareness level red",
-            "Green": "Awareness level green"
+            "Orange": "orange level",
+            "Yellow": "yellow level",
+            "Red": "red level",
+            "Green": "green level"
         }
     },
     "eventAwarenessName": {
