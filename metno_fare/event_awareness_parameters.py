@@ -41,12 +41,5 @@ class event_awareness_parameters:
         return eventSeverityParameters
 
 
-    def getSeverityResponse(self,phenomenon_name):
-
-        response = self.awarenessResponse
-        if (phenomenon_name):
-            response+=" " + phenomenon_name
-        return response
-
 
 

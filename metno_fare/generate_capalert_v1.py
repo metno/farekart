@@ -89,8 +89,7 @@ class info:
 
         parameters={}
 
-        parameters["awarenessResponse"]=\
-                self.event_awareness_par.getSeverityResponse(self.phenomenon_name)
+        parameters["awarenessResponse"]=self.event_awareness_par.awarenessResponse
         parameters["awarenessSeriousness"]= self.event_awareness_par.awarenessSeriousness
 
         # MeteoAlarm mandatory elements
