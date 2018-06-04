@@ -171,6 +171,8 @@ def make_cap_list(language, capalerts,write_counties=False):
                 cap_entry['area'] += info['areaDesc']
                 if info['severity']=='Extreme':
                     is_extreme = True
+                if 'incidentName' in info:
+                    is_extreme = True
                 expires_list.append(dateutil.parser.parse(info['expires']))
                 onset_list.append(dateutil.parser.parse(info['onset']))
 
@@ -179,6 +181,8 @@ def make_cap_list(language, capalerts,write_counties=False):
                     cap_entry['event']=info['eventType']
                 if 'geographicDomain' in info:
                     cap_entry['geographicDomain']=info['geographicDomain']
+                if 'incidentName' in info:
+                    cap_entry['incidentName']=info['incidentName']
                 if write_counties and 'county' in info:
                     cap_entry['county']=info['county']
 
