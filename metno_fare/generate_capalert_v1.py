@@ -160,10 +160,19 @@ def generate_capalert_v1(xmldoc,db):
 
     sent_time = termin.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
+    # get information common for all info blocks
+    event_type = get_event_type(res)
+    phenomenon_name = res.get('phenomenon_name')
+    status="Actual"
+    if phenomenon_name=="Test":
+        status="Test"
+
+
     SubElement(alert, 'identifier').text = fare_setup.identifier_prefix + identifier
     SubElement(alert, 'sender').text =  fare_setup.sender
     SubElement(alert, 'sent').text = sent_time
-    SubElement(alert, 'status').text = res.get('status','Actual')
+    #SubElement(alert, 'status').text = res.get('status','Actual')
+    SubElement(alert, 'status').text =  status
     SubElement(alert, 'msgType').text = l_alert
     SubElement(alert, 'scope').text = 'Public'
 
@@ -182,9 +191,6 @@ def generate_capalert_v1(xmldoc,db):
     if res.get('phenomenon_number'):
         SubElement(alert, 'incidents').text=res['phenomenon_number']
 
-    # get information common for all info blocks
-    event_type = get_event_type(res)
-    phenomenon_name = res.get('phenomenon_name')
 
     all_location_names={}
     for lang in fare_setup.languages:
