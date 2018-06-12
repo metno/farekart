@@ -96,10 +96,10 @@ ted2Geocode = {
          "MunicipalityId":"1573;1572;1502;1503;1504;1505;1511;1514;1515;1516;1517;1519;1520;1523;1524;1525;"
                           "1526;1528;1529;1531;1532;1534;1535;1539;1543;1545;1546;1547;1548;1551;1554;1556;"
                           "1557;1560;1563;1566;1567;1569;1571;1576"},
-"0616": {"iso":"NO-16","county":"16:50", # Sør-Trøndelag, 50 is new code for Trøndelag from 2018
+"0616": {"iso":"NO-16","county":"50", # Sør-Trøndelag, 50 is new code for Trøndelag from 2018
          "MunicipalityId":"5033;5054;5001;5011;5012;5013;5014;5015;5016;5017;5018;5019;5020;5021;5022;5023;"
                           "5024;5025;5026;5027;5028;5029;5030;5031;5032"},
-"0617": {"iso":"NO-17","county":"17:50", # Nord-Trøndelag, 50 is new code for Trøndelag from 2018
+"0617": {"iso":"NO-17","county":"50", # Nord-Trøndelag, 50 is new code for Trøndelag from 2018
          "MunicipalityId":"5035:5034;5036;5037;5038;5039;5040;5041;5042;5043;5044;5045;5046;5047;5048;5049;5050;"
                           "5051;5052;5053;5004;5005;5054"},
 "0618": {"iso":"NO-18","county":"18",  # Nordland
@@ -139,10 +139,10 @@ ted2Geocode = {
 "9018": {"iso":"NO-21","county":"21",
          "MunicipalityId":"2111"},   # Nordenskiöld Land på Spitsbergen
 # Fjellet i Sør-Norge berører fylkene
-    # Sør-Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
+    # Trøndelag, Oppland, Hedmark, Buskerud,Telemark, Aust-Agder, Vest-Agder, Rogaland,Hordaland,
     # Sogn og Fjordane, Møre og Romsdal
 "0710" : {"iso":"NO-16:NO-05:NO-04:NO-06:NO-08:NO-09:NO-10:NO-11:NO-12:NO-14:NO-15",
-          "county":"16:05:04:06:08:09:10:11:12:14:15:50:34:30:38:42:46",
+          "county":"05:04:06:08:09:10:11:12:14:15:50:34:30:38:42:46",
           "MunicipalityId": "437;439;441;511;512;513;514;545;618;619;620;633;826;831;833;834;938;940;941;1026;1046;1134;"
                             "1228;1231;1232;1233;1421;1422;1424;1426;1449;1524;1525;1539;1543;1563;1566;1567;5033;5021;"
                             "5022;5026;5027"}
