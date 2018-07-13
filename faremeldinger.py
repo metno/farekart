@@ -96,47 +96,8 @@ if __name__ == "__main__":
 
     generate_file(locations, db, filename, "Gale warning", "Label Gale")
 
-    if OpenLayer:
-        filename = os.path.join(ol_dirname, "Current_gale_ol.kml")
-        generate_file_ol(locations,db, filename, "Gale warning", "Label Gale")
 
-    # OBS warnings
-
-    select_string = 'select name,vfrom,vto,location,value from forecast where vto > %s and name in ("VA_Obsvarsel","VV_Obsvarsel","VN_Obsvarsel") order by vto desc'
-
-    locations = get_locations(db, select_string, now)
-
-    filename = os.path.join(dirname, "Current_obs.kml")
-
-    generate_file(locations, db, filename, "Obs warning", "Label Obs")
-
-    if OpenLayer:
-        filename = os.path.join(ol_dirname, "Current_obs_ol.kml")
-        generate_file_ol(locations,db, filename, "Obs warning", "Label Obs")
-
-    # Extreme forecasts
-
-    select_string='select name,vfrom,vto,location,value from forecast where vto > %s and name in ("MIekstrem_FaseA","MIekstrem") order by vto desc'
-
-    locations = get_locations(db, select_string, now)
-
-    filename = os.path.join(dirname, "Current_extreme.kml")
-
-    generate_file(locations, db, filename, "Extreme forecast", "Label Extreme")
-
-    if OpenLayer:
-        filename = os.path.join(ol_dirname, "Current_extreme_ol.kml")
-        generate_file_ol(locations, db, filename, "Extreme forecast", "Label Extreme")
-
-    # Farevarsler
-
-    select_string='select value,termin from document where name = "MIfare" and vto > %s'
-
-    filename = os.path.join(dirname, "Current_fare.kml")
-
-    generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
-
-    # same from other product.
+    # METfare warnings.
 
     select_string='select value,termin,lang from document where name = "METfare" and vto > %s'
 
@@ -144,13 +105,7 @@ if __name__ == "__main__":
 
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
-    # Farevarsler TEST
 
-    select_string='select value from document where name = "x_test_MIfare" and vto > %s'
-
-    filename = os.path.join(dirname, "Current_fare_test.kml")
-
-    generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
     # Close the database connection.
 

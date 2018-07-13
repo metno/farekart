@@ -1,0 +1,13 @@
+*.pyc
+.idea/
+apt.tar
+build/
+debian/debhelper-build-stamp
+debian/files
+debian/python-farekart.debhelper.log
+debian/python-farekart.postinst.debhelper
+debian/python-farekart.prerm.debhelper
+debian/python-farekart.substvars
+debian/python-farekart/
+test/
+tmp/
