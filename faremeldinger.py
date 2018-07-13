@@ -78,7 +78,9 @@ if __name__ == "__main__":
     dirname_v1 = os.path.join(dirname, "v1")
     if (not os.path.isdir(dirname_v1)):
         os.mkdir(dirname_v1)
-    generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db)
+
+    errors=generate_files_cap_fare(fare_documentname,dirname_v1, schema_dirname,db)
+
 
     sys.stderr.write("Start creating kml-files\n")
     # Obtain a string containing the local time for the start of the current hour.
@@ -135,7 +137,7 @@ if __name__ == "__main__":
     generate_file_fare(db, filename, "Dangerous weather warning", "Label Faremelding", now, select_string)
 
     # same from other product.
-    
+
     select_string='select value,termin,lang from document where name = "METfare" and vto > %s'
 
     filename = os.path.join(dirname, "Current_METfare.kml")
@@ -155,5 +157,8 @@ if __name__ == "__main__":
     if db:
         db.close()
 
-
-    sys.exit()
+    if errors:
+        sys.stderr.write("%s errors found when generating CAP!\n" % errors)
+        sys.exit(1)
+    else:
+        sys.exit(0)

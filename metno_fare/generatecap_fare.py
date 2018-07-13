@@ -89,6 +89,7 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
 
     except Exception as inst:
         sys.stderr.write("CAP file %s could not be made: %s %s \n" % (cap_filename, PrintException() ,inst.message))
+        raise
 
 
 def get_capfilename_from_teddoc(xmldoc):
@@ -107,10 +108,12 @@ def generate_files_cap_fare(ted_documentname, output_dirname, schemas,db):
     for documents with
     Writes an index file for all CAP files in output_dirname."""
 
-    generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
+    #return number of errors found in generating CAP files
+    errors=0
+    errors += generate_capfiles_from_teddb(ted_documentname,output_dirname,db)
     filebase = os.path.join(output_dirname,ted_documentname)
     make_list_of_valid_files(filebase, schemas)
-
+    return errors
 
 
 def download_ted_documents(download_dirname,ted_documentname,db):
@@ -135,12 +138,20 @@ def get_ted_documents(db, ted_documentname):
 
 def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
     docs = get_ted_documents(db, ted_documentname)
+    errors=0
     for doc in docs:
-        capfilename = os.path.join(output_dirname,get_capfilename_from_teddoc(doc[0]))
-        if (os.path.isfile(capfilename)):
-            sys.stderr.write("File '%s' already exists!\n" % capfilename)
-        else:
-            generate_capfile_from_teddoc(doc[0], output_dirname, db)
+        try:
+            capfilename = os.path.join(output_dirname,get_capfilename_from_teddoc(doc[0]))
+            if (os.path.isfile(capfilename)):
+              sys.stderr.write("File '%s' already exists!\n" % capfilename)
+            else:
+                generate_capfile_from_teddoc(doc[0], output_dirname, db)
+        except Exception as e:
+            errors=+1
+
+    return errors
+
+
 
 
 
