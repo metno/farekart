@@ -1,3 +1,9 @@
+python-farekart (0.3.17-1) UNRELEASED; urgency=medium
+
+  * error checking
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Fri, 13 Jul 2018 09:41:54 +0200
+
 python-farekart (0.3.16-10) RELEASED; urgency=medium
 
   * status=Test for phenomenon_name Test

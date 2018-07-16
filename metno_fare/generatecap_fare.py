@@ -88,7 +88,7 @@ def generate_capfile_from_teddoc(xmldoc, output_dirname,db):
 
 
     except Exception as inst:
-        sys.stderr.write("CAP file %s could not be made: %s %s \n" % (cap_filename, PrintException() ,inst.message))
+        sys.stderr.write("ERROR:CAP file %s could not be made: %s %s \n" % (cap_filename, PrintException() ,inst.message))
         raise
 
 
