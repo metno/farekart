@@ -220,49 +220,49 @@
         "wind": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstrem vind",
-                    "Moderate": "Kraftig vind",
-                    "Severe": "Svært kraftig vind"
+                    "Extreme": "Ekstreme vindkast",
+                    "Moderate": "Kraftige vindkast",
+                    "Severe": "Svært kraftige vindkast"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme winds",
-                    "Moderate": "Strong winds",
-                    "Severe": "Very strong winds"
+                    "Extreme": "Extreme wind gusts",
+                    "Moderate": "Strong wind gusts",
+                    "Severe": "Very strong wind gusts"
                 }
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstrem vind pågår",
-                    "Moderate": "kraftig vind pågår",
-                    "Severe": "svært kraftig vind pågår"
+                    "Extreme": "Ekstreme vindkast pågår",
+                    "Moderate": "kraftige vindkast pågår",
+                    "Severe": "svært kraftige vindkast pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme wind ongoing",
-                    "Moderate": "Heavy wind ongoing",
-                    "Severe": "Very heavy wind ongoing"
+                    "Extreme": "Extreme wind gusts ongoing",
+                    "Moderate": "Heavy wind gusts ongoing",
+                    "Severe": "Very heavy wind gusts ongoing"
                 }
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstrem vind",
+                    "Extreme": "mulighet for ekstreme vindkast",
                     "Moderate": null,
-                    "Severe": "mulighet for svært kraftig vind"
+                    "Severe": "mulighet for svært kraftige vindkast"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme wind",
+                    "Extreme": "possibility of extreme wind gusts",
                     "Moderate": null,
-                    "Severe": "possiblity of very heavy wind"
+                    "Severe": "possiblity of very heavy wind gusts"
                 }
 
             },
              "Unlikely": {
                  "no": {
-                     "Extreme": "liten mulighet for ekstrem vind",
+                     "Extreme": "liten mulighet for ekstreme vindkast",
                      "Moderate": null,
                      "Severe": null
                  },
                  "en-GB": {
-                     "Extreme": "small possibility of ekstrem vind",
+                     "Extreme": "small possibility of ekstreme wind gusts",
                      "Moderate": null,
                      "Severe": null
                  }
