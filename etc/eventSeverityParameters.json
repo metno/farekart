@@ -121,11 +121,13 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Kansellert kulingvarsel",
                     "Moderate": "Kulingvarsel",
                     "Severe": "Stormvarsel"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Cancelled gale Warning",
                     "Moderate": "Gale Warning",
                     "Severe": "Storm warning"
                 }
@@ -133,11 +135,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Kansellert kulingvarsel",
                     "Moderate": "Kulingvarsel",
                     "Severe": "Stormvarsel"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Cancelled gale Warning",
                     "Moderate": "Gale Warning",
                     "Severe": "Storm warning"
                 }
@@ -171,11 +175,13 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normale kjøreforhold",
                     "Moderate": "Vanskelige kjøreforhold",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Normal driving conditions",
                     "Moderate": "Difficult driving conditions",
                     "Severe": null
                 }
@@ -183,11 +189,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normale kjøreforhold",
                     "Moderate": "vanskelige kjøreforhold pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Normal driving conditions",
                     "Moderate": "Difficult driving conditions ongoing",
                     "Severe": null
                 }
@@ -221,11 +229,13 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstreme vindkast",
+                    "Minor": "Normale vindkast",
                     "Moderate": "Kraftige vindkast",
                     "Severe": "Svært kraftige vindkast"
                 },
                 "en-GB": {
                     "Extreme": "Extreme wind gusts",
+                    "Minor": "Normal wind gusts",
                     "Moderate": "Strong wind gusts",
                     "Severe": "Very strong wind gusts"
                 }
@@ -233,11 +243,13 @@
             "Observed": {
                 "no": {
                     "Extreme": "Ekstreme vindkast pågår",
+                    "Minor": "Normale vindkast",
                     "Moderate": "kraftige vindkast pågår",
                     "Severe": "svært kraftige vindkast pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme wind gusts ongoing",
+                    "Minor": "Normal wind gusts",
                     "Moderate": "Heavy wind gusts ongoing",
                     "Severe": "Very heavy wind gusts ongoing"
                 }
@@ -272,11 +284,13 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Ikke fare for polart lavtrykk",
                     "Moderate": "Fare for polart lavtrykk",
                     "Severe": "Fare for kraftig polart lavtrykk"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "No polar low",
                     "Moderate": "Polar low",
                     "Severe": "Severe polar low"
                 }
@@ -284,11 +298,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Ikke fare for polart lavtrykk",
                     "Moderate": "polart lavtrykk pågår",
                     "Severe": "kraftig polart lavtrykk pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "No polar low",
                     "Moderate": "Polar low ongoing",
                     "Severe": "Severe polar low ongoing"
                 }
@@ -322,11 +338,13 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstreme snømengder",
+                    "Minor": "Normale snømengder",
                     "Moderate": "Store snømengder",
                     "Severe": "Svært store snømengder"
                 },
                 "en-GB": {
                     "Extreme": "Extreme snowfall",
+                    "Minor": "Normal snowfall",
                     "Moderate": "Heavy snowfall",
                     "Severe": "Very heavy snowfall"
                 }
@@ -334,11 +352,13 @@
             "Observed": {
                 "no": {
                     "Extreme": "Ekstreme snømengder pågår",
+                    "Minor": "Normale snømengder",
                     "Moderate": "store snømengder pågår",
                     "Severe": " svært store snømengder pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme snowfall ongoing",
+                    "Minor": "Normal snowfall",
                     "Moderate": "Heavy snowfall ongoing",
                     "Severe": "Very heavy snowfall ongoing"
                 }
@@ -372,11 +392,13 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstremt mye regn",
+                    "Minor": "Regn",
                     "Moderate": "Mye regn",
                     "Severe": "Svært mye regn"
                 },
                 "en-GB": {
                     "Extreme": "Extreme rainfall",
+                    "Minor": "Normal rainfall",
                     "Moderate": "Heavy rainfall",
                     "Severe": "Very heavy rainfall"
                 }
@@ -384,11 +406,13 @@
             "Observed": {
                 "no": {
                     "Extreme": "Ekstremt mye regn pågår",
+                    "Minor": "Regn",
                     "Moderate": "mye regn pågår",
                     "Severe": "svært mye regn pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme rainfall ongoing",
+                    "Minor": "Normal rainfall",
                     "Moderate": "Heavy rainfall ongoing",
                     "Severe": "Very heavy rainfall ongoing"
                 }
@@ -422,11 +446,13 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normal skogbrannfare",
                     "Moderate": "Stor skogbrannfare",
                     "Severe": "Meget stor skogbrannfare"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Minor forest fire danger",
                     "Moderate": "Forest fire danger",
                     "Severe": "High forest fire danger"
                 }
@@ -434,11 +460,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normal skogbrannfare",
                     "Moderate": "Stor skogbrannfare pågår",
                     "Severe": "Meget stor skogbrannfare pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Minor forest fire danger",
                     "Moderate": "Forest fire danger ongoing",
                     "Severe": "High forest fire danger ongoing"
                 }
@@ -472,11 +500,13 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstreme regnbyger",
+                    "Minor": "Normale regnbyger",
                     "Moderate": "Kraftige regnbyger",
                     "Severe": "Svært kraftige regnbyger"
                 },
                 "en-GB": {
                     "Extreme": "Extreme rainshowers",
+                    "Minor": "Normale rainshowers",
                     "Moderate": "Heavy rainshowers",
                     "Severe": "Very heavy rainshowers"
                 }
@@ -484,11 +514,13 @@
             "Observed": {
                 "no": {
                     "Extreme": "Ekstreme regnbyger pågår",
-                    "Moderate": "kraftige regnbyger pågår",
+                    "Minor": "Normale regnbyger",
+                    "Moderate": "Kraftige regnbyger pågår",
                     "Severe": "svært kraftige regnbyger pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme rainshowers ongoing",
+                    "Minor": "Normale rainshowers",
                     "Moderate": "Heavy rainshowers ongoing",
                     "Severe": "Very heavy rainshowers ongoing"
                 }
@@ -575,11 +607,13 @@
             "Likely": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normal fare for ising",
                     "Moderate": "Fare for ising",
                     "Severe": "Fare for kraftig ising"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Normal risk of icing",
                     "Moderate": "Risk of icing",
                     "Severe": "Risk of severe icing"
                 }
@@ -587,11 +621,13 @@
             "Observed": {
                 "no": {
                     "Extreme": null,
+                    "Minor": "Normal fare for ising",
                     "Moderate": "Fare for ising pågår",
                     "Severe": "Fare for kraftig ising pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
+                    "Minor": "Normal risk of icing",
                     "Moderate": "Risk of icing ongoing",
                     "Severe": "Risk of severe icing ongoing"
                 }
@@ -727,11 +763,13 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstremt høy vannstand",
+                    "Minor": "Normal vannstand",
                     "Moderate": "Høy vannstand",
                     "Severe": "Svært høy vannstand"
                 },
                 "en-GB": {
                     "Extreme": "Extreme water level",
+                    "Minor": "Normal water level",
                     "Moderate": "High water level",
                     "Severe": "Very high water level"
                 }
@@ -739,11 +777,13 @@
             "Observed": {
                 "no": {
                     "Extreme": "Ekstremt høy vannstand pågår",
+                    "Minor": "Normal vannstand",
                     "Moderate": "Høy vannstand pågår",
                     "Severe": "Svært høy vannstand pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme water level ongoing",
+                    "Minor": "Normal water level",
                     "Moderate": "High water level ongoing",
                     "Severe": "Very high water level ongoing"
                 }
