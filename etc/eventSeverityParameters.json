@@ -608,13 +608,13 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal fare for ising",
-                    "Moderate": "Fare for ising",
+                    "Moderate": "Fare for moderat ising",
                     "Severe": "Fare for kraftig ising"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
-                    "Moderate": "Risk of icing",
+                    "Moderate": "Risk of moderate icing",
                     "Severe": "Risk of severe icing"
                 }
             },
@@ -622,13 +622,13 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal fare for ising",
-                    "Moderate": "Fare for ising pågår",
+                    "Moderate": "Fare for moderat ising pågår",
                     "Severe": "Fare for kraftig ising pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
-                    "Moderate": "Risk of icing ongoing",
+                    "Moderate": "Risk of moderate icing ongoing",
                     "Severe": "Risk of severe icing ongoing"
                 }
             },
