@@ -42,13 +42,13 @@
             "Orange": "Vær forberedt",
             "Yellow": "Følg med",
             "Red": "Sikre verdiene",
-            "Green": "Ulempe"
+            "Green": "Ingen"
         },
         "en-GB": {
             "Orange": "Be prepared",
             "Yellow": "Be aware",
             "Red": "Take action",
-            "Green": "Inconvenience"
+            "Green": "None"
         }
     },
     "awarenessHeadline": {
