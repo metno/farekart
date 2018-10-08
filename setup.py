@@ -6,10 +6,10 @@ from distutils.core import setup
 setup(
     name="python-farekart",
     description="Generate KML and CAP files from text warnings in the TED database",
-    author="Bård Fjukstad",
+    author="Helen Korsmo",
     author_email="b.fjukstad@met.no",
     url="http://www.met.no/",
-    version="0.3.17",
+    version="0.3.18",
     packages=["metno_fare"],
     scripts=["faremeldinger.py", "cap2kml.py"],
     data_files=[("share/xml/farekart", 
