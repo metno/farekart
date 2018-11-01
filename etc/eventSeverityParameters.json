@@ -228,7 +228,7 @@
         "wind": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstreme vindkast",
+                    "Extreme": "Ekstremt kraftige vindkast",
                     "Minor": "Normale vindkast",
                     "Moderate": "Kraftige vindkast",
                     "Severe": "Svært kraftige vindkast"
@@ -242,7 +242,7 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme vindkast pågår",
+                    "Extreme": "Ekstremt kraftige vindkast pågår",
                     "Minor": "Normale vindkast",
                     "Moderate": "kraftige vindkast pågår",
                     "Severe": "svært kraftige vindkast pågår"
@@ -256,7 +256,7 @@
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstreme vindkast",
+                    "Extreme": "mulighet for ekstremt kraftige vindkast",
                     "Moderate": null,
                     "Severe": "mulighet for svært kraftige vindkast"
                 },
@@ -269,7 +269,7 @@
             },
              "Unlikely": {
                  "no": {
-                     "Extreme": "liten mulighet for ekstreme vindkast",
+                     "Extreme": "liten mulighet for ekstremt kraftige vindkast",
                      "Moderate": null,
                      "Severe": null
                  },
@@ -285,8 +285,8 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Ikke fare for polart lavtrykk",
-                    "Moderate": "Fare for polart lavtrykk",
-                    "Severe": "Fare for kraftig polart lavtrykk"
+                    "Moderate": "Polart lavtrykk",
+                    "Severe": "Svært kraftig polart lavtrykk"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -299,8 +299,8 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Ikke fare for polart lavtrykk",
-                    "Moderate": "polart lavtrykk pågår",
-                    "Severe": "kraftig polart lavtrykk pågår"
+                    "Moderate": "Polart lavtrykk pågår",
+                    "Severe": "Svært kraftig polart lavtrykk pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -313,7 +313,7 @@
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for kraftig polart lavtrykk"
+                    "Severe": "mulighet for svært kraftig polart lavtrykk"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -337,10 +337,10 @@
         "snow": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstreme snømengder",
-                    "Minor": "Normale snømengder",
-                    "Moderate": "Store snømengder",
-                    "Severe": "Svært store snømengder"
+                    "Extreme": "Ekstremt mye snø",
+                    "Minor": "Normalt mye snø snø",
+                    "Moderate": "Mye snø",
+                    "Severe": "Svært mye snø"
                 },
                 "en-GB": {
                     "Extreme": "Extreme snowfall",
@@ -351,10 +351,10 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme snømengder pågår",
-                    "Minor": "Normale snømengder",
-                    "Moderate": "store snømengder pågår",
-                    "Severe": " svært store snømengder pågår"
+                    "Extreme": "Ekstremt mye snø pågår",
+                    "Minor": "Normalt mye snø",
+                    "Moderate": "Mye snø pågår",
+                    "Severe": "Svært mye snø pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extreme snowfall ongoing",
@@ -365,9 +365,9 @@
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstreme snømengder",
+                    "Extreme": "mulighet for ekstremt mye snø",
                     "Moderate": null,
-                    "Severe": "mulighet for svært store snømengder"
+                    "Severe": "mulighet for svært mye snø"
                 },
                 "en-GB": {
                     "Extreme": "possibility of extreme snowfall",
@@ -447,8 +447,8 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal skogbrannfare",
-                    "Moderate": "Stor skogbrannfare",
-                    "Severe": "Meget stor skogbrannfare"
+                    "Moderate": "Skogbrannfare",
+                    "Severe": "Stor skogbrannfare"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -461,8 +461,8 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal skogbrannfare",
-                    "Moderate": "Stor skogbrannfare pågår",
-                    "Severe": "Meget stor skogbrannfare pågår"
+                    "Moderate": "Skogbrannfare pågår",
+                    "Severe": "Stor skogbrannfare pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -499,7 +499,7 @@
         "rainFlood": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstreme regnbyger",
+                    "Extreme": "Ekstremt kraftige regnbyger",
                     "Minor": "Normale regnbyger",
                     "Moderate": "Kraftige regnbyger",
                     "Severe": "Svært kraftige regnbyger"
@@ -513,7 +513,7 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstreme regnbyger pågår",
+                    "Extreme": "Ekstremt kraftige regnbyger pågår",
                     "Minor": "Normale regnbyger",
                     "Moderate": "Kraftige regnbyger pågår",
                     "Severe": "svært kraftige regnbyger pågår"
@@ -527,7 +527,7 @@
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstreme regnbyger",
+                    "Extreme": "mulighet for ekstremt kraftige regnbyger",
                     "Moderate": null,
                     "Severe": "mulighet for svært kraftige regnbyger"
                 },
@@ -539,7 +539,7 @@
             },
              "Unlikely": {
                 "no": {
-                    "Extreme": "liten mulighet for ekstreme regnbyger",
+                    "Extreme": "liten mulighet for ekstremt kraftige regnbyger",
                     "Moderate": null,
                     "Severe": null
                 },
@@ -608,13 +608,13 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal fare for ising",
-                    "Moderate": "Fare for moderat ising",
-                    "Severe": "Fare for kraftig ising"
+                    "Moderate": "Moderat ising på skip",
+                    "Severe": "Sterk ising på skip"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
-                    "Moderate": "Risk of moderate icing",
+                    "Moderate": "Moderate ising på skip",
                     "Severe": "Risk of severe icing"
                 }
             },
@@ -622,8 +622,8 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal fare for ising",
-                    "Moderate": "Fare for moderat ising pågår",
-                    "Severe": "Fare for kraftig ising pågår"
+                    "Moderate": "Fare for moderat ising på skip pågår",
+                    "Severe": "Fare for sterk ising på skip pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
@@ -636,7 +636,7 @@
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for kraftig ising"
+                    "Severe": "mulighet for sterk ising på skip"
                 },
                 "en-GB": {
                     "Extreme": null,
