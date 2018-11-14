@@ -196,8 +196,7 @@ def make_cap_list(language, capalerts,write_counties=False):
             cap_entry['t_expires'] = expires.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
         # keep entries for MAX_WEEKS_TO_KEEP
-        # keep all exteme warnings
-        if (is_extreme or now-expires < datetime.timedelta(weeks=MAX_WEEKS_TO_KEEP)):
+        if (now-expires < datetime.timedelta(weeks=MAX_WEEKS_TO_KEEP)):
             caplist.append(cap_entry)
 
 
