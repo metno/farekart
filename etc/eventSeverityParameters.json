@@ -122,28 +122,28 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Kansellert kulingvarsel",
-                    "Moderate": "Kulingvarsel",
-                    "Severe": "Stormvarsel"
+                    "Moderate": "Kuling",
+                    "Severe": "Storm"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Cancelled gale Warning",
-                    "Moderate": "Gale Warning",
-                    "Severe": "Storm warning"
+                    "Moderate": "Gale",
+                    "Severe": "Storm"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
                     "Minor": "Kansellert kulingvarsel",
-                    "Moderate": "Kulingvarsel",
-                    "Severe": "Stormvarsel"
+                    "Moderate": "Kuling",
+                    "Severe": "Storm"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Cancelled gale Warning",
-                    "Moderate": "Gale Warning",
-                    "Severe": "Storm warning"
+                    "Moderate": "Gale",
+                    "Severe": "Storm"
                 }
             },
             "Possible": {
