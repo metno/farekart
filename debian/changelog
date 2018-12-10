@@ -1,4 +1,4 @@
-python-farekart (0.3.19.1) RELEASED; urgency=medium
+python-farekart (0.3.19-1) RELEASED; urgency=medium
 
   * new eventAwarenessNames, coordinated between NRK, MET and NVE
 
