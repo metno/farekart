@@ -1,3 +1,9 @@
+python-farekart (0.3.19.1) RELEASED; urgency=medium
+
+  * new eventAwarenessNames, coordinated between NRK, MET and NVE
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Mon, 10 Dec 2018 15:16:14 +0100
+
 python-farekart (0.3.18-1) RELEASED; urgency=medium
 
   * changes in setup files including better support for green warnings

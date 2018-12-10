@@ -338,7 +338,7 @@
             "Likely": {
                 "no": {
                     "Extreme": "Ekstremt mye snø",
-                    "Minor": "Normalt mye snø snø",
+                    "Minor": "Normalt mye snø",
                     "Moderate": "Mye snø",
                     "Severe": "Svært mye snø"
                 },
@@ -454,7 +454,7 @@
                     "Extreme": null,
                     "Minor": "Minor forest fire danger",
                     "Moderate": "Moderate forest fire danger",
-                    "Severe": "Condiderable forest fire danger"
+                    "Severe": "Considerable forest fire danger"
                 }
             },
             "Observed": {
