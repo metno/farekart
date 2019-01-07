@@ -234,7 +234,7 @@
                     "Severe": "Svært kraftige vindkast"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme wind gusts",
+                    "Extreme": "Extremely strong wind gusts",
                     "Minor": "Normal wind gusts",
                     "Moderate": "Strong wind gusts",
                     "Severe": "Very strong wind gusts"
@@ -248,10 +248,10 @@
                     "Severe": "svært kraftige vindkast pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme wind gusts ongoing",
+                    "Extreme": "Extremely strong wind gusts ongoing",
                     "Minor": "Normal wind gusts",
-                    "Moderate": "Heavy wind gusts ongoing",
-                    "Severe": "Very heavy wind gusts ongoing"
+                    "Moderate": "Strong wind gusts ongoing",
+                    "Severe": "Very strong wind gusts ongoing"
                 }
             },
             "Possible": {
@@ -261,9 +261,9 @@
                     "Severe": "mulighet for svært kraftige vindkast"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme wind gusts",
+                    "Extreme": "possibility of extremely strong wind gusts",
                     "Moderate": null,
-                    "Severe": "possiblity of very heavy wind gusts"
+                    "Severe": "possiblity of very strong wind gusts"
                 }
 
             },
@@ -292,7 +292,7 @@
                     "Extreme": null,
                     "Minor": "No polar low",
                     "Moderate": "Polar low",
-                    "Severe": "Severe polar low"
+                    "Severe": "Very strong polar low"
                 }
             },
             "Observed": {
@@ -306,7 +306,7 @@
                     "Extreme": null,
                     "Minor": "No polar low",
                     "Moderate": "Polar low ongoing",
-                    "Severe": "Severe polar low ongoing"
+                    "Severe": "Very strong polar low ongoing"
                 }
             },
             "Possible": {
@@ -318,7 +318,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Risk of severe polar low"
+                    "Severe": "Risk of very strong polar low"
                 }
             },
             "Unlikely": {
@@ -343,10 +343,10 @@
                     "Severe": "Svært mye snø"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme snowfall",
-                    "Minor": "Normal snowfall",
-                    "Moderate": "Heavy snowfall",
-                    "Severe": "Very heavy snowfall"
+                    "Extreme": "Extremely heavy snow",
+                    "Minor": "Normal snow",
+                    "Moderate": "Heavy snow",
+                    "Severe": "Very heavy snow"
                 }
             },
             "Observed": {
@@ -357,10 +357,10 @@
                     "Severe": "Svært mye snø pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme snowfall ongoing",
-                    "Minor": "Normal snowfall",
-                    "Moderate": "Heavy snowfall ongoing",
-                    "Severe": "Very heavy snowfall ongoing"
+                    "Extreme": "Extremely heavy snow ongoing",
+                    "Minor": "Normal snow",
+                    "Moderate": "Heavy snow ongoing",
+                    "Severe": "Very heavy snow ongoing"
                 }
             },
             "Possible": {
@@ -370,9 +370,9 @@
                     "Severe": "mulighet for svært mye snø"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme snowfall",
+                    "Extreme": "possibility of extremely heavy snow",
                     "Moderate": null,
-                    "Severe": "possibility of very heavy snowfall"
+                    "Severe": "possibility of very heavy snow"
                 }
             },
             "Unlikely": {
@@ -397,10 +397,10 @@
                     "Severe": "Svært mye regn"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainfall",
-                    "Minor": "Normal rainfall",
-                    "Moderate": "Heavy rainfall",
-                    "Severe": "Very heavy rainfall"
+                    "Extreme": "Extremely heavy rain",
+                    "Minor": "Normal rain",
+                    "Moderate": "Heavy rain",
+                    "Severe": "Very heavy rain"
                 }
             },
             "Observed": {
@@ -411,10 +411,10 @@
                     "Severe": "svært mye regn pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainfall ongoing",
-                    "Minor": "Normal rainfall",
-                    "Moderate": "Heavy rainfall ongoing",
-                    "Severe": "Very heavy rainfall ongoing"
+                    "Extreme": "Extremely heavy rain ongoing",
+                    "Minor": "Normal rain",
+                    "Moderate": "Heavy rain ongoing",
+                    "Severe": "Very heavy rain ongoing"
                 }
             },
             "Possible": {
@@ -424,9 +424,9 @@
                     "Severe": "mulighet for svært mye regn"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme rainfall",
+                    "Extreme": "possibility of extremely heavy rain",
                     "Moderate": null,
-                    "Severe": "possibility of very heavy rainfall"
+                    "Severe": "possibility of very heavy rain"
                 }
             },
              "Unlikely": {
@@ -436,7 +436,7 @@
                      "Severe": null
                  },
                  "en-GB": {
-                     "Extreme": "small possibility of extreme rainfall",
+                     "Extreme": "small possibility of extremely heavy rain",
                      "Moderate": null,
                      "Severe": null
                  }
@@ -505,7 +505,7 @@
                     "Severe": "Svært kraftige regnbyger"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainshowers",
+                    "Extreme": "Extremely heavy rainshowers",
                     "Minor": "Normale rainshowers",
                     "Moderate": "Heavy rainshowers",
                     "Severe": "Very heavy rainshowers"
@@ -519,7 +519,7 @@
                     "Severe": "svært kraftige regnbyger pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme rainshowers ongoing",
+                    "Extreme": "Extremely heavy rainshowers ongoing",
                     "Minor": "Normale rainshowers",
                     "Moderate": "Heavy rainshowers ongoing",
                     "Severe": "Very heavy rainshowers ongoing"
@@ -532,7 +532,7 @@
                     "Severe": "mulighet for svært kraftige regnbyger"
                 },
                 "en-GB": {
-                    "Extreme": "possibility of extreme rainshowers",
+                    "Extreme": "possibility of extremely heavy rainshowers",
                     "Moderate": null,
                     "Severe": "possibility of very heavy rainshowers"
                 }
@@ -544,7 +544,7 @@
                     "Severe": null
                 },
                 "en-GB": {
-                    "Extreme": "small possibility of extreme rainshowers",
+                    "Extreme": "small possibility of extremely heavy rainshowers",
                     "Moderate": null,
                     "Severe": null
                 }
@@ -614,22 +614,22 @@
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
-                    "Moderate": "Moderate ising på skip",
-                    "Severe": "Risk of severe icing"
+                    "Moderate": "Moderate icing on ships",
+                    "Severe": "Strong icing on ships icing"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal fare for ising",
-                    "Moderate": "Fare for moderat ising på skip pågår",
-                    "Severe": "Fare for sterk ising på skip pågår"
+                    "Moderate": "Moderat ising på skip pågår",
+                    "Severe": "Sterk ising på skip pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
-                    "Moderate": "Risk of moderate icing ongoing",
-                    "Severe": "Risk of severe icing ongoing"
+                    "Moderate": "Moderate icing on ships ongoing",
+                    "Severe": "Strong icing on ships ongoing"
                 }
             },
             "Possible": {
@@ -641,7 +641,7 @@
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "small risk of severe icing"
+                    "Severe": "small risk of strong icing on ships"
                 }
             },
             "Unlikely": {
@@ -768,7 +768,7 @@
                     "Severe": "Svært høy vannstand"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme water level",
+                    "Extreme": "Extremely high water level",
                     "Minor": "Normal water level",
                     "Moderate": "High water level",
                     "Severe": "Very high water level"
@@ -782,7 +782,7 @@
                     "Severe": "Svært høy vannstand pågår"
                 },
                 "en-GB": {
-                    "Extreme": "Extreme water level ongoing",
+                    "Extreme": "Extremely high water level ongoing",
                     "Minor": "Normal water level",
                     "Moderate": "High water level ongoing",
                     "Severe": "Very high water level ongoing"
@@ -795,7 +795,7 @@
                     "Severe": "mulighet for svært høy vannstand"
                 },
                 "en-GB": {
-                    "Extreme": "Possibility of extreme water level",
+                    "Extreme": "Possibility of extremely high water level",
                     "Moderate": null,
                     "Severe": "Possibility of very high water level"
                 }
@@ -807,7 +807,7 @@
                     "Severe": null
                 },
                 "en-GB": {
-                    "Extreme": "small possibility of extreme water level",
+                    "Extreme": "small possibility of extremely high water level",
                     "Moderate": null,
                     "Severe": null
                 }
