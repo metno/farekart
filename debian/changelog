@@ -1,3 +1,9 @@
+python-farekart (0.3.20-1) UNRELEASED; urgency=medium
+
+  * Change in resourceDesc and fixes in eventAwarenessNames
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Tue, 08 Jan 2019 09:28:52 +0100
+
 python-farekart (0.3.19-1) RELEASED; urgency=medium
 
   * new eventAwarenessNames, coordinated between NRK, MET and NVE
