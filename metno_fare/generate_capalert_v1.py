@@ -281,7 +281,7 @@ def make_info_element(alert, l_info):
     # Link to graphical representation
     if l_info.pict:
         resource = SubElement(info, 'resource')
-        SubElement(resource, 'resourceDesc').text = "Grafiske beskrivelse av farevarslet"
+        SubElement(resource, 'resourceDesc').text = l_info.headline
         SubElement(resource, 'mimeType').text = "image/png"
         SubElement(resource, 'uri').text = l_info.pict
 
