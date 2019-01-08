@@ -506,7 +506,7 @@
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers",
-                    "Minor": "Normale rainshowers",
+                    "Minor": "Normal rainshowers",
                     "Moderate": "Heavy rainshowers",
                     "Severe": "Very heavy rainshowers"
                 }
@@ -520,7 +520,7 @@
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers ongoing",
-                    "Minor": "Normale rainshowers",
+                    "Minor": "Normal rainshowers",
                     "Moderate": "Heavy rainshowers ongoing",
                     "Severe": "Very heavy rainshowers ongoing"
                 }
@@ -615,7 +615,7 @@
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
                     "Moderate": "Moderate icing on ships",
-                    "Severe": "Strong icing on ships icing"
+                    "Severe": "Strong icing on ships"
                 }
             },
             "Observed": {
