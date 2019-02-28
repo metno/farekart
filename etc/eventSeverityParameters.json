@@ -447,40 +447,40 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal skogbrannfare",
-                    "Moderate": "Moderat skogbrannfare",
-                    "Severe": "Betydelig skogbrannfare"
+                    "Moderate": "Skogbrannfare",
+                    "Severe": "Stor skogbrannfare"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Minor forest fire danger",
-                    "Moderate": "Moderate forest fire danger",
-                    "Severe": "Considerable forest fire danger"
+                    "Moderate": "Forest fire danger",
+                    "Severe": "High forest fire danger"
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal skogbrannfare",
-                    "Moderate": "Moderat skogbrannfare pågår",
-                    "Severe": "Betydelig skogbrannfare pågår"
+                    "Moderate": "Skogbrannfare pågår",
+                    "Severe": "Stor skogbrannfare pågår"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Minor": "Minor forest fire danger",
-                    "Moderate": "Moderate forest fire danger ongoing",
-                    "Severe": "Considerable forest fire danger ongoing"
+                    "Moderate": "Forest fire danger ongoing",
+                    "Severe": "High forest fire danger ongoing"
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Mulig fare for betydelig skogbrann"
+                    "Severe": "Mulig stor skogbrannfare"
                 },
                 "en-GB": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "Risk of considerable forest fires"
+                    "Severe": "Risk of high forest fires"
                 }
             },
             "Unlikely": {
