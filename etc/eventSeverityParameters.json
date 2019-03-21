@@ -935,7 +935,7 @@
             "en-GB": "Difficult driving conditions"
         },
         "polarLow": {
-            "no": "Polare lavtrykk",
+            "no": "Polart lavtrykk",
             "en-GB": "Polar low"
         },
         "fog": {
@@ -943,8 +943,8 @@
             "en-GB": "Fog"
         },
         "wind": {
-            "no": "Vind",
-            "en-GB": "Wind"
+            "no": "Vindkast",
+            "en-GB": "Wind gusts"
         },
         "snow": {
             "no": "Snø",
