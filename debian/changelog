@@ -1,4 +1,10 @@
-python-farekart (0.3.20-1) UNRELEASED; urgency=medium
+python-farekart (0.3.21-1) RELEASED; urgency=medium
+
+  * changes in eventSeverityParameters
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Tue, 23 Apr 2019 09:09:40 +0200
+
+python-farekart (0.3.20-1) RELEASED; urgency=medium
 
   * Change in resourceDesc and fixes in eventAwarenessNames
 
