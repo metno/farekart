@@ -671,7 +671,7 @@
                     "Extreme": null,
                     "Minor": "Little ice",
                     "Moderate": "Ice",
-                    "Severe": "Very heavy ice"
+                    "Severe": "Very thick ice"
                 }
             },
             "Observed": {
@@ -685,14 +685,14 @@
                     "Extreme": null,
                     "Minor": "Little ice",
                     "Moderate": "Ice observed",
-                    "Severe": "Very heavy ice observed"
+                    "Severe": "Very thick ice observed"
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
                     "Moderate": null,
-                    "Severe": "mulighet for sterk mye is"
+                    "Severe": "mulighet for svært mye is"
                 },
                 "en-GB": {
                     "Extreme": null,
