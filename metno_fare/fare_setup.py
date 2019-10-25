@@ -47,7 +47,8 @@ geographicDomain={
 "icing":"marine",
 "uvRadiation": None,
 "pollen": "land",
-"airPollution": "land"
+"airPollution": "land",
+"ice":"land"
 }
 
 

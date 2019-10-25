@@ -1,3 +1,9 @@
+python-farekart (0.3.23-1) RELEASED; urgency=medium
+
+  * support for event code ice 
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Fri, 25 Oct 2019 14:46:41 +0200
+
 python-farekart (0.3.22-1) RELEASED; urgency=medium
 
   * added NUTS3 and emma_id geocodes for Meteoalarm
