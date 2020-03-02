@@ -300,7 +300,7 @@ def make_info_element(alert, l_info):
                 ted_ids=l_info.all_ids.split(":")
                 geocodes={}
                 for ted_id in ted_ids:
-                    ted2Geo=fare_setup.ted2Geocode.get(ted_id)
+                    ted2Geo=fare_setup.ted2Geocode2020.get(ted_id)
                     if not ted2Geo:
                         continue
                     for code,ids in ted2Geo.items():
