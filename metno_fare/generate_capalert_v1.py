@@ -25,6 +25,7 @@ class info:
         self.certainty = loc.get("certainty", "").strip()
         self.pict = loc['picturelink']
         self.infolink = loc['infolink']
+        self.areaDesc=""
 
         # dependencies of parameters on event_type, lang,certainty and severity handled in event_awareness_par
         self.event_awareness_par = event_awareness_parameters(event_type,lang,self.certainty,self.severity)
@@ -65,6 +66,8 @@ class info:
             if "consequences_no" in loc:
                 self.consequences=loc.get('consequences_no')
             self.instruction = loc.get('instructions_no','')
+            if "location_name_no" in loc:
+                self.areaDesc = loc.get("location_name_no")
         elif lang.startswith("en"):
             self.description = loc['englishforecast']
             # old METfare template
@@ -73,6 +76,9 @@ class info:
             # new METfare template
                 self.consequences = loc.get('consequences_en')
             self.instruction = loc.get('instructions_en',"")
+            if "location_name_en" in loc:
+                self.areaDesc = loc.get("location_name_en")
+
 
         if self.instruction:
             self.instruction = " ".join((self.instruction,fare_setup.instructions[lang]))
@@ -81,7 +87,8 @@ class info:
             self.instruction = fare_setup.instructions[lang]
 
     # info for the area element. One for each info
-        self.areaDesc = translate_name(db,lang,loc['name'])
+        if not self.areaDesc:
+            self.areaDesc = translate_name(db,lang,loc['name'])
         self.altitude = loc.get('altitude')
         self.ceiling = loc.get('ceiling')
         self.polygon=get_polygon(db, loc)
@@ -120,7 +127,8 @@ class info:
         self.all_locations_name = all_locations_name
 
     def create_headline(self):
-        self.headline = get_headline(self.eventAwarenessName, self.awarenessHeadline, self.phenomenon_name, self.lang, self.effective, self.expires, self.all_locations_name)
+        self.headline = get_headline(self.eventAwarenessName, self.awarenessHeadline, self.phenomenon_name,
+                                     self.lang, self.effective, self.expires, self.areaDesc)
 
 
 def generate_capalert_v1(xmldoc,db):
