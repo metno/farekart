@@ -289,7 +289,10 @@ def make_info_element(alert, l_info):
     # Link to graphical representation
     if l_info.pict:
         resource = SubElement(info, 'resource')
-        SubElement(resource, 'resourceDesc').text = l_info.headline
+        caption = fare_setup.caption[l_info.lang]
+        if l_info.headline:
+            caption = caption + l_info.headline[0].lower() + l_info.headline[1:]
+        SubElement(resource, 'resourceDesc').text = caption
         SubElement(resource, 'mimeType').text = "image/png"
         SubElement(resource, 'uri').text = l_info.pict
 

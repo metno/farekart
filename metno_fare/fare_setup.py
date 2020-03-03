@@ -3,16 +3,22 @@
 
 languages = ["no", "en-GB"]
 
-senders ={
+senders = {
         "no": "Meteorologisk Institutt",
         "en-GB": "MET Norway",
         }
 
 
-contact={
+contact= {
         "no": "https://www.met.no/kontakt-oss",
         "en-GB": "https://www.met.no/en/contact-us",
 }
+
+caption ={
+        "no": "Kart over ",
+        "en-GB": "Map of ",
+}
+
 
 
 sender = "noreply@met.no"
