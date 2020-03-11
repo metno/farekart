@@ -6,17 +6,11 @@
         "snow",
 	"ice",
         "rainFlood",
-        "thunder",
         "blowingSnow",
         "stormSurge",
         "polarLow",
-        "drivingConditions",
         "forestFire",
-        "icing",
-        "avalanches",
-        "uvRadiation",
-        "pollen",
-        "airPollution"
+        "icing"
     ],
     "awareness_levels": {
         "Orange": "3; orange; Severe",
