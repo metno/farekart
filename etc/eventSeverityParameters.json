@@ -501,10 +501,10 @@
         "rainFlood": {
             "Likely": {
                 "no": {
-                    "Extreme": "Ekstremt kraftige regnbyger",
+                    "Extreme": "Ekstremt kraftig styrtregn",
                     "Minor": "Normale regnbyger",
-                    "Moderate": "Kraftige regnbyger",
-                    "Severe": "Svært kraftige regnbyger"
+                    "Moderate": "Styrtregn",
+                    "Severe": "Svært kraftig styrtregn"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers",
@@ -515,10 +515,10 @@
             },
             "Observed": {
                 "no": {
-                    "Extreme": "Ekstremt kraftige regnbyger pågår",
+                    "Extreme": "Ekstremt kraftig styrtregn pågår",
                     "Minor": "Normale regnbyger",
-                    "Moderate": "Kraftige regnbyger pågår",
-                    "Severe": "svært kraftige regnbyger pågår"
+                    "Moderate": "Styrtregn pågår",
+                    "Severe": "Svært kraftig styrtregn pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers ongoing",
@@ -529,9 +529,9 @@
             },
             "Possible": {
                 "no": {
-                    "Extreme": "mulighet for ekstremt kraftige regnbyger",
+                    "Extreme": "mulighet for ekstremt kraftig styrtregn",
                     "Moderate": null,
-                    "Severe": "mulighet for svært kraftige regnbyger"
+                    "Severe": "mulighet for svært kraftig styrtregn"
                 },
                 "en-GB": {
                     "Extreme": "possibility of extremely heavy rainshowers",
@@ -541,7 +541,7 @@
             },
              "Unlikely": {
                 "no": {
-                    "Extreme": "liten mulighet for ekstremt kraftige regnbyger",
+                    "Extreme": "liten mulighet for ekstremt kraftig styrtregn",
                     "Moderate": null,
                     "Severe": null
                 },
