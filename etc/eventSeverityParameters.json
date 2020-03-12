@@ -561,7 +561,7 @@
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
                     "Moderate": "Moderate icing on ships",
-                    "Severe": "Strong icing on ships"
+                    "Severe": "Severe icing on ships"
                 }
             },
             "Observed": {
@@ -575,7 +575,7 @@
                     "Extreme": null,
                     "Minor": "Normal risk of icing",
                     "Moderate": "Moderate icing on ships ongoing",
-                    "Severe": "Strong icing on ships ongoing"
+                    "Severe": "Severe icing on ships ongoing"
                 }
             },
             "Possible": {
