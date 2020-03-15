@@ -1,3 +1,9 @@
+python-farekart (0.3.24-1) RELEASED; urgency=medium
+
+  * new municipalityIds and more
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Sun, 15 Mar 2020 19:55:05 +0100
+
 python-farekart (0.3.23-1) RELEASED; urgency=medium
 
   * support for event code ice 
