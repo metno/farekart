@@ -31,7 +31,8 @@
         "avalanches": "9; avalanches",
         "icing": "7; coastalevent",
         "stormSurge": "7; coastalevent",
-        "blowingSnow": "2; snow-ice"
+        "blowingSnow": "2; snow-ice",
+	"polarLow": "1; Wind"
     },
     "awarenessResponse": {
         "no": {
