@@ -388,6 +388,20 @@
                 "no": {
                     "Extreme": null,
                     "Minor": "Normal skogbrannfare",
+                    "Moderate": "Skogbrannfare ventes",
+                    "Severe": "Stor skogbrannfare ventes"
+                },
+                "en-GB": {
+                    "Extreme": null,
+                    "Minor": "Minor forest fire danger",
+                    "Moderate": "Forest fire danger expected",
+                    "Severe": "High forest fire danger expected"
+                }
+            },
+            "Observed": {
+                "no": {
+                    "Extreme": null,
+                    "Minor": "Normal skogbrannfare",
                     "Moderate": "Skogbrannfare",
                     "Severe": "Stor skogbrannfare"
                 },
@@ -396,20 +410,6 @@
                     "Minor": "Minor forest fire danger",
                     "Moderate": "Forest fire danger",
                     "Severe": "High forest fire danger"
-                }
-            },
-            "Observed": {
-                "no": {
-                    "Extreme": null,
-                    "Minor": "Normal skogbrannfare",
-                    "Moderate": "Skogbrannfare pågår",
-                    "Severe": "Stor skogbrannfare pågår"
-                },
-                "en-GB": {
-                    "Extreme": null,
-                    "Minor": "Minor forest fire danger",
-                    "Moderate": "Forest fire danger ongoing",
-                    "Severe": "High forest fire danger ongoing"
                 }
             },
             "Possible": {
