@@ -29,6 +29,8 @@ def make_list_of_valid_files(filebase,schemas):
         files that start with the given filebase, writing the Json file to the
         directory containing the files."""
 
+
+    print("generatejson_fare.py: make_list_of_valid_files, filebase = %s, schemas=%s" % (filebase, schemas))
     filesearch = "{0}*.cap.xml".format(filebase)
     filenames = glob.glob(filesearch)
     filenames.sort()
@@ -41,6 +43,7 @@ def make_list_of_valid_files(filebase,schemas):
     references = {}
 
     for fname in filenames:
+        print("Processing file %s " %  fname)
 
         # Parse and validate each CAP file found.
         root = etree.parse(fname)
@@ -107,16 +110,15 @@ def make_list_of_valid_files(filebase,schemas):
     cap_no_list = make_cap_list("no",capalerts,write_counties=True)
     cap_en_list = make_cap_list("en-GB",capalerts,write_counties=True)
 
-    dirname = os.path.dirname(filebase)
+    if not os.path.isdir(filebase):
+        dirname = os.path.dirname(filebase)
+    else:
+        dirname = filebase
+
+    print("Dirname to save Json-files: %s" % dirname)
+
     write_json(cap_no_list, dirname, "CAP_no.json")
     write_json(cap_en_list, dirname, "CAP_en.json")
-
-    # make Json list for testing with counties
-    cap_no_test_list = make_cap_list("no",capalerts,write_counties=True)
-    cap_en_test_list = make_cap_list("en-GB",capalerts,write_counties=True)
-    write_json(cap_no_test_list, dirname, "test_CAP_no.json")
-    write_json(cap_en_test_list, dirname, "test_CAP_en.json")
-
 
 
 def find_references(cap):
@@ -129,8 +131,8 @@ def find_references(cap):
 
         pieces = ref.split(",")
         if len(pieces) != 3:
-            sys.stderr.write("Error: CAP file '%s' contains invalid cancellation references.\n" % file_name)
-            sys.exit(1)
+            sys.stderr.write("Error: CAP file contains invalid cancellation references. %s\n" % ref)
+            continue
 
         sender, original_id, time = pieces
         yield original_id
@@ -255,3 +257,19 @@ def update_references(capalerts,references):
                 capalert['ref_by']=key
             else:
                 print("Could not find",id)
+
+
+if __name__ == "__main__":
+
+    filebase = sys.argv[1]
+    if os.path.isdir(filebase):
+        # add slash to dirname
+        filebase = os.path.join(filebase, '')
+
+
+    if os.path.exists("schemas"):
+       schema_dirname = "schemas"
+    else:
+       schema_dirname = "/usr/share/xml/farekart"
+
+    make_list_of_valid_files(filebase, schema_dirname)

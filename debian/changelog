@@ -1,3 +1,9 @@
+python-farekart (0.3.25-1) RELEASED; urgency=medium
+
+  * add generatejson_fare.py to scripts 
+
+ -- Helen Korsmo <helenk@pc4996.pc.met.no>  Tue, 12 May 2020 18:02:18 +0000
+
 python-farekart (0.3.24-1) RELEASED; urgency=medium
 
   * new municipalityIds and more
