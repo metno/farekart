@@ -443,13 +443,13 @@
                 "no": {
                     "Extreme": "Ekstremt kraftig styrtregn",
                     "Minor": "Normale regnbyger",
-                    "Moderate": "Styrtregn",
+                    "Moderate": "Kraftig styrtregn lokalt",
                     "Severe": "Svært kraftig styrtregn"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers",
                     "Minor": "Normal rainshowers",
-                    "Moderate": "Heavy rainshowers",
+                    "Moderate": "Locally heavy rainshowers",
                     "Severe": "Very heavy rainshowers"
                 }
             },
@@ -457,13 +457,13 @@
                 "no": {
                     "Extreme": "Ekstremt kraftig styrtregn pågår",
                     "Minor": "Normale regnbyger",
-                    "Moderate": "Styrtregn pågår",
+                    "Moderate": "Kraftig styrtregn lokalt pågår",
                     "Severe": "Svært kraftig styrtregn pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy rainshowers ongoing",
                     "Minor": "Normal rainshowers",
-                    "Moderate": "Heavy rainshowers ongoing",
+                    "Moderate": "Locally heavy rainshowers ongoing",
                     "Severe": "Very heavy rainshowers ongoing"
                 }
             },
