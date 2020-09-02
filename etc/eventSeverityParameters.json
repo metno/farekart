@@ -281,13 +281,13 @@
                 "no": {
                     "Extreme": "Ekstremt mye snø",
                     "Minor": "Normalt mye snø",
-                    "Moderate": "Mye snø",
+                    "Moderate": "Snø",
                     "Severe": "Svært mye snø"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy snow",
                     "Minor": "Normal snow",
-                    "Moderate": "Heavy snow",
+                    "Moderate": "Snow",
                     "Severe": "Very heavy snow"
                 }
             },
@@ -295,13 +295,13 @@
                 "no": {
                     "Extreme": "Ekstremt mye snø pågår",
                     "Minor": "Normalt mye snø",
-                    "Moderate": "Mye snø pågår",
+                    "Moderate": "Snø pågår",
                     "Severe": "Svært mye snø pågår"
                 },
                 "en-GB": {
                     "Extreme": "Extremely heavy snow ongoing",
                     "Minor": "Normal snow",
-                    "Moderate": "Heavy snow ongoing",
+                    "Moderate": "Snow ongoing",
                     "Severe": "Very heavy snow ongoing"
                 }
             },
