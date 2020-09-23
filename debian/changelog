@@ -1,3 +1,9 @@
+python-farekart (0.3.26-1) RELEASED; urgency=medium
+
+  * changed eventAwarenessName for snow
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Wed, 23 Sep 2020 13:08:43 +0200
+
 python-farekart (0.3.25-1) RELEASED; urgency=medium
 
   * add generatejson_fare.py to scripts 
