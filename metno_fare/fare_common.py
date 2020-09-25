@@ -4,7 +4,7 @@
 # Lese aktuelle Farevarsler fra TED databasen og lage Produkt som kan vises i Diana.
 #
 # Author:
-# Bård Fjukstad.  Mar. 2015
+# B?rd Fjukstad.  Mar. 2015
 
 """Writes farevarsel (dangerous weather warning) products using data obtained
 from a TED database.
@@ -427,7 +427,7 @@ def generate_file_fare(db, filename, type, labelType, dateto, select_string):
             properties = [
                 ("met:objectType",          "PolyLine"),
                 ("met:style:type",          "Dangerous weather warning"),
-                ("met:info:type",           locs.get('phenomenon_type')),
+                ("met:info:type",           res.get('phenomenon_type')),
                 ("met:style:fillcolour",    locs['severity']),
                 ("met:info:severity",       locs['severity']),
                 ("met:info:comment",        locs.get('coment')),
