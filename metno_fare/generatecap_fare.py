@@ -142,10 +142,8 @@ def generate_capfiles_from_teddb(ted_documentname,output_dirname,db):
     for doc in docs:
         try:
             capfilename = os.path.join(output_dirname,get_capfilename_from_teddoc(doc[0]))
-            if (os.path.isfile(capfilename)):
-              sys.stderr.write("File '%s' already exists!\n" % capfilename)
-            else:
-                generate_capfile_from_teddoc(doc[0], output_dirname, db)
+            if not os.path.isfile(capfilename):
+              generate_capfile_from_teddoc(doc[0], output_dirname, db)
         except Exception as e:
             errors=+1
 

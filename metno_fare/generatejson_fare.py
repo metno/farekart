@@ -43,7 +43,7 @@ def make_list_of_valid_files(filebase,schemas):
     references = {}
 
     for fname in filenames:
-        print("Processing file %s " %  fname)
+        # print("Processing file %s " %  fname)
 
         # Parse and validate each CAP file found.
         root = etree.parse(fname)
