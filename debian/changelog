@@ -1,3 +1,9 @@
+python-farekart (0.3.28-1) RELEASED; urgency=medium
+
+  * added geocodes for mountain areas
+
+ -- Helen Korsmo <helenk@pc4365.pc.met.no>  Sun, 08 Nov 2020 15:30:50 +0100
+
 python-farekart (0.3.27-1) RELEASED; urgency=medium
 
   * Added event type to kml-files, removed debug print

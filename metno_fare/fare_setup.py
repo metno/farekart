@@ -160,8 +160,55 @@ ted2Geocode2020 = {
           "NUTS3":"NO061:NO022:NO021:NO032:NO034:NO041:NO042:NO043:NO051:NO052:NO053",
 
           "MunicipalityId":"1134;1506;1525;1539;1563;1566;1578;3042;3043;3044;3052;3427;3429;3430;3431;3432;3433;3434;3454;3818;3823;3824;3825;4220;4221;4222;4224;4228;4618;4619;4620;4641;4642;4643;4644;4651;5021;5022;5026;5027;5033;5061"
-          
 },
+# Rondane
+# Innlandet (nytt fylke, county 34)
+# Oppland og Hedmark (gamle fylker, NUTS3 22 og 21) 
+"0701": {"MunicipalityId":"3423;3429;3431;3436;3437;3438;3439",
+         "county":"34",
+         "NUTS3":"NO021:NO022"},
+# Fjelltraktene Dovrefjell- Svenskegrensa
+# Innlandet, Trøndelag (nytt fylke, county 34,50,
+# Hedmark, Oppland, Sør-Trøndelag (NUTS 21,22,61)  
+ "0702":{"MunicipalityId":"3426;3427;3429;3430;3431;3432;5021;5022;5025;5026;5027;5033",
+         "county":"34:50",
+         "NUTS3":"NO021:NO022:NO061"},
+# Trollheimen - Strynefjellet
+# Innlandet, Møre og Romsdal, Trøndelag
+# Møre og Romsdal,Sør-Trøndelag,Oppland (NUTS 53,61,22)
+# Trøndelag - sør    
+"0703":{"MunicipalityId":"1506;1539;1563;1566;1578;3432;3433;3434;5021",
+        "county":"34:50:15",
+         "NUTS3":"NO053:NO022:NO061"},
+# Jotunheimen
+# Innlandet
+# Vestland (county 46)
+ # Sogn og Fjordane,Oppland (NUTS 52,22)  
+"0705": {"MunicipalityId":"3454;3434;3435;3453;3436;3433;4643;4644",
+       "county":"34:46",
+         "NUTS3":"NO052:NO022"
+         }, 
+# Nordfjella
+# county Innlandet, Vestland, Viken (county 30,34,46)
+# Buskerud, Oppland, Sogn og Fjordane (NUTS NO032, NO022, NO052)
+"0706":  {"MunicipalityId":"3042;3043;3044;3452;3454;4641;4642",
+        "county":"34:46:30",
+         "NUTS3":"NO022:NO052:NO032"
+              },
+# Hardangervidda
+# county Viken, Vestland, Vestfold og Telemark(30,38 46)
+# Buskerud, Telemark, Hordaland   (NUTS3 NO032, NO034, NO051)
+"0707": {"MunicipalityId":"3044;3052;3818;3825;4618;4619;4620",
+        "county":"30:38:46",
+         "NUTS3":"NO032:NO034:NO051"
+            },
+# Heiane
+# county Vestfold 38, Aust-Agder 42
+# Telemark, Aust-Agder, Vest-Agder  (NUTS3 NO034,NO041,NO042) 
+"0708": {"MunicipalityId":"3823;3824;4220;4221;4222;4224;4228",
+    "county":"38:42",
+    "NUTS3":"NO034:NO041:NO042"},
+    
 # Mapping of area used in METs warnings to Meteolarms internal emma_id
 # Østfold kyst = NO801
 # Aust-Agder kyst = NO802
