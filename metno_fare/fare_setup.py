@@ -54,7 +54,8 @@ geographicDomain={
 "uvRadiation": None,
 "pollen": "land",
 "airPollution": "land",
-"ice":"land"
+"ice":"land",
+"lightning":"land"    
 }
 
 
