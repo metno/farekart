@@ -11,6 +11,7 @@
         "polarLow",
         "forestFire",
         "icing"
+	"lightning"
     ],
     "awareness_levels": {
         "Orange": "3; orange; Severe",
@@ -19,7 +20,7 @@
         "Green": "1; green; Minor"
     },
     "awareness_types": {
-        "thunder": "3; Thunderstorm",
+        "lightning": "3; Thunderstorm",
         "gale": "1; Wind",
         "wind": "1; Wind",
         "snow": "2; snow-ice",
@@ -62,41 +63,41 @@
         }
     },
     "eventAwarenessName": {
-        "thunder": {
+        "lightning": {
             "Likely": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftige tordenbyger",
+                    "Moderate": "Mye lyn",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Heavy thunderstorms",
+                    "Moderate": "Frequent lightning",
                     "Severe": null
                 }
             },
             "Observed": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": "Kraftige tordenbyger pågår",
+                    "Moderate": "Mye lyn pågår",
                     "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": "Heavy thunderstorms ongoing",
+                    "Moderate": "Frequent lightning ongoing",
                     "Severe": null
                 }
             },
             "Possible": {
                 "no": {
                     "Extreme": null,
-                    "Moderate": null,
-                    "Severe": "mulighet for svært kraftige tordenbyger"
+                    "Moderate": "mulighet for mye lyn",
+                    "Severe": null
                 },
                 "en-GB": {
                     "Extreme": null,
-                    "Moderate": null,
-                    "Severe": "possibility of very heavy thunderstorms"
+                    "Moderate": "possibility of frequent lightning",
+                    "Severe": null
                 }
             },
             "Unlikely": {
@@ -918,9 +919,9 @@
             "no": "Lave temperaturer",
             "en-GB": "Low temperature"
         },
-        "thunder": {
-            "no": "Torden",
-            "en-GB": "Thunderstorm"
+        "lightning": {
+            "no": "Mye lyn",
+            "en-GB": "Lightning"
         },
         "gale": {
             "no": "Kuling",
