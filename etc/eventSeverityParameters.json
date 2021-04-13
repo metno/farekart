@@ -10,7 +10,7 @@
         "stormSurge",
         "polarLow",
         "forestFire",
-        "icing"
+        "icing",
 	"lightning"
     ],
     "awareness_levels": {
